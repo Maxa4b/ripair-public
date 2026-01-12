@@ -5,6 +5,7 @@ require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../config/database.php';
 
 header('Content-Type: application/json; charset=utf-8');
+header('X-Ripair-Reviews-Version: 1');
 error_reporting(E_ALL);
 ini_set('display_errors', '0');
 
@@ -63,7 +64,8 @@ function ensure_reviews_table(PDO $pdo): void
         }
     }
 
-    $pdo->exec("
+    try {
+        $pdo->exec("
         CREATE TABLE IF NOT EXISTS customer_reviews (
             id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
             rating TINYINT UNSIGNED NOT NULL,
@@ -84,6 +86,10 @@ function ensure_reviews_table(PDO $pdo): void
             INDEX idx_customer_reviews_ip_hash_created (ip_hash, created_at)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
     ");
+    } catch (PDOException $e) {
+        // e.g. CREATE command denied / insufficient privileges on shared hosting
+        throw $e;
+    }
 }
 
 $payload = read_payload();
@@ -176,15 +182,22 @@ try {
         'success' => true,
         'id' => $id,
         'status' => 'pending',
-        'message' => 'Merci ! Votre avis a bien ete envoye et sera publie apres validation.',
+        'message' => 'Merci ! Votre avis a bien été envoyé et sera publié après validation.',
     ]);
 } catch (Throwable $e) {
     $debugId = bin2hex(random_bytes(6));
     error_log('[submit_review][' . $debugId . '] ' . $e->getMessage());
+    header('X-Ripair-Debug-Id: ' . $debugId);
     http_response_code(500);
     $payload = ['success' => false, 'error' => 'server_error', 'debug_id' => $debugId];
     if ($e instanceof PDOException) {
         $payload['db_code'] = $e->getCode();
+        $msg = strtolower($e->getMessage());
+        if (str_contains($msg, 'create command denied') || str_contains($msg, 'permission') || str_contains($msg, 'access denied')) {
+            $payload['error'] = 'db_permission_denied';
+        } elseif ($e->getCode() === '42S02') {
+            $payload['error'] = 'table_missing';
+        }
     }
     echo json_encode($payload);
 }
