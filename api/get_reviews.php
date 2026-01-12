@@ -13,6 +13,17 @@ ini_set('display_errors', '0');
  */
 function ensure_reviews_table(PDO $pdo): void
 {
+    // Avoid requiring CREATE privilege on every request (some hosts reject CREATE TABLE even with IF NOT EXISTS).
+    try {
+        $pdo->query("SELECT 1 FROM customer_reviews LIMIT 1");
+        return;
+    } catch (PDOException $e) {
+        // 42S02 = table not found
+        if ($e->getCode() !== '42S02') {
+            throw $e;
+        }
+    }
+
     $pdo->exec("
         CREATE TABLE IF NOT EXISTS customer_reviews (
             id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -196,8 +207,12 @@ try {
         'reviews' => $merged,
     ]);
 } catch (Throwable $e) {
-    error_log('[get_reviews] ' . $e->getMessage());
+    $debugId = bin2hex(random_bytes(6));
+    error_log('[get_reviews][' . $debugId . '] ' . $e->getMessage());
     http_response_code(500);
-    echo json_encode(['success' => false, 'error' => 'server_error']);
+    $payload = ['success' => false, 'error' => 'server_error', 'debug_id' => $debugId];
+    if ($e instanceof PDOException) {
+        $payload['db_code'] = $e->getCode();
+    }
+    echo json_encode($payload);
 }
-

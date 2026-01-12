@@ -52,6 +52,17 @@ function normalize_bool(mixed $value): bool
 
 function ensure_reviews_table(PDO $pdo): void
 {
+    // Avoid requiring CREATE privilege on every request (some hosts reject CREATE TABLE even with IF NOT EXISTS).
+    try {
+        $pdo->query("SELECT 1 FROM customer_reviews LIMIT 1");
+        return;
+    } catch (PDOException $e) {
+        // 42S02 = table not found
+        if ($e->getCode() !== '42S02') {
+            throw $e;
+        }
+    }
+
     $pdo->exec("
         CREATE TABLE IF NOT EXISTS customer_reviews (
             id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -165,11 +176,15 @@ try {
         'success' => true,
         'id' => $id,
         'status' => 'pending',
-        'message' => 'Merci ! Votre avis a bien été envoyé et sera publié après validation.',
+        'message' => 'Merci ! Votre avis a bien ete envoye et sera publie apres validation.',
     ]);
 } catch (Throwable $e) {
-    error_log('[submit_review] ' . $e->getMessage());
+    $debugId = bin2hex(random_bytes(6));
+    error_log('[submit_review][' . $debugId . '] ' . $e->getMessage());
     http_response_code(500);
-    echo json_encode(['success' => false, 'error' => 'server_error']);
+    $payload = ['success' => false, 'error' => 'server_error', 'debug_id' => $debugId];
+    if ($e instanceof PDOException) {
+        $payload['db_code'] = $e->getCode();
+    }
+    echo json_encode($payload);
 }
-

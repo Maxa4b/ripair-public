@@ -361,13 +361,20 @@ async function loadReviews(){
 }
 
 function normalizeError(code){
-  switch(String(code || "")){
+  const raw = String(code || "");
+  const parts = raw.split(":");
+  const base = parts[0] || "";
+  const ref = parts.length > 1 ? parts[1] : "";
+  const suffix = ref ? ` (ref: ${ref})` : "";
+  switch(base){
     case "invalid_rating": return "Merci de choisir une note entre 1 et 5.";
     case "comment_too_short": return "Votre commentaire est trop court (min. 10 caractères).";
     case "comment_too_long": return "Votre commentaire est trop long (max. 1200 caractères).";
     case "name_required_when_public": return "Si vous affichez votre nom, merci de renseigner au moins un prénom ou un nom.";
     case "too_many_requests": return "Vous avez déjà envoyé un avis récemment. Merci de réessayer dans une minute.";
-    default: return "Impossible d'envoyer l'avis pour le moment. Réessayez plus tard.";
+    case "pdo_not_initialized": return "Le service avis n'est pas disponible pour le moment. Réessayez plus tard." + suffix;
+    case "server_error": return "Erreur serveur lors de l'envoi. Réessayez plus tard." + suffix;
+    default: return "Impossible d'envoyer l'avis pour le moment. Réessayez plus tard." + suffix;
   }
 }
 
@@ -470,7 +477,9 @@ function initReviewModal(){
 
         const payload = await resp.json().catch(()=> ({}));
         if (!resp.ok || !payload?.success) {
-          throw new Error(payload?.error || "server_error");
+          const code = payload?.error || "server_error";
+          const ref = payload?.debug_id ? (":" + payload.debug_id) : "";
+          throw new Error(code + ref);
         }
 
         if (formPanel) formPanel.hidden = true;
@@ -501,4 +510,3 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 </body>
 </html>
-
