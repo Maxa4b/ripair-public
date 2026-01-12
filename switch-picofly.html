@@ -1,0 +1,824 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nintendo Switch - Picofly | RIPAIR</title>
+  <meta name="description" content="Installation Picofly sur Nintendo Switch (Classique, Lite, OLED) : micro-soudure soignée, contrôles qualité et tests. Service réservé à un usage légal." />
+
+  <meta property="og:title" content="Nintendo Switch - Picofly | RIPAIR" />
+  <meta property="og:description" content="Installation Picofly : micro-soudure, contrôles et restitution soignée. Usage légal uniquement." />
+  <meta property="og:image" content="https://ripair.shop/assets/img/preview.jpg" />
+  <meta property="og:url" content="https://ripair.shop/switch-picofly.html" />
+  <meta property="og:type" content="website" />
+
+  <link rel="icon" href="assets/img/logoweb.webp" type="image/png">
+  <link rel="preconnect" href="https://ripair.shop">
+  <link rel="stylesheet" href="/assets/css/critical.css">
+  <link rel="preload" href="/assets/css/style.css" as="style">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <noscript><link rel="stylesheet" href="/assets/css/style.css"></noscript>
+
+  <script defer src="/assets/js/script.js"></script>
+  <style>
+    :root{
+      --panel:#ffffff;
+      --border:rgba(17,17,17,0.08);
+      --ink:#0b172b;
+      --muted:#5b6b80;
+      --accent: var(--blue);
+    }
+
+    .hero-switch{
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-switch::before,
+    .hero-switch::after{
+      content:"";
+      position:absolute;
+      pointer-events:none;
+      width:560px;height:560px;
+      border-radius:999px;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.16), transparent 62%);
+      opacity: 1;
+    }
+    .hero-switch::before{ right:-220px; top:-220px; }
+    .hero-switch::after{ left:-260px; bottom:-300px; background: radial-gradient(circle at 35% 35%, rgba(255,255,255,0.14), transparent 64%); }
+    .hero-switch .container{ position:relative; z-index:1; }
+
+    .hero-layout{
+      display:grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 28px;
+      align-items: center;
+      padding: 18px 0 0;
+    }
+
+    .kicker{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:8px 12px;
+      border-radius:999px;
+      background: rgba(255,255,255,0.14);
+      border: 1px solid rgba(255,255,255,0.22);
+      font-weight: 950;
+      letter-spacing: .2px;
+    }
+    .hero-title{
+      margin: 14px 0 10px;
+      line-height: 1.06;
+      font-size: clamp(34px, 4.2vw, 56px);
+      font-weight: 1000;
+    }
+    .hero-title .accent{
+      background: rgba(255,255,255,0.16);
+      border: 1px solid rgba(255,255,255,0.24);
+      padding: 6px 12px;
+      border-radius: 999px;
+      backdrop-filter: blur(8px);
+      display:inline-block;
+    }
+    .hero-sub{
+      margin: 0;
+      font-size: 1.05rem;
+      line-height: 1.65;
+      color: rgba(255,255,255,0.92);
+      max-width: 62ch;
+    }
+    .hero-actions{
+      display:flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+    .hero-badges{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding: 10px 12px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.14);
+      border: 1px solid rgba(255,255,255,0.22);
+      backdrop-filter: blur(8px);
+      font-weight: 900;
+    }
+    .badge svg{ width:18px; height:18px; stroke: rgba(255,255,255,0.92); }
+    .hero-fine{
+      margin: 12px 0 0;
+      color: rgba(255,255,255,0.80);
+      font-size: 0.95rem;
+      line-height: 1.55;
+      max-width: 76ch;
+    }
+    .hero-media{
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.22);
+      border-radius: 22px;
+      padding: 12px;
+      box-shadow: 0 18px 54px rgba(0,0,0,0.22);
+      overflow: hidden;
+    }
+    .hero-media img{
+      width:100%;
+      height:auto;
+      display:block;
+      border-radius: 16px;
+      object-fit: cover;
+      transform: scale(1.52);
+      transform-origin: 65% 45%;
+    }
+
+    .section{ padding: 44px 0; }
+    .section.tight{ padding: 32px 0; }
+    .section .section-title{ margin: 0 0 14px; }
+
+    .lead{
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 80ch;
+    }
+    .lead.center{
+      text-align: center;
+      margin-inline: auto;
+    }
+
+    .offer-grid{
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+    .offer{
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 18px;
+      box-shadow: 0 12px 34px rgba(17,17,17,0.08);
+      display: grid;
+      gap: 12px;
+      min-width: 0;
+    }
+    .offer.featured{
+      border-color: rgba(58,186,252,0.35);
+      box-shadow: 0 18px 46px rgba(58,186,252,0.14);
+    }
+    .offer-head{
+      display:flex;
+      justify-content:space-between;
+      gap: 12px;
+      align-items:flex-start;
+    }
+    .offer-head h3{
+      margin:0;
+      font-size: 1.16rem;
+      font-weight: 1000;
+      color: var(--ink);
+    }
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      padding:7px 10px;
+      border-radius:999px;
+      background: rgba(58,186,252,0.12);
+      border: 1px solid rgba(58,186,252,0.22);
+      color: #0b2a3a;
+      font-weight: 950;
+      font-size: 0.88rem;
+      white-space: nowrap;
+    }
+    .price{
+      display:flex;
+      align-items:baseline;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .price .old{ color:#7a8699; text-decoration: line-through; font-weight: 900; }
+    .price .now{ font-size: 1.7rem; font-weight: 1100; color: var(--ink); }
+    .price .hint{ color: var(--muted); font-size: 0.95rem; font-weight: 800; }
+    .offer ul{
+      margin: 0;
+      padding-left: 18px;
+      color: #364152;
+      line-height: 1.65;
+    }
+    .offer li{ margin: 6px 0; }
+    .offer .btn{ width: 100%; text-align: center; }
+    .offer .btn + .btn{ margin-top: 10px; }
+
+    .cta-strip{
+      margin-top: 18px;
+      background: rgba(58,186,252,0.10);
+      border: 1px solid rgba(58,186,252,0.20);
+      border-radius: 20px;
+      padding: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .cta-strip strong{ color: var(--ink); }
+
+    .trust{
+      margin-top: 18px;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 14px 16px;
+      box-shadow: 0 10px 24px rgba(17,17,17,0.06);
+      display:flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .trust .stars{ font-weight: 1100; color: var(--ink); }
+    .trust .muted{ color: var(--muted); font-weight: 800; }
+
+    .benefits{
+      margin-top: 18px;
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+    .card{
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 18px 18px 16px;
+      box-shadow: 0 10px 24px rgba(17,17,17,0.06);
+      min-width: 0;
+    }
+    .card-top{ display:flex; gap: 12px; align-items: flex-start; }
+    .ico{
+      width: 42px; height: 42px;
+      border-radius: 14px;
+      background: rgba(58,186,252,0.10);
+      border: 1px solid rgba(58,186,252,0.18);
+      display: grid;
+      place-items: center;
+      color: var(--blue);
+      flex: 0 0 auto;
+    }
+    .ico svg{ width: 22px; height: 22px; stroke: currentColor; }
+    .card h3{ margin: 2px 0 6px; font-size: 1.12rem; font-weight: 1000; color: var(--ink); }
+    .card p{ margin: 0; color:#364152; line-height: 1.65; }
+
+    .steps{ margin-top: 18px; display: grid; gap: 10px; }
+    .step{
+      display:grid;
+      grid-template-columns: 46px 1fr;
+      gap: 12px;
+      align-items: start;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 14px 16px;
+      box-shadow: 0 10px 24px rgba(17,17,17,0.06);
+    }
+    .step-n{
+      width: 46px; height: 46px;
+      border-radius: 16px;
+      background: linear-gradient(180deg, rgba(58,186,252,0.18), rgba(58,186,252,0.08));
+      border: 1px solid rgba(58,186,252,0.18);
+      color: #0b2a3a;
+      display: grid;
+      place-items: center;
+      font-weight: 1100;
+    }
+    .step-title{ font-weight: 1100; color: var(--ink); margin: 2px 0 4px; }
+    .step-desc{ margin: 0; color:#364152; line-height: 1.65; }
+
+    .gallery{
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 18px;
+    }
+    .g-card{
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: 0 12px 34px rgba(17,17,17,0.08);
+    }
+    .g-hero{ height: 460px; }
+    .g-stack{ display:grid; gap: 18px; }
+    .g-small{ height: 220px; }
+    .gallery img{ width:100%; height:100%; object-fit: cover; display:block; }
+
+    .faq details{
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 14px 16px;
+      box-shadow: 0 10px 24px rgba(17,17,17,0.06);
+    }
+    .faq details + details{ margin-top: 12px; }
+    .faq summary{ cursor:pointer; font-weight: 1100; list-style: none; }
+    .faq summary::-webkit-details-marker{ display:none; }
+    .faq summary::after{ content:"+"; float:right; color: rgba(17,17,17,0.55); font-weight: 1100; }
+    .faq details[open] summary::after{ content:"–"; }
+    .faq p{ margin: 10px 0 0; color:#364152; line-height: 1.7; }
+
+    .legal{
+      background: rgba(58,186,252,0.10);
+      border: 1px solid rgba(58,186,252,0.20);
+      border-radius: 18px;
+      padding: 14px 16px;
+      color: #0b2a3a;
+      line-height: 1.6;
+    }
+
+    /* Very subtle hover feedback (desktop only) */
+    @media (hover: hover) and (pointer: fine){
+      .offer,
+      .card,
+      .step,
+      .g-card,
+      .trust,
+      .cta-strip,
+      .legal{
+        transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+        will-change: transform;
+      }
+
+      .offer:hover,
+      .card:hover,
+      .step:hover,
+      .g-card:hover,
+      .trust:hover,
+      .cta-strip:hover,
+      .legal:hover{
+        transform: translateY(-2px);
+        border-color: rgba(58,186,252,0.18);
+        box-shadow: 0 14px 38px rgba(17,17,17,0.09);
+      }
+
+      .offer.featured:hover{
+        border-color: rgba(58,186,252,0.30);
+        box-shadow: 0 18px 46px rgba(58,186,252,0.16);
+      }
+    }
+
+    @media (max-width: 980px){
+      .hero-layout{ grid-template-columns: 1fr; }
+      .hero-actions{ justify-content: center; }
+      .hero-badges{ justify-content: center; }
+      .hero-sub, .hero-fine{ margin-inline: auto; text-align: center; }
+      .kicker{ margin-inline: auto; }
+      .offer-grid{ grid-template-columns: 1fr; }
+      .benefits{ grid-template-columns: 1fr; }
+      .gallery{ grid-template-columns: 1fr; }
+      .g-hero{ height: 260px; }
+    }
+  </style>
+</head>
+<body>
+<!-- NAV -->
+<header class="navbar">
+  <div class="nav-inner">
+    <a class="navbar-logo" href="index.html">
+      <img src="assets/img/logo.webp" alt="RIPAIR Logo">
+    </a>
+
+    <nav class="navbar-links">
+      <a href="/index.html">Accueil</a>
+      <a href="/services.html">Services</a>
+      <a href="/switch-picofly.html">Switch</a>
+      <a href="/devis.html">Devis</a>
+      <a href="/avis.html">Avis</a>
+      <a href="/contact.html">Contact</a>
+    </nav>
+
+    <button class="icon-btn" aria-label="Ouvrir le menu" id="hamburger" onclick="toggleMenu()">
+      <svg viewBox="0 0 24 24" width="24" height="24" stroke="#111" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <line x1="3" y1="12" x2="21" y2="12"/>
+        <line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+
+    <nav id="mobileMenu" class="mobile-menu">
+      <a href="/index.html">Accueil</a>
+      <a href="/services.html">Services</a>
+      <a href="/switch-picofly.html">Switch</a>
+      <a href="/devis.html">Devis</a>
+      <a href="/avis.html">Avis</a>
+      <a href="/contact.html">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="page-hero hero-switch">
+    <div class="container hero-layout">
+      <div>
+        <div class="kicker">Nintendo Switch • Picofly</div>
+        <h1 class="hero-title">Votre puce Picofly installée <span class="accent">dès 59 €</span></h1>
+        <p class="hero-sub">Compatible Switch Classique, Lite et OLED. Micro-soudure soignée, contrôles qualité et tests avant restitution.</p>
+        <div class="hero-actions">
+          <a href="#tarifs" class="btn btn-primary">Passez commande</a>
+          <a href="#" class="btn btn-secondary" data-contact-modal>Contact rapide</a>
+          <a class="btn btn-secondary" href="https://wa.me/33615588782?text=Bonjour%20RIPAIR%2C%20je%20souhaite%20un%20devis%20Picofly%20pour%20ma%20Nintendo%20Switch%20(mod%C3%A8le%20%3A%20...).">WhatsApp</a>
+        </div>
+        <div class="hero-badges" aria-label="Réassurance">
+          <span class="badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <path d="m9 12 2 2 4-4"/>
+            </svg>
+            Garantie 3 mois
+          </span>
+          <span class="badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 7h14l4 4v10H3V7z"/>
+              <path d="M3 7l4-4h10l4 4"/>
+            </svg>
+            Dépôt / expédition
+          </span>
+          <span class="badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 3v18h18"/>
+              <path d="M7 14l3-3 4 4 5-6"/>
+            </svg>
+            Contrôles & tests
+          </span>
+        </div>
+        <p class="hero-fine">Prix d’appel indicatif (à ajuster selon modèle/révision). Réponse sous 24h ouvrées. Service réservé à un usage légal.</p>
+      </div>
+      <div class="hero-media">
+        <img src="assets/img/picofly.webp" alt="Nintendo Switch (illustration)">
+      </div>
+    </div>
+  </section>
+
+  <section class="container section tight" id="tarifs" data-section>
+    <h2 class="section-title">Promotions (par modèle)</h2>
+    <p class="lead center">Choisissez votre modèle, passez commande et on revient vers vous rapidement pour confirmer la compatibilité, le délai et les détails de l’intervention.</p>
+
+    <div class="offer-grid">
+      <article class="offer featured">
+        <div class="offer-head">
+          <h3>Switch Classique</h3>
+          <span class="tag">Promo</span>
+        </div>
+        <div class="price">
+          <span class="old">79 €</span>
+          <span class="now">59 €</span>
+          <span class="hint">pose + tests</span>
+        </div>
+        <ul>
+          <li>Installation Picofly</li>
+          <li>Contrôles qualité</li>
+          <li>Restitution soignée</li>
+        </ul>
+        <a class="btn btn-primary" href="#" data-contact-modal>Passez commande</a>
+        <a class="btn btn-secondary" href="contact.html">Une question ?</a>
+      </article>
+
+      <article class="offer">
+        <div class="offer-head">
+          <h3>Switch Lite</h3>
+          <span class="tag">Promo</span>
+        </div>
+        <div class="price">
+          <span class="old">89 €</span>
+          <span class="now">69 €</span>
+          <span class="hint">pose + tests</span>
+        </div>
+        <ul>
+          <li>Installation Picofly</li>
+          <li>Vérifications + tests</li>
+          <li>Conseils au retrait</li>
+        </ul>
+        <a class="btn btn-primary" href="#" data-contact-modal>Passez commande</a>
+        <a class="btn btn-secondary" href="contact.html">Une question ?</a>
+      </article>
+
+      <article class="offer">
+        <div class="offer-head">
+          <h3>Switch OLED</h3>
+          <span class="tag">Promo</span>
+        </div>
+        <div class="price">
+          <span class="old">99 €</span>
+          <span class="now">79 €</span>
+          <span class="hint">pose + tests</span>
+        </div>
+        <ul>
+          <li>Installation Picofly</li>
+          <li>Contrôles qualité</li>
+          <li>Restitution soignée</li>
+        </ul>
+        <a class="btn btn-primary" href="#" data-contact-modal>Passez commande</a>
+        <a class="btn btn-secondary" href="contact.html">Une question ?</a>
+      </article>
+    </div>
+
+    <div class="trust" aria-label="Preuve sociale">
+      <div>
+        <div class="stars">★★★★★ <span id="ratingValue">—</span>/5</div>
+        <div class="muted"><span id="ratingCount">—</span> avis clients</div>
+      </div>
+      <div class="hero-actions" style="margin:0">
+        <a href="avis.html" class="btn btn-primary">Voir les avis</a>
+      </div>
+    </div>
+
+    <div class="cta-strip">
+      <div><strong>Pas sûr de votre modèle ?</strong> Envoyez une photo de l’étiquette, on vous oriente.</div>
+      <div class="hero-actions" style="margin:0">
+        <a href="contact.html" class="btn btn-secondary">Contact rapide</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="container section" data-section>
+    <h2 class="section-title">Une solution clé en main</h2>
+    <div class="benefits">
+      <article class="card">
+        <div class="card-top">
+          <div class="ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 10.5V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V10.5"/>
+              <path d="M3 10.5 12 3l9 7.5"/>
+            </svg>
+          </div>
+          <div>
+            <h3>Prise en charge simple</h3>
+            <p>Dépôt et retrait en boutique. Expédition possible sur demande.</p>
+          </div>
+        </div>
+      </article>
+      <article class="card">
+        <div class="card-top">
+          <div class="ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2l3 7h7l-5.5 4 2 7-6.5-4.5L5.5 20l2-7L2 9h7l3-7z"/>
+            </svg>
+          </div>
+          <div>
+            <h3>Prêt à l’emploi</h3>
+            <p>Console testée et validée avant restitution, avec guide d'utilisation.</p>
+          </div>
+        </div>
+      </article>
+      <article class="card">
+        <div class="card-top">
+          <div class="ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <path d="m9 12 2 2 4-4"/>
+            </svg>
+          </div>
+          <div>
+            <h3>Garantie</h3>
+            <p>Intervention garantie 3 mois (hors chocs, oxydation, dégâts antérieurs).</p>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="container section tight" data-section>
+    <h2 class="section-title">Comment ça marche ?</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-n">1</div>
+        <div>
+          <div class="step-title">Vous nous contactez</div>
+          <p class="step-desc">Choisissez votre modèle et envoyez votre demande (formulaire ou WhatsApp). Réponse sous 24h ouvrées.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-n">2</div>
+        <div>
+          <div class="step-title">Installation + contrôles</div>
+          <p class="step-desc">Micro-soudure Picofly, sécurisation, contrôles qualité et tests avant restitution.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-n">3</div>
+        <div>
+          <div class="step-title">Retour rapide</div>
+          <p class="step-desc">Retrait sur place ou expédition (sur demande). On vous explique l’intervention.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-strip">
+      <div><strong>Le plus simple :</strong> un message WhatsApp avec votre modèle.</div>
+      <div class="hero-actions" style="margin:0">
+        <a class="btn btn-secondary" href="https://wa.me/33615588782?text=Bonjour%20RIPAIR%2C%20je%20souhaite%20un%20devis%20Picofly%20pour%20ma%20Nintendo%20Switch%20(mod%C3%A8le%20%3A%20...).">WhatsApp</a>
+        <a href="#" class="btn btn-primary" data-contact-modal>Passez commande</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="container section tight" data-section>
+    <h2 class="section-title">Le retour en image</h2>
+    <div class="gallery" aria-label="Atelier et exemples">
+      <div class="g-card g-hero">
+        <img src="assets/img/diagnostic.webp" alt="Atelier - diagnostic">
+      </div>
+      <div class="g-stack">
+        <div class="g-card g-small">
+          <img src="assets/img/service2.webp" alt="Atelier - intervention">
+        </div>
+        <div class="g-card g-small">
+          <img src="assets/img/service1.webp" alt="Finition">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="container section tight faq" data-section>
+    <h2 class="section-title">FAQ</h2>
+    <details>
+      <summary>Combien de temps prend l’intervention ?</summary>
+      <p>Le délai dépend du modèle et de l’état de la console. On vous donne une estimation au moment du devis.</p>
+    </details>
+    <details>
+      <summary>Est-ce légal ?</summary>
+      <p>Ce service est proposé pour un usage légal (homebrew, développement, sauvegardes personnelles). RIPAIR ne fournit aucun contenu protégé.</p>
+    </details>
+    <details>
+      <summary>Y a-t-il des risques ?</summary>
+      <p>Comme toute micro-soudure, il existe des risques (pistes fragiles, usure, dégâts antérieurs). On vous informe avant la prise en charge.</p>
+    </details>
+    <details>
+      <summary>Je ne connais pas mon modèle exact, je fais comment ?</summary>
+      <p>Envoyez une photo de l’étiquette, et on vous oriente vers l’offre correspondante.</p>
+    </details>
+  </section>
+
+  <section class="container section tight" id="contact" data-section>
+    <h2 class="section-title">Contact</h2>
+    <div class="legal">
+      Veuillez vérifier vos courriers SPAM après votre demande. Si vous êtes pressé, écrivez-nous via WhatsApp.
+      Délai de réponse : <strong>24h ouvrées</strong>.
+    </div>
+    <div class="cta-strip">
+      <div><strong>Prêt ?</strong> Cliquez et on vous répond.</div>
+      <div class="hero-actions" style="margin:0">
+        <a href="contact.html" class="btn btn-primary">Demander un devis</a>
+        <a href="#" class="btn btn-secondary" data-contact-modal>Contact rapide</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container footer-content">
+    <div class="footer-left">
+      <p>&copy; 2025 RIPAIR &mdash; Tous droits r&eacute;serv&eacute;s.</p>
+      <p class="footer-meta">EI RIPAIR &middot; 06&nbsp;15&nbsp;58&nbsp;87&nbsp;82 &middot; contact@ripair.shop</p>
+    </div>
+    <div class="footer-links">
+      <a href="mentions.html">Mentions l&eacute;gales</a>
+      <a href="devis.html">Obtenir un devis</a>
+    </div>
+    <div class="footer-right">
+      <a href="https://instagram.com/ripair.shop" target="_blank" rel="noopener">
+        <img src="assets/img/instagram.webp" alt="Instagram" class="social-icon">
+      </a>
+      <a href="https://www.facebook.com/profile.php?id=61579654974480" target="_blank" rel="noopener">
+        <img src="assets/img/facebook.webp" alt="Facebook" class="social-icon">
+      </a>
+      <a href="#" class="btn-contact" data-contact-modal>Contactez-nous</a>
+    </div>
+  </div>
+</footer>
+
+<!-- Popup Modal -->
+<div id="contactModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2 class="modal-title">Contactez-nous</h2>
+
+    <div class="contact-item">
+      <p>contact@ripair.shop</p>
+      <button id="copyEmail" class="btn-contact">Copier</button>
+    </div>
+
+    <div class="contact-item">
+      <p>06&nbsp;15&nbsp;58&nbsp;87&nbsp;82</p>
+      <button id="phoneAction" class="btn-contact"></button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+(function(){
+  const modal = document.getElementById("contactModal");
+  const triggers = document.querySelectorAll("[data-contact-modal]");
+  const closeBtn = modal ? modal.querySelector(".close") : null;
+  const copyEmailBtn = document.getElementById("copyEmail");
+  const phoneAction = document.getElementById("phoneAction");
+  const phoneNumber = "0615588782";
+
+  const showToast = (message) => {
+    const toast = document.getElementById("toast");
+    if (!toast) return;
+    toast.textContent = message;
+    toast.className = "toast success show";
+    setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 2500);
+  };
+
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text).then(() => showToast("Copié : " + text));
+  };
+
+  if (modal && triggers.length) {
+    const openModal = (e) => {
+      e.preventDefault();
+      modal.style.display = "flex";
+    };
+    triggers.forEach(btn => btn.addEventListener("click", openModal));
+  }
+
+  if (closeBtn) closeBtn.addEventListener("click", () => modal.style.display = "none");
+  window.addEventListener("click", (e) => { if (e.target === modal) modal.style.display = "none"; });
+
+  if (copyEmailBtn) {
+    copyEmailBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      copyToClipboard("contact@ripair.shop");
+    });
+  }
+
+  if (phoneAction) {
+    if (/Mobi|Android/i.test(navigator.userAgent)) {
+      phoneAction.textContent = "Appeler";
+      phoneAction.addEventListener("click", (e) => {
+        e.preventDefault();
+        window.location.href = "tel:" + phoneNumber;
+      });
+    } else {
+      phoneAction.textContent = "Copier";
+      phoneAction.addEventListener("click", (e) => {
+        e.preventDefault();
+        copyToClipboard(phoneNumber);
+      });
+    }
+  }
+})();
+</script>
+
+<script>
+(function(){
+  const ratingValue = document.getElementById('ratingValue');
+  const ratingCount = document.getElementById('ratingCount');
+  if (!ratingValue || !ratingCount) return;
+
+  const API = (location.protocol === 'file:' || location.origin === 'null')
+    ? 'https://ripair.shop/api'
+    : 'api';
+
+  fetch(API + '/get_reviews.php')
+    .then((r) => r.json())
+    .then((data) => {
+      const rating = data?.meta?.rating ?? data?.result?.rating;
+      const total = data?.meta?.count ?? data?.result?.user_ratings_total;
+      if (typeof rating === 'number') ratingValue.textContent = rating.toFixed(1);
+      if (typeof total === 'number') ratingCount.textContent = total.toString();
+    })
+    .catch(() => { /* ignore */ });
+})();
+</script>
+
+<style>
+.toast{
+  visibility:hidden;
+  min-width:250px;
+  margin-left:-125px;
+  background-color:#333;
+  color:#fff;
+  text-align:center;
+  border-radius:10px;
+  padding:16px;
+  position:fixed;
+  left:50%;
+  bottom:30px;
+  font-size:15px;
+  z-index:1000;
+  transition: opacity .3s ease;
+}
+.toast.show{ visibility:visible; opacity:1; }
+.toast.success{ background-color:#2ecc71; }
+</style>
+</body>
+</html>

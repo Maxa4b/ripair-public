@@ -1,0 +1,1191 @@
+﻿<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>Prendre rendez-vous — RIPAIR</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Styles globaux du site -->
+  <link rel="stylesheet" href="/assets/css/critical.css">
+  <link rel="preload" href="/assets/css/style.css" as="style">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <noscript><link rel="stylesheet" href="/assets/css/style.css"></noscript>
+  <style>
+    :root {
+      --bg:#ffffff; --panel:#ffffff; --border:rgba(17,17,17,.08); --ink:#111111; --muted:#667085;
+      --accent: var(--blue); --accent-ink:#ffffff; --field:#f7f9fd; --field-b:#dfe6f0; --ok:#16a34a; --err:#ef4444;
+      --nav-h: 72px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--ink)}
+    main.container{max-width:1200px;margin:0 auto;padding:20px;width:min(1200px,92%)}
+    .card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px}
+    .muted{color:var(--muted);font-size:14px}
+    .hint{border:1px dashed rgba(17,17,17,.25);padding:10px;border-radius:10px;background:#f8fbff;color:#111}
+    /* Step 1 form */
+    .grid{display:grid;gap:10px}
+    .grid{display:grid;gap:10px}
+    .row-2{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+    .row-3{display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px}
+    /* Allow full-width items inside grid rows when needed */
+    .row-2 > .full, .row-3 > .full{ grid-column: 1 / -1 }
+    /* Make a whole 2-col row behave as single-column */
+    .row-2.single > *{ grid-column: 1 / -1 }
+    label{font-size:14px;color:var(--muted);font-weight:600; display:block; margin-bottom:6px}
+    select,input{width:100%;padding:14px;border-radius:14px;border:1px solid var(--field-b);background:var(--field);color:var(--ink);transition:border-color .15s ease, box-shadow .15s ease; font-family: inherit; font-size:16px; line-height:1.25; font-weight:500}
+    input::placeholder{ color:#9aa7bd }
+    select:hover,input:hover{ border-color: var(--blue) }
+    select:focus,input:focus{ outline:none; border-color: var(--accent); box-shadow:0 0 0 3px rgba(58,186,252,.18) }
+    /* Fancy select (cascade-style) */
+    .fs-wrap{position:relative}
+    .fs-wrap .fs-control{
+      display:flex; align-items:center; gap:8px;
+      background:var(--field); color:var(--ink);
+      border:1px solid var(--field-b); border-radius:14px;
+      padding:12px 14px; cursor:pointer;
+      transition:border-color .15s ease, box-shadow .15s ease, background .15s ease;
+      font-family: inherit; font-size:16px; font-weight:500;
+    }
+    .fs-wrap .fs-control:hover{ border-color: var(--blue); }
+    .fs-wrap .fs-control:focus{ outline:none; border-color: var(--accent); box-shadow:0 0 0 3px rgba(58,186,252,.18); }
+    .fs-wrap .fs-value{ flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .fs-wrap .fs-chevron{ width:18px; height:18px; opacity:.7; color: var(--muted); }
+    .fs-wrap .fs-menu{
+      position:absolute; left:0; right:0; top:calc(100% + 8px); z-index:50;
+      background:#ffffff; border:1px solid var(--border); border-radius:14px; box-shadow:0 14px 44px rgba(17,17,17,.12);
+      display:none; padding:8px;
+    }
+    .fs-wrap.open .fs-menu{ display:block; }
+    .fs-wrap .fs-list{ max-height:260px; overflow:auto; padding:4px; }
+    .fs-item{ display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; cursor:pointer; transition:background .15s ease; }
+    .fs-item:hover{ background:rgba(58,186,252,.08); }
+    .fs-item.active{ background:rgba(58,186,252,.12); outline:1px solid rgba(58,186,252,.25); }
+    .fs-item .fs-label{ flex:1; font-family:inherit; font-size:15px; color:#111; }
+    .fs-empty{ padding:10px 12px; color:var(--muted); }
+    select.fs{ position:absolute !important; left:-9999px !important; width:1px; height:1px; clip:rect(0 0 0 0); clip-path:inset(50%); overflow:hidden; }
+    .fs-wrap.disabled .fs-control{ opacity:.6; cursor:not-allowed; }
+    .fs-wrap.valid .fs-control{ border-color:#34d399; box-shadow:0 0 0 3px rgba(52,211,153,.22); }
+    .fs-wrap.invalid .fs-control{ border-color:#ef4444; box-shadow:0 0 0 3px rgba(239,68,68,.15); }
+    /* Validation states (lighter green to match blue) */
+    .is-valid{ border-color:#34d399 !important; box-shadow:0 0 0 3px rgba(52,211,153,.22) !important }
+    .is-invalid{ border-color:#ef4444 !important; box-shadow:0 0 0 3px rgba(239,68,68,.15) !important }
+    .bar{display:flex;gap:10px;justify-content:flex-end;margin-top:12px}
+    .bar.center{justify-content:center}
+    .btn{border:none;border-radius:28px;cursor:pointer;font-weight:700}
+    .btn-ghost{background:var(--field);color:var(--ink);border:1px solid var(--field-b);padding:10px 14px}
+    .btn-ghost:hover{border-color:var(--blue)}
+    .btn-primary:disabled{opacity:.6;cursor:not-allowed}
+    /* Slots grid */
+    .weekbar{display:flex;align-items:center;justify-content:space-between;margin:6px 0 12px}
+    .days{display:grid;gap:10px;grid-template-columns:repeat(7,1fr)}
+    .day{background:#ffffff;border:1px solid var(--border);border-radius:12px;display:flex;flex-direction:column;min-height:260px;box-shadow:0 4px 12px rgba(17,17,17,.05)}
+    .day header{background:#f4f7fc;border-bottom:1px solid var(--border);padding:10px;font-weight:600;font-size:13px;color:#111}
+    .date{color:var(--muted);font-weight:400}
+    .slots{padding:10px;display:grid;gap:8px}
+    .slot{display:flex;justify-content:space-between;gap:8px;padding:10px 12px;border:1px solid var(--border);background:#ffffff;color:#111;border-radius:12px;cursor:pointer;font-size:14px;transition:border-color .15s ease, box-shadow .15s ease, transform .12s ease}
+    .slot:hover{border-color: var(--blue); box-shadow:0 6px 16px rgba(58,186,252,.18); transform:translateY(-1px)}
+    .slot.selected{border-color:var(--blue); box-shadow:0 0 0 3px rgba(58,186,252,.18); background:rgba(58,186,252,.06)}
+    .slot.disabled{opacity:.5;border-color:var(--field-b);background:#f4f7fc;cursor:not-allowed; box-shadow:none; transform:none}
+    .slot.disabled .badge{display:none}
+    .badge{font-size:12px;padding:4px 8px;border-radius:999px;background:#ecf7ff;color:var(--blue);border:1px solid rgba(58,186,252,.35);font-weight:600}
+    .hidden{display:none}
+    @media (max-width:980px){.days{grid-template-columns:repeat(3,1fr)} .row-3{grid-template-columns:1fr}}
+    @media (max-width:640px){.days{grid-template-columns:repeat(2,1fr)} .row-2{grid-template-columns:1fr}}
+    .success{color:var(--ok)} .error{color:var(--err)}
+    .mobile-progress{display:none}
+    
+    /* --- Quote (Votre devis) modern card --- */
+    #quoteCard{ overflow:hidden }
+    .q-grid{ display:grid; grid-template-columns: 1fr auto; gap:12px; align-items:center }
+    .q-left{ display:grid; gap:6px }
+    .q-row{ color:#111 }
+    .q-row strong{ color:#111 }
+    .q-muted{ color:var(--muted) }
+    .q-right{ text-align:right }
+    .q-amt{ font-size:22px; font-weight:800 }
+    .q-pill{ display:inline-block; padding:6px 10px; border-radius:999px; background:#eef3f9; color:#111; border:1px solid var(--field-b); font-weight:600; font-size:13px }
+    @media (max-width:640px){ .q-grid{ grid-template-columns:1fr; text-align:left } .q-right{ text-align:left } }
+    /* --- Modal --- */
+    .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;z-index:1200;padding:16px;opacity:0;pointer-events:none;transition:opacity .32s var(--ease);}
+    .modal-backdrop.open{opacity:1;pointer-events:auto}
+    .modal{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(.9);width:min(540px,92vw);max-width:540px;background:rgba(255,255,255,.94);border-radius:34px;box-shadow:0 26px 70px rgba(11,24,43,.22),0 14px 36px rgba(58,186,252,.18);padding:28px 40px 26px;color:#111;display:grid;gap:18px;grid-auto-flow:row;opacity:0;transition:transform .32s var(--ease), opacity .32s var(--ease);text-align:left;border:1px solid rgba(255,255,255,.55);backdrop-filter:blur(18px)}
+    .modal-backdrop.open .modal{transform:translate(-50%,-50%) scale(1);opacity:1}
+    .modal h3{margin:0;font-size:24px;text-align:center}
+    .modal .sub{color:#667085;margin:0;font-size:15px;text-align:center}
+    .modal .note{margin-top:0;color:#9aa7bd;font-size:12px;text-align:center}
+    .modal .row{display:flex;gap:12px;margin-top:6px;justify-content:center}
+    .modal .btn{flex:1;border:none;border-radius:28px;padding:12px 16px;font-weight:700;cursor:pointer}
+    .modal .btn-cancel{background:#eef3f9;color:#111;border:1px solid var(--field-b)}
+    .modal .btn-ok{background:var(--blue);color:#fff;box-shadow:0 8px 18px rgba(58,186,252,.25)}
+    .modal .btn:disabled{opacity:.6;cursor:not-allowed}
+
+    /* ===== Checkbox moderne ===== */
+    .chk{
+      display:flex; gap:10px; align-items:flex-start; user-select:none; cursor:pointer;
+      margin-top:6px;
+    }
+    .chk input{
+      position:absolute; opacity:0; width:1px; height:1px; pointer-events:none;
+    }
+    .chk .box{
+      position:relative; top:2px; width:22px; height:22px; flex:0 0 22px;
+      border-radius:7px; background:var(--field); border:1px solid var(--field-b);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.03);
+      transition:border-color .15s ease, background .15s ease, box-shadow .15s ease, transform .06s ease;
+    }
+    .chk .lbl{ color:var(--muted); line-height:1.45 }
+    .chk .box::after{
+      content:''; position:absolute; left:50%; top:50%; width:14px; height:14px;
+      transform:translate(-50%,-50%) scale(.7); opacity:0; transition:opacity .12s ease, transform .12s ease;
+      background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><polyline points='20 6 9 17 4 12'/></svg>") no-repeat center / 14px 14px;
+    }
+    .chk input:focus-visible + .box{
+      border-color: var(--accent); box-shadow:0 0 0 3px rgba(58,186,252,.18);
+    }
+    .chk input:active + .box{ transform:scale(.98) }
+    .chk input:checked + .box{
+      background: var(--accent); border-color: var(--accent);
+    }
+    .chk input:checked + .box::after{ opacity:1; transform:translate(-50%,-50%) scale(1) }
+    .chk input:disabled + .box{ opacity:.5; cursor:not-allowed }
+    .chk input:disabled ~ .lbl{ opacity:.6; cursor:not-allowed }
+/* --- Modal contact : version compacte (scopée) --- */
+#contactModal{
+  display:none; position:fixed; inset:0; z-index:1000;
+  background: rgba(17,17,17,.35); backdrop-filter: blur(2px);
+  justify-content:center; align-items:center; padding:16px;
+}
+#contactModal .modal-content{
+  width:min(560px, calc(100% - 24px));
+  background:#fff; border:1px solid var(--border);
+  border-radius:18px; padding:22px 22px 18px;
+  box-shadow:0 18px 50px rgba(17,17,17,.18);
+}
+#contactModal .modal-title{
+  margin:4px 0 14px; text-align:center; font-size:28px; color:var(--blue);
+}
+#contactModal .close{
+  position:absolute; right:18px; top:14px; cursor:pointer; font-size:22px; line-height:1;
+  color:#98a4b6;
+}
+
+/* Lignes email/téléphone */
+#contactModal .contact-item{
+  display:flex; align-items:center; justify-content:space-between; gap:14px;
+  background:#f7f9fd; border:1px solid var(--field-b); border-radius:14px;
+  padding:12px 14px; margin:12px 0;
+}
+#contactModal .contact-item p{ margin:0; font-size:18px; color:var(--ink); }
+
+/* Bouton compact */
+#contactModal .btn-contact{
+  width:auto; min-width:96px; flex:0 0 auto;
+  padding:10px 16px; border:none; border-radius:999px;
+  background:var(--blue); color:#fff; font-weight:700;
+  box-shadow:0 6px 16px rgba(58,186,252,.25);
+  transition:transform .06s ease, box-shadow .15s ease;
+}
+#contactModal .btn-contact:hover{ box-shadow:0 8px 18px rgba(58,186,252,.33); }
+#contactModal .btn-contact:active{ transform:scale(.98); }
+
+@media (max-width:420px){
+  #contactModal .contact-item{ gap:10px; }
+  #contactModal .contact-item p{ font-size:16px; }
+  #contactModal .btn-contact{ min-width:84px; padding:9px 14px; }
+}
+
+
+@media (max-width:640px){
+  main.container{padding:16px 12px;width:100%;max-width:none;}
+  .card{padding:14px;}
+  .hint{font-size:15px;}
+  .bar{flex-direction:column;align-items:stretch;}
+  .bar .btn{width:100%;}
+  .weekbar{flex-direction:column;align-items:stretch;gap:12px;text-align:center;}
+  .weekbar > *{width:100%;}
+  .weekbar .muted{order:-1;margin:0;}
+  .weekbar > div:last-child{display:flex;gap:8px;justify-content:space-between;order:1;}
+  .weekbar #backBtn{order:2;}
+  .weekbar > div:last-child .btn{flex:1;}
+  .slot{flex-direction:column;align-items:center;gap:6px;text-align:center;}
+  .slot .badge{margin-top:4px;}
+  .navbar .nav-inner{padding:0 12px;}
+  .footer-content{flex-direction:column;gap:16px;text-align:center;align-items:center;}
+  .footer-right{justify-content:center;width:100%;gap:16px;}
+  .footer-right .btn-contact{width:100%;}
+  #contactModal .modal-content{width:min(100%,420px);margin:0 auto;padding:20px 18px;}
+  #contactModal .contact-item{flex-direction:column;align-items:stretch;gap:10px;}
+  #contactModal .btn-contact{width:100%;}
+  .modal{width:94vw;padding:24px 18px;}
+  .modal .row{flex-direction:column;}
+  .modal .btn{width:100%;}
+  .mobile-progress{display:grid;gap:6px;margin-bottom:14px;}
+  .mobile-progress .step-label{font-size:14px;font-weight:700;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;}
+  .mobile-progress-bar{height:6px;border-radius:999px;background:rgba(58,186,252,.15);overflow:hidden;}
+  .mobile-progress-bar .fill{display:block;height:100%;background:var(--blue);border-radius:inherit;transition:width .3s ease;}
+  .mobile-progress[data-step="1"] .fill{width:50%;}
+  .mobile-progress[data-step="2"] .fill{width:100%;}
+  body.step2-mobile{overflow:hidden;}
+  body.step2-mobile .navbar{opacity:0;pointer-events:none;visibility:hidden;}
+  body.step2-mobile main.container{padding:0;width:100%;max-width:none;}
+  body.step2-mobile #step1{display:none;}
+  body.step2-mobile #step2{position:fixed;inset:0;margin:0;border-radius:0;border:none;box-shadow:none;display:flex;flex-direction:column;background:#ffffff;z-index:900;max-width:none;padding:24px 18px 0;min-height:100vh;}
+  body.step2-mobile #step2 .mobile-progress{margin-bottom:18px;}
+  body.step2-mobile #step2 .weekbar{padding:0;margin-bottom:16px;gap:12px;box-shadow:none;}
+  body.step2-mobile #step2 .weekbar .btn-ghost{justify-content:center;}
+  body.step2-mobile #step2 .days{flex:1;overflow-y:auto;padding-bottom:24px;margin:0;gap:14px;}
+  body.step2-mobile #step2 .day{min-height:auto;}
+  body.step2-mobile #step2 .slots{padding:12px 0 0;}
+  body.step2-mobile #step2 .slot{font-size:15px;}
+  body.step2-mobile #step2 .slot .badge{margin-top:6px;}
+  body.step2-mobile footer{display:none;}
+}
+/* Lignes email/téléphone sur une même rangée */
+.contact-item{
+  display:flex; align-items:center; justify-content:space-between; gap:14px;
+  background:#f7f9fd; border:1px solid var(--field-b); border-radius:14px;
+  padding:12px 14px; margin:12px 0;
+}
+.contact-item p{ margin:0; font-size:18px; color:var(--ink); }
+
+/* Bouton compact à droite (plus de 100% width) */
+.btn-contact{
+  width:auto; min-width:96px; flex:0 0 auto;
+  padding:10px 16px; border:none; border-radius:999px;
+  background:var(--blue); color:#fff; font-weight:700;
+  box-shadow:0 6px 16px rgba(58,186,252,.25);
+  transition:transform .06s ease, box-shadow .15s ease;
+}
+.btn-contact:hover{ box-shadow:0 8px 18px rgba(58,186,252,.33); }
+.btn-contact:active{ transform:scale(.98); }
+
+/* Petites largeurs : on garde l’alignement propre */
+@media (max-width:420px){
+  .contact-item{ gap:10px; }
+  .contact-item p{ font-size:16px; }
+  .btn-contact{ min-width:84px; padding:9px 14px; }
+}
+@media (max-width:640px){
+  body.step2-mobile #step2 { display:flex; flex-direction:column; }
+  body.step2-mobile #step2 .days{ display:none !important; }
+  body.step2-mobile #step2 .m-daybar{ display:flex; gap:8px; overflow-x:auto; padding:0 2px 6px; position:sticky; top:0; background:#fff; z-index:5; scrollbar-width:none; -ms-overflow-style:none; }
+  body.step2-mobile #step2 .m-daybar::-webkit-scrollbar{ display:none }
+  body.step2-mobile #step2 .m-slots{ display:grid; grid-template-columns:1fr 1fr; gap:10px; padding-bottom:24px; overflow-y:auto; }
+  body.step2-mobile #step2 .m-pill{
+    flex:0 0 auto; border:1px solid var(--field-b); background:#f7f9fd; color:#111; border-radius:999px; padding:10px 12px; font-weight:700; font-size:14px; white-space:nowrap;
+  }
+  body.step2-mobile #step2 .m-pill.active{ background:rgba(58,186,252,.08); border-color:var(--blue); }
+  body.step2-mobile #step2 .slot{ justify-content:center }
+}
+/* --- Fix modal mobile : largeur/hauteur sûres + wrap + scroll interne --- */
+html, body { max-width:100%; overflow-x:hidden; } /* garde-fou global */
+
+.modal, .modal *{
+  min-width:0;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  hyphens: auto;
+}
+
+@media (max-width:640px){
+  .modal-backdrop{ padding:12px; } /* réduit le padding de l’overlay */
+  .modal{
+    position:fixed; left:50%; top:50%;
+    transform:translate(-50%,-50%); /* centrage simple */
+    width: min(520px, calc(100vw - 24px)); /* jamais > viewport */
+    max-width: 100%;
+    max-height: calc(100dvh - 24px);       /* jamais > hauteur utile */
+    padding:18px 16px 16px;
+    border-radius:20px;
+    overflow: auto;                         /* scroll interne propre */
+    overscroll-behavior: contain;
+  }
+  .modal h3{ font-size:20px; }
+  .modal .sub{ font-size:14px; }
+  .modal .note{ font-size:12px; }
+  .modal .row{ flex-direction:column; gap:8px; }
+  .modal .btn{ width:100%; }
+}
+
+  </style>
+  <script defer src="/assets/js/script.js"></script>
+</head>
+<body>
+<!-- NAV -->
+<header class="navbar">
+  <div class="nav-inner">
+    <a class="navbar-logo" href="index.html">
+      <img src="assets/img/logo.webp" alt="RIPAIR Logo">
+    </a>
+    <div class="navbar-actions">
+      <button class="icon-btn" aria-label="Ouvrir le menu" id="hamburger" onclick="toggleMenu()">
+        <svg viewBox="0 0 24 24" width="24" height="24" stroke="#111" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+      <nav id="mobileMenu" class="mobile-menu">
+        <a href="/index.html">Accueil - RIPAIR</a>
+        <a href="/services.html">Services</a>
+        <a href="/switch-picofly.html">Switch</a>
+        <a href="/devis.html">Devis</a>
+        <a href="/avis.html">Avis</a>
+        <a href="/contact.html">Contact</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<!-- Modal de confirmation -->
+<div id="modalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal">
+    <h3 id="modalTitle">Réservez ce créneau !</h3>
+    <div id="modalWhen" class="sub">—</div>
+    <p class="sub">Si vous changez d’avis sur le jour et/ou l’heure de votre rendez-vous, vous pourrez modifier votre créneau ultérieurement, selon nos disponibilités.</p>
+    <div class="row">
+      <button id="modalCancel" class="btn btn-cancel">Annuler</button>
+      <button id="modalOk" class="btn btn-ok">Confirmer</button>
+    </div>
+    <p class="note">Ce créneau est indiqué à titre indicatif. Certaines réparations peuvent nécessiter un temps d’intervention plus long.</p>
+  </div>
+</div>
+
+<main class="container">
+  <!-- Devis -->
+  <section class="card" id="quoteCard" style="margin-bottom:14px;">
+    <h2 style="margin:0 0 10px 0;">Votre devis</h2>
+    <div id="q_content">Chargement…</div>
+  </section>
+
+  <!-- ÉTAPE 1 : formulaire -->
+  <section class="card" id="step1">
+    <div class="mobile-progress" data-step="1">
+      <span class="step-label">Étape 1 / 2</span>
+      <span class="mobile-progress-bar"><span class="fill"></span></span>
+    </div>
+    <div class="hint" style="margin-bottom:12px">
+      Rentrer vos informations ne vous engage pas à prendre rendez-vous. Elles servent à personnaliser votre prise en charge.
+    </div>
+
+    <form id="infoForm" class="grid" novalidate>
+      <div class="row-3">
+        <div class="full">
+          <label for="civility">Civilité *</label>
+          <select id="civility" name="civility" class="fs" required>
+            <option value="Monsieur">Monsieur</option>
+            <option value="Madame">Madame</option>
+            <option value="Autre">Autre</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row-2">
+        <div>
+          <label for="first_name">Prénom *</label>
+          <input id="first_name" name="first_name" required />
+        </div>
+        <div>
+          <label for="last_name">Nom *</label>
+          <input id="last_name" name="last_name" required />
+        </div>
+      </div>
+
+      <div class="row-2 single">
+        <div>
+          <label for="email">Adresse e-mail *</label>
+          <input id="email" type="email" name="email" required autocomplete="email" inputmode="email" pattern="[A-Za-z0-9._%+\-']+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}" />
+        </div>
+        <div>
+          <label for="phone">Numéro de téléphone *</label>
+          <input id="phone" type="tel" name="phone" required />
+        </div>
+      </div>
+
+      <div class="row-2">
+        <div>
+          <label for="zip">Code postal *</label>
+          <input id="zip" name="zip" inputmode="numeric" pattern="\\d{4,5}" required />
+        </div>
+        <div>
+          <label for="country">Pays *</label>
+          <select id="country" name="country" class="fs" required>
+            <option value="France" selected>France</option>
+            <option value="Belgique">Belgique</option>
+            <option value="Suisse">Suisse</option>
+            <option value="Luxembourg">Luxembourg</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Checkbox moderne (à gauche, cliquable sur toute la ligne) -->
+      <label class="chk">
+        <input type="checkbox" id="optout" />
+        <span class="box" aria-hidden="true"></span>
+        <span class="lbl">Je ne souhaite pas recevoir d’informations commerciales.</span>
+      </label>
+
+      <!-- Bouton centré -->
+      <div class="bar center">
+        <button type="button" class="btn btn-primary" id="goSlotsBtn">Choisir mon créneau</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- ÉTAPE 2 : créneaux -->
+  <section class="card hidden" id="step2" style="margin-top:14px;" tabindex="-1">
+    <div class="mobile-progress" data-step="2">
+      <span class="step-label">Étape 2 / 2</span>
+      <span class="mobile-progress-bar"><span class="fill"></span></span>
+    </div>
+    <div class="weekbar">
+      <button class="btn btn-ghost" id="backBtn">
+        <span aria-hidden="true" style="display:inline-block;margin-right:6px;">&larr;</span>
+        <span>Modifier mes informations</span>
+      </button>
+      <div class="muted" id="rangeLabel">Semaine</div>
+      <div>
+        <button class="btn btn-ghost" id="prevBtn" aria-label="Semaine précédente">
+          <span aria-hidden="true">&larr;</span>
+        </button>
+        <button class="btn btn-ghost" id="nextBtn" aria-label="Semaine suivante">
+          <span aria-hidden="true">&rarr;</span>
+        </button>
+      </div>
+    </div>
+    <div id="mDaybar" class="m-daybar hidden"></div>
+    <div id="mSlots" class="m-slots hidden"></div>
+    <div class="days" id="daysGrid"></div>
+    <div id="result" class="muted" style="margin-top:6px;"></div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="container footer-content">
+    <div class="footer-left">
+      <p>&copy; 2025 RIPAIR &mdash; Tous droits r&eacute;serv&eacute;s.</p>
+      <p class="footer-meta">EI RIPAIR &middot; 06&nbsp;15&nbsp;58&nbsp;87&nbsp;82 &middot; contact@ripair.shop</p>
+    </div>
+    <div class="footer-links">
+      <a href="mentions.html">Mentions l&eacute;gales</a>
+      <a href="devis.html">Obtenir un devis</a>
+    </div>
+    <div class="footer-right">
+      <a href="https://instagram.com/ripair.shop" target="_blank" rel="noopener">
+        <img src="assets/img/instagram.webp" alt="Instagram" class="social-icon">
+      </a>
+      <a href="https://www.facebook.com/profile.php?id=61579654974480" target="_blank" rel="noopener">
+        <img src="assets/img/facebook.webp" alt="Facebook" class="social-icon">
+      </a>
+      <a href="#" class="btn-contact" data-contact-modal>Contactez-nous</a>
+    </div>
+  </div>
+</footer>
+
+<div id="contactModal" role="dialog" aria-hidden="true">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2 class="modal-title">Contactez-nous</h2>
+    <div class="contact-item">
+      <p>?? contact@ripair.shop</p>
+      <button id="copyEmail" class="btn-contact">Copier</button>
+    </div>
+    <div class="contact-item">
+      <p>?? 06&nbsp;15&nbsp;58&nbsp;87&nbsp;82</p>
+      <button id="phoneAction" class="btn-contact"></button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+(function(){
+  // Détermine la base de l'API : si la page est ouverte depuis le système de fichiers
+  // (protocole file:// ou origin null), alors utiliser le domaine ripair.shop
+  // sinon utiliser le chemin relatif /api pour rester en même origine.
+  const API = (location.protocol === 'file:' || location.origin === 'null')
+    ? 'https://ripair.shop/api'
+    : 'api';
+  const CANCEL_URL_BASE = (location.protocol === 'file:' || location.origin === 'null')
+    ? 'https://ripair.shop/api/cancel_appointment.php'
+    : 'api/cancel_appointment.php';
+  const params = new URLSearchParams(location.search);
+  const tag = params.get('tag');
+  // flag indiquant un devis avec plusieurs problèmes (multi)
+  const multiFlag = params.get('multi');
+
+  // --- UI refs
+  const quoteBox = document.getElementById('q_content');
+  const step1 = document.getElementById('step1');
+  const step2 = document.getElementById('step2');
+  const goSlotsBtn = document.getElementById('goSlotsBtn');
+  const backBtn = document.getElementById('backBtn');
+  const daysGrid = document.getElementById('daysGrid');
+  const mDaybar = document.getElementById('mDaybar');
+  const mSlots = document.getElementById('mSlots');
+  let weekData = [];
+  let mobileDayIndex = 0;
+
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const rangeLabel = document.getElementById('rangeLabel');
+  const resultDiv = document.getElementById('result');
+  const bodyEl = document.body;
+  const mobileMq = window.matchMedia('(max-width: 640px)');
+
+  function openStep2View(){
+    if(mobileMq.matches){
+      const alreadyMobile = bodyEl.classList.contains('step2-mobile');
+      bodyEl.classList.add('step2-mobile');
+      requestAnimationFrame(()=>{
+        step2.focus({ preventScroll: true });
+        if(!alreadyMobile){
+          const scroller = step2.querySelector('.days');
+          if(scroller){ scroller.scrollTop = 0; }
+        }
+      });
+    } else {
+      step2.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+  function closeStep2View(){
+    bodyEl.classList.remove('step2-mobile');
+    if(mobileMq.matches){
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      step1.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+  const handleViewportSwitch = (e)=>{
+    if(e.matches){
+      if(!step2.classList.contains('hidden')){
+        openStep2View();
+      }
+    } else {
+      bodyEl.classList.remove('step2-mobile');
+    }
+  };
+  if(mobileMq.addEventListener){
+    mobileMq.addEventListener('change', handleViewportSwitch);
+  } else if(mobileMq.addListener){
+    mobileMq.addListener(handleViewportSwitch);
+  }
+  handleViewportSwitch(mobileMq);
+
+  // Modal
+  const modalBackdrop = document.getElementById('modalBackdrop');
+  const modalWhen = document.getElementById('modalWhen');
+  const modalCancel = document.getElementById('modalCancel');
+  const modalOk = document.getElementById('modalOk');
+
+  // Step 1 fields
+  const civility = document.getElementById('civility');
+  const firstName = document.getElementById('first_name');
+  const lastName = document.getElementById('last_name');
+  const email = document.getElementById('email');
+  const phone = document.getElementById('phone');
+  const zip = document.getElementById('zip');
+  const country = document.getElementById('country');
+
+  if(!window.FancySelect){
+    (function(){
+      function el(tag, cls, html){ var n=document.createElement(tag); if(cls) n.className=cls; if(html!=null) n.innerHTML=html; return n; }
+      function chevronSVG(){ return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>'; }
+
+      function FancySelect(select){
+        this.select = select;
+        this.disabled = select.disabled;
+        var wrap = this.wrap = el('div','fs-wrap'+(this.disabled?' disabled':''));
+        select.parentNode.insertBefore(wrap, select);
+        wrap.appendChild(select);
+
+        var ctrl = this.ctrl = el('button','fs-control'); ctrl.type='button';
+        this.valueEl = el('div','fs-value', this.selectedText());
+        this.chevron = el('div','fs-chevron', chevronSVG());
+        ctrl.appendChild(this.valueEl);
+        ctrl.appendChild(this.chevron);
+        wrap.appendChild(ctrl);
+
+        this.menu = el('div','fs-menu');
+        this.list = el('div','fs-list');
+        this.menu.appendChild(this.list);
+        wrap.appendChild(this.menu);
+
+        this.buildItems();
+
+        var self=this;
+        ctrl.addEventListener('click', function(e){ e.preventDefault(); if(self.disabled) return; self.toggle(); });
+        document.addEventListener('click', function(e){ if(!wrap.contains(e.target)) self.close(); });
+        select.addEventListener('change', function(){ self.valueEl.textContent = self.selectedText(); self.buildItems(); });
+        select.addEventListener('focus', function(){ ctrl.focus(); });
+
+        select._fs = this;
+      }
+
+      FancySelect.prototype.selectedText = function(){
+        var opt = this.select.options[this.select.selectedIndex];
+        return opt ? opt.text : 'Choisir…';
+      };
+
+      FancySelect.prototype.buildItems = function(){
+        var self=this; this.list.innerHTML='';
+        var opts = this.select.options;
+        if(!opts || !opts.length){ this.list.appendChild(el('div','fs-empty','Aucune option')); return; }
+        for(var i=0;i<opts.length;i++){
+          var o = opts[i]; if(!o.value && o.value!=="0") continue;
+          var item = el('div','fs-item');
+          item.innerHTML = '<span class="fs-label">'+o.text+'</span>';
+          item.dataset.value = o.value;
+          item.addEventListener('click', function(){ self.choose(this.dataset.value); });
+          this.list.appendChild(item);
+        }
+        this.markActive();
+      };
+
+      FancySelect.prototype.markActive = function(){
+        var value = this.select.value;
+        Array.prototype.forEach.call(this.list.children, function(node){
+          if(node.classList) node.classList.toggle('active', node.dataset.value === value);
+        });
+      };
+
+      FancySelect.prototype.choose = function(value){
+        this.select.value = value;
+        this.valueEl.textContent = this.selectedText();
+        this.markActive();
+        this.close();
+        var evt = new Event('change', { bubbles:true });
+        this.select.dispatchEvent(evt);
+      };
+
+      FancySelect.prototype.toggle = function(){ this.wrap.classList.toggle('open'); };
+      FancySelect.prototype.open = function(){ this.wrap.classList.add('open'); };
+      FancySelect.prototype.close = function(){ this.wrap.classList.remove('open'); };
+      FancySelect.prototype.setDisabled = function(dis){ this.disabled = !!dis; this.wrap.classList.toggle('disabled', this.disabled); };
+      FancySelect.prototype.setState = function(state){ this.wrap.classList.remove('valid','invalid'); if(state==='valid') this.wrap.classList.add('valid'); else if(state==='invalid') this.wrap.classList.add('invalid'); };
+
+      FancySelect.upgradeAll = function(){
+        document.querySelectorAll('select.fs').forEach(function(sel){
+          if(!sel._fs) new FancySelect(sel);
+          else sel._fs.buildItems();
+        });
+      };
+
+      window.FancySelect = FancySelect;
+    })();
+  }
+
+  if(window.FancySelect){ window.FancySelect.upgradeAll(); }
+
+  // --- validation helpers
+  function validateEmailDeep(v){
+    if(!v) return { ok:false, reason:'empty' };
+    const s = String(v).trim();
+    // basic syntax check
+    const basic = /^[A-Z0-9._%+\-']+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(s);
+    if(!basic) return { ok:false, reason:'syntax' };
+    const [local, domain] = s.split('@');
+    // no consecutive dots, no leading/trailing dot in local
+    if(/\.\./.test(local) || local.startsWith('.') || local.endsWith('.')) return { ok:false, reason:'local_dots' };
+    // domain rules
+    if(domain.indexOf('.') < 0) return { ok:false, reason:'no_tld' };
+    if(domain.length > 255) return { ok:false, reason:'domain_len' };
+    const labels = domain.split('.');
+    if(labels.some(l => !l || l.length>63 || l.startsWith('-') || l.endsWith('-'))) return { ok:false, reason:'label' };
+    const tld = labels[labels.length-1];
+    if(!/^[A-Za-z]{2,24}$/.test(tld)) return { ok:false, reason:'tld' };
+    // obvious disposable/placeholder domains
+    const blocked = new Set(['mailinator.com','yopmail.com','10minutemail.com','guerrillamail.com','trashmail.com','sharklasers.com','temp-mail.org','tempmail.dev','maildrop.cc','fakeinbox.com','dispostable.com','example.com','test.com','invalid','localhost']);
+    if(blocked.has(domain.toLowerCase())) return { ok:false, reason:'disposable' };
+    // common typo domains -> flag as invalid (suggestion in title)
+    const typos = {
+      'gamil.com':'gmail.com','gmial.com':'gmail.com','gmai.com':'gmail.com','gmail.co':'gmail.com','gnail.com':'gmail.com',
+      'hotmial.com':'hotmail.com','hotamil.com':'hotmail.com','hotmal.com':'hotmail.com','hotmail.co':'hotmail.com',
+      'yaho.com':'yahoo.com','yhoo.com':'yahoo.com',
+      'outlok.com':'outlook.com','outllok.com':'outlook.com',
+      'icloud.co':'icloud.com','icloud.con':'icloud.com',
+      'protonmail.co':'protonmail.com'
+    };
+    const dl = domain.toLowerCase();
+    if(typos[dl]) return { ok:false, reason:'typo', suggestion: typos[dl] };
+    return { ok:true };
+  }
+  function validatePhone(v){
+    if(!v) return false; const digits=(String(v).match(/\d/g)||[]).length; return digits>=9 && digits<=14;
+  }
+  function validateZip(v){ return /^\d{4,5}$/.test(String(v).trim()); }
+  function nonEmpty(v){ return String(v||'').trim().length>0; }
+  function mark(el, ok){
+    if(!el) return;
+    el.classList.remove('is-valid','is-invalid');
+    if(!nonEmpty(el.value)){
+      if(el._fs){ el._fs.setState(null); }
+      return;
+    }
+    el.classList.add(ok ? 'is-valid' : 'is-invalid');
+    if(el._fs){ el._fs.setState(ok ? 'valid' : 'invalid'); }
+  }
+  function wireValidation(){
+    firstName.addEventListener('blur', ()=>mark(firstName, nonEmpty(firstName.value)));
+    lastName.addEventListener('blur', ()=>mark(lastName, nonEmpty(lastName.value)));
+    email.addEventListener('blur', ()=>{
+      const res = validateEmailDeep(email.value);
+      const builtin = email.checkValidity();
+      const ok = builtin && res.ok;
+      mark(email, ok);
+      if(!ok && res.suggestion){ email.title = 'Vouliez-vous dire ' + email.value.replace(/@.*/, '@'+res.suggestion) + ' ?'; }
+      else { email.title = ''; }
+    });
+    // live feedback: mark invalid if it obviously can't be valid yet
+    email.addEventListener('input', ()=>{
+      email.classList.remove('is-valid','is-invalid');
+      email.title = '';
+    });
+    phone.addEventListener('blur', ()=>mark(phone, validatePhone(phone.value)));
+    zip.addEventListener('blur', ()=>mark(zip, validateZip(zip.value)));
+    civility.addEventListener('change', ()=>mark(civility, nonEmpty(civility.value)));
+    country.addEventListener('change', ()=>mark(country, nonEmpty(country.value)));
+    [firstName,lastName,email,phone,zip].forEach(el=>{
+      el.addEventListener('input', ()=>{ el.classList.remove('is-valid','is-invalid'); });
+    });
+  }
+  wireValidation();
+  function validateAll(){
+    const ok = [
+      nonEmpty(firstName.value),
+      nonEmpty(lastName.value),
+      (email.checkValidity() && validateEmailDeep(email.value).ok),
+      validatePhone(phone.value),
+      validateZip(zip.value),
+      nonEmpty(civility.value),
+      nonEmpty(country.value)
+    ];
+    mark(firstName, ok[0]); mark(lastName, ok[1]); mark(email, ok[2]); mark(phone, ok[3]); mark(zip, ok[4]); mark(civility, ok[5]); mark(country, ok[6]);
+    return ok.every(Boolean);
+  }
+
+  // --- state
+  let quote = null;
+  let durationMin = 0;
+  let serviceLabel = '';
+  let selectedStart = null;
+  let selectedDiscount = 0;
+  let pendingDiscount = 0;
+  let startDate = new Date(); // semaine affichée
+  let pendingStart = null;    // pour la modal
+
+  // --- utils
+  const fmtDate = d => d.toISOString().slice(0,10);
+  const addDays = (d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x;}
+  const frDay = d => d.toLocaleDateString('fr-FR',{weekday:'long'});
+  const frDM  = d => d.toLocaleDateString('fr-FR',{day:'2-digit',month:'short'}).replace('.','');
+  const fmtFullFR = (iso) => {
+    const dt = new Date(iso.replace(' ', 'T'));
+    return dt.toLocaleString('fr-FR', {
+      weekday:'long', year:'numeric', month:'long', day:'2-digit',
+      hour:'2-digit', minute:'2-digit'
+    }).replace(',', ' à');
+  };
+  function parseDurationToMin(s){
+    if(!s) return 0;
+    const str = String(s).toLowerCase().replace(/\\s|~|approx\\.?/g,'');
+    let m=0; const h=str.match(/(\\d+)\\s*h/); const mn=str.match(/(\\d+)\\s*m/);
+    if(h) m+=parseInt(h[1],10)*60; if(mn) m+=parseInt(mn[1],10);
+    if(!h && !mn && /^\\d+$/.test(str)) m=parseInt(str,10);
+    return m;
+  }
+
+  // --- 1) Devis
+  async function loadQuote(){
+    if(!tag){ quoteBox.textContent = '? Tag manquant.'; return; }
+    const r = await fetch(API + '/get_quote.php?tag=' + encodeURIComponent(tag));
+    const t = await r.text();
+    let j; try{ j=JSON.parse(t);}catch(e){ console.error('get_quote non-JSON:', t); return; }
+    if(!j.success){ quoteBox.textContent='?? Devis introuvable.'; return; }
+    quote = j.data;
+    // Si multiFlag est présent, récupérer les données agrégées stockées en session
+    if (multiFlag) {
+      try {
+        const m = JSON.parse(sessionStorage.getItem('ripairMulti') || 'null');
+        if (m && typeof m === 'object') {
+          // Remplacer problème, prix et durée par les valeurs agrégées
+          if (m.problems) quote.problem = m.problems;
+          if (m.price != null && !isNaN(Number(m.price))) quote.price = Number(m.price);
+          if (m.duration) {
+            quote.duration = m.duration;
+          }
+          // Remplacer duration_min par la valeur calculée si disponible
+          if (m.durationMin != null) {
+            const dm = parseFloat(m.durationMin);
+            if (!isNaN(dm) && dm > 0) {
+              quote.duration_min = Math.round(dm);
+            }
+          } else if (m.duration) {
+            // recalculer à partir de la chaîne si durationMin absent
+            const durMin = parseDurationToMin(m.duration);
+            if (durMin > 0) quote.duration_min = durMin;
+          }
+        }
+      } catch(e) {
+        console.warn('Failed to read multi quote from sessionStorage', e);
+      }
+    }
+
+    serviceLabel = (quote.brand||'') + ' ' + (quote.model||'') + ' — ' + (quote.problem||'');
+    durationMin  = (quote.duration_min ? parseInt(quote.duration_min,10) : 0)
+                   || parseDurationToMin(quote.duration) || 60;
+
+    quoteBox.innerHTML =
+      '<div class="q-grid">' +
+        '<div class="q-left">' +
+          '<div class="q-row"><span class="q-muted">Appareil</span> : <strong>' + (quote.category + ' ' + quote.brand + ' ' + quote.model) + '</strong></div>' +
+          '<div class="q-row"><span class="q-muted">Problème</span> : <strong>' + quote.problem + '</strong></div>' +
+        '</div>' +
+        '<div class="q-right">' +
+          '<div class="q-amt">' + (Number(quote.price)||0).toLocaleString('fr-FR',{style:'currency',currency:'EUR'}) + '</div>' +
+          '<div class="q-pill">~ ' + durationMin + ' min</div>' +
+        '</div>' +
+      '</div>';
+  }
+
+  // --- 2) Passage à l’étape créneaux
+  goSlotsBtn.addEventListener('click', function(){
+    if(!validateAll()){
+      alert('Merci de vérifier vos informations.');
+      return;
+    }
+    step1.classList.add('hidden');
+    step2.classList.remove('hidden');
+    openStep2View();
+    loadWeek().catch(console.error);
+  });
+  backBtn.addEventListener('click', function(){
+    step2.classList.add('hidden');
+    step1.classList.remove('hidden');
+    closeStep2View();
+  });
+  document.addEventListener('keydown', function(evt){
+    if(evt.key === 'Escape' && !step2.classList.contains('hidden')){
+      backBtn.click();
+    }
+  });
+
+  // --- 3) Slots
+  async function loadWeek(){
+    // Construire l'URL correctement selon l'environnement. En file://, location.origin vaut "null",
+    // ce qui cassait la construction d'URL. On se base sur API : si API commence par http, utiliser
+    // directement cette valeur comme base, sinon préfixer avec location.origin.
+    const base = API.startsWith('http') ? API : (location.origin + '/' + API);
+    const url = new URL(base + '/slots.php');
+    url.searchParams.set('start', fmtDate(startDate));
+    url.searchParams.set('days', '7');
+    url.searchParams.set('duration_min', String(durationMin));
+    url.searchParams.set('lead_min', '180');
+    url.searchParams.set('show_taken', '1'); // renvoyer aussi les indispo
+
+    const r = await fetch(url.toString());
+    const t = await r.text();
+    let j; try{ j=JSON.parse(t);}catch(e){ console.error('slots non-JSON:', t); return; }
+    if(!j.success){ resultDiv.textContent='Erreur lors du chargement des créneaux.'; return; }
+
+    // Si on est sur mobile, déterminer le premier jour avec au moins un créneau disponible afin
+    // d'éviter d'afficher une journée vide. On recherche un jour ayant au moins un slot avec
+    // available !== false ; à défaut, on garde l'index 0.
+    const days = j.data;
+    if (mobileMq && mobileMq.matches && Array.isArray(days)) {
+      let foundIndex = 0;
+      for (let i = 0; i < days.length; i++) {
+        const d = days[i];
+        if (d && Array.isArray(d.slots) && d.slots.some(s => s.available !== false)) {
+          foundIndex = i;
+          break;
+        }
+      }
+      mobileDayIndex = foundIndex;
+    }
+    renderDays(days);
+    const end = addDays(startDate,6);
+    rangeLabel.textContent = frDay(startDate) + ' ' + frDM(startDate) + ' au ' + frDay(end) + ' ' + frDM(end);
+  }
+
+function renderDays(days){
+  weekData = days || [];
+  selectedStart = null;
+  selectedDiscount = 0;
+  pendingDiscount = 0;
+  if(mobileMq.matches){
+    renderDaysMobile();
+  }else{
+    renderDaysDesktop();
+  }
+}
+
+function renderDaysDesktop(){
+  mDaybar.classList.add('hidden');
+  mSlots.classList.add('hidden');
+  daysGrid.innerHTML = '';
+  weekData.forEach(function(day){
+    const col = document.createElement('div'); col.className='day';
+    const d = new Date(day.date+'T00:00:00');
+    const h = document.createElement('header');
+    h.innerHTML = frDay(d) + '<div class="date">' + frDM(d) + '</div>';
+    col.appendChild(h);
+    const wrap = document.createElement('div'); wrap.className='slots';
+    if(!day.slots || !day.slots.length){
+      const p = document.createElement('div'); p.className='muted'; p.textContent="Plus de créneaux disponibles aujourd'hui";
+      wrap.appendChild(p);
+    }else{
+      day.slots.forEach(function(s){
+        const btn=document.createElement('button'); btn.type='button'; btn.className='slot';
+        btn.innerHTML='<span>' + s.time + '</span>' + (s.discount>0?'<span class="badge">-' + s.discount + '%</span>':'');
+        if (s.available === false) {
+          btn.classList.add('disabled'); btn.disabled = true;
+        } else {
+          btn.addEventListener('click', function(evt){
+            evt.preventDefault();
+            daysGrid.querySelectorAll('.slot').forEach(function(x){ x.classList.remove('selected'); });
+            btn.classList.add('selected');
+            selectedStart = s.start;
+            selectedDiscount = Number(s.discount) || 0;
+            pendingDiscount = selectedDiscount;
+            openModalFor(s.start);
+          });
+        }
+        wrap.appendChild(btn);
+      });
+    }
+    col.appendChild(wrap);
+    daysGrid.appendChild(col);
+  });
+}
+
+function renderDaysMobile(){
+  daysGrid.innerHTML = '';
+  mDaybar.classList.remove('hidden');
+  mSlots.classList.remove('hidden');
+  mDaybar.innerHTML = '';
+  weekData.forEach(function(day, idx){
+    const d = new Date(day.date+'T00:00:00');
+    const pill = document.createElement('button');
+    pill.type='button';
+    pill.className='m-pill' + (idx===mobileDayIndex?' active':'');
+    pill.textContent = frDay(d).charAt(0).toUpperCase()+frDay(d).slice(1)+' · '+frDM(d);
+    pill.addEventListener('click', function(){
+      mobileDayIndex = idx;
+      renderDaysMobile();
+    });
+    mDaybar.appendChild(pill);
+  });
+  Array.from(mDaybar.children).forEach(function(el, i){
+    el.classList.toggle('active', i===mobileDayIndex);
+  });
+  mSlots.innerHTML = '';
+  const day = weekData[mobileDayIndex];
+  if(!day || !day.slots || !day.slots.length){
+    const p = document.createElement('div'); p.className='muted'; p.textContent="Plus de créneaux disponibles aujourd'hui";
+    mSlots.appendChild(p);
+  }else{
+    day.slots.forEach(function(s){
+      const btn=document.createElement('button'); btn.type='button'; btn.className='slot';
+      btn.innerHTML='<span>' + s.time + '</span>' + (s.discount>0?'<span class="badge">-' + s.discount + '%</span>':'');
+      if (s.available === false) {
+        btn.classList.add('disabled'); btn.disabled = true;
+      } else {
+        btn.addEventListener('click', function(evt){
+          evt.preventDefault();
+          mSlots.querySelectorAll('.slot').forEach(function(x){ x.classList.remove('selected'); });
+          btn.classList.add('selected');
+          selectedStart = s.start;
+          selectedDiscount = Number(s.discount) || 0;
+          pendingDiscount = selectedDiscount;
+          openModalFor(s.start);
+        });
+      }
+      mSlots.appendChild(btn);
+    });
+  }
+}
+
+
+  prevBtn.addEventListener('click', function(){ startDate = addDays(startDate,-7); loadWeek().catch(console.error); });
+  nextBtn.addEventListener('click', function(){ startDate = addDays(startDate, 7); loadWeek().catch(console.error); });
+
+  // --- 4) Modal
+  function openModalFor(startISO){
+    pendingStart = startISO;
+    pendingDiscount = selectedDiscount || 0;
+    modalWhen.textContent = fmtFullFR(startISO);
+    modalBackdrop.classList.add('open');
+  }
+  function closeModal(){
+    modalBackdrop.classList.remove('open');
+    pendingStart = null;
+    pendingDiscount = 0;
+  }
+  modalBackdrop.addEventListener('click', function(e){ if(e.target===modalBackdrop) closeModal(); });
+  modalCancel.addEventListener('click', closeModal);
+
+  modalOk.addEventListener('click', async function(){
+    if(!pendingStart) return;
+    const fullName = civility.value + ' ' + firstName.value.trim() + ' ' + lastName.value.trim();
+    const discountPct = Number(pendingDiscount) || 0;
+
+    const fd = new FormData();
+    fd.set('name', fullName);
+    fd.set('email', email.value.trim());
+    fd.set('phone', phone.value.trim());
+    fd.set('service_label', serviceLabel);
+    fd.set('duration_min', String(durationMin));
+    fd.set('start_datetime', pendingStart);
+
+    modalOk.disabled = true;
+    try{
+      const r = await fetch(API + '/book.php', { method:'POST', body: fd });
+      const t = await r.text();
+      const j = JSON.parse(t);
+      if (j.success) {
+      const cancelToken = typeof j.cancel_token === 'string' ? j.cancel_token : '';
+      const cancelExpiry = typeof j.cancel_token_expires_at === 'string' ? j.cancel_token_expires_at : '';
+      let cancelUrl = typeof j.cancel_url === 'string' ? j.cancel_url.trim() : '';
+      if (!cancelUrl && cancelToken) {
+        const sep = CANCEL_URL_BASE.includes('?') ? '&' : '?';
+        cancelUrl = `${CANCEL_URL_BASE}${sep}token=${encodeURIComponent(cancelToken)}`;
+      }
+      const canCancel = !!cancelToken && !!cancelUrl;
+      // Construire le payload pour la page de confirmation
+      const payload = {
+        name: fullName,
+        email: email.value.trim(),
+        phone: phone.value.trim(),
+        brand:  (quote && quote.brand)  || '',
+        model:  (quote && quote.model)  || '',
+        problem:(quote && quote.problem)|| '',
+        device: (((quote && quote.brand) || '') + ' ' + ((quote && quote.model) || '')).trim(),
+        price:  Number((quote && quote.price) || 0),
+        discount: discountPct,
+        bonus: 0,         // mets ici un éventuel bonus € si tu en appliques
+        store:   'RIPAIR — Cestas',          // magasin de Cestas
+        address: '12 Chemin de Guitayne, 33610, Cestas', // adresse correcte
+        start_datetime: pendingStart,
+        cancel_token: cancelToken,
+        cancel_token_expires_at: cancelExpiry,
+        cancel_url: cancelUrl,
+        can_cancel: canCancel
+      };
+
+      // Ajouter les détails et la durée agrégée si disponibles
+      try {
+        const multiData = JSON.parse(sessionStorage.getItem('ripairMulti') || 'null');
+        if (multiData && typeof multiData === 'object') {
+          if (Array.isArray(multiData.details)) {
+            payload.details = multiData.details;
+          }
+          if (multiData.durationMin != null && !isNaN(Number(multiData.durationMin))) {
+            payload.duration_min = Number(multiData.durationMin);
+          }
+        }
+      } catch(e) {
+        console.warn('unable to read ripairMulti for payload', e);
+      }
+
+      // 1) sauvegarder pour confirmation.html (fallback si tu ne passes pas tout en query)
+      if (!payload.phone || !/\d/.test(payload.phone)) {
+        payload.phone = phone.value.trim();
+      }
+      localStorage.setItem('ripair_last_booking', JSON.stringify(payload));
+
+      // 1bis) envoyer l'email de confirmation via notre API. On déclenche sans bloquer le flux.
+      // Utiliser la même base API que pour les autres requêtes afin de fonctionner en mode file:// sur mobile
+      try {
+        fetch(API + '/send_confirmation.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+      } catch(ex) {
+        console.error('send_confirmation error', ex);
+      }
+
+      // 2) (optionnel) passer l’essentiel en query pour rendre la page partageable
+      const qs = new URLSearchParams({
+        name: payload.name,
+        start: payload.start_datetime,
+        brand: payload.brand,
+        model: payload.model,
+        problem: payload.problem,
+        price: String(payload.price),
+        discount: String(payload.discount),
+        store: payload.store,
+        address: payload.address
+      }).toString();
+
+      // redirection vers la page de confirmation
+      location.href = 'confirmation.html?' + qs;
+      return; // on stoppe ici (pas besoin de recharger les créneaux)
+    } else {
+        resultDiv.innerHTML = '<span class="error">? ' + (j.error || 'Erreur inconnue') + '</span>';
+        if (j.error === 'slot_taken') await loadWeek();
+      }
+    } catch(e){
+      console.error('book error', e);
+      resultDiv.innerHTML = '<span class="error">Erreur serveur.</span>';
+    } finally {
+      modalOk.disabled = false;
+    }
+  });
+
+  // --- init
+  loadQuote().catch(console.error);
+})();
+</script>
+<script>
+(function(){
+  const modal = document.getElementById('contactModal');
+  const triggers = document.querySelectorAll('[data-contact-modal]');
+  const toast = document.getElementById('toast');
+  if(!modal || !toast) return;
+
+  const closeBtn = modal.querySelector('.close');
+  const copyEmailBtn = document.getElementById('copyEmail');
+  const phoneAction = document.getElementById('phoneAction');
+  const phoneNumber = '0615588782';
+
+  function showToast(message){
+    toast.textContent = message;
+    toast.className = 'show';
+    setTimeout(()=>{ toast.className = toast.className.replace('show',''); }, 2000);
+  }
+
+  function copyToClipboard(text){
+    if(!navigator.clipboard){ showToast('Copie non supportée'); return; }
+    navigator.clipboard.writeText(text).then(()=> showToast('?? Copié : ' + text));
+  }
+
+  if(triggers.length){
+    const openModal = (e)=>{ e.preventDefault(); modal.style.display = 'flex'; };
+    triggers.forEach(btn => btn.addEventListener('click', openModal));
+  }
+  if(closeBtn){ closeBtn.addEventListener('click', ()=> modal.style.display = 'none'); }
+  window.addEventListener('click', (e)=>{ if(e.target === modal) modal.style.display = 'none'; });
+
+  if(copyEmailBtn){
+    copyEmailBtn.addEventListener('click', (e)=>{ e.preventDefault(); copyToClipboard('contact@ripair.shop'); });
+  }
+
+  if(phoneAction){
+    if(/Mobi|Android/i.test(navigator.userAgent)){
+      phoneAction.textContent = 'Appeler';
+      phoneAction.addEventListener('click', (e)=>{ e.preventDefault(); window.location.href = 'tel:' + phoneNumber; });
+    } else {
+      phoneAction.textContent = 'Copier';
+      phoneAction.addEventListener('click', (e)=>{ e.preventDefault(); copyToClipboard(phoneNumber); });
+    }
+  }
+})();
+
+</script>
+</body>
+</html>
+
+
+

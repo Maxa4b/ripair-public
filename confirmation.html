@@ -1,0 +1,626 @@
+﻿<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>Confirmation de rendez-vous — RIPAIR</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Styles globaux du site -->
+  <link rel="stylesheet" href="/assets/css/critical.css">
+  <link rel="preload" href="/assets/css/style.css" as="style">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <noscript><link rel="stylesheet" href="/assets/css/style.css"></noscript>
+  <style>
+    :root{
+      --bg:#ffffff; --panel:#ffffff; --border:rgba(17,17,17,.08); --ink:#111111; --muted:#667085;
+      --accent: var(--blue); --accent-ink:#ffffff; --field:#f7f9fd; --field-b:#dfe6f0; --ok:#16a34a; --err:#ef4444;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--ink)}
+    main.container{max-width:960px;margin:0 auto;padding:28px 20px;width:min(960px,92%)}
+    .card{background:var(--panel);border:1px solid var(--border);border-radius:20px;box-shadow:0 18px 48px rgba(17,17,17,.08);padding:30px;display:grid;gap:22px}
+    .muted{color:var(--muted)}
+    .divider{height:1px;background:linear-gradient(90deg,transparent,rgba(17,17,17,.08),transparent);margin:6px 0}
+    .title-xl{font-size:30px;line-height:1.2;margin:0;color:#0b172b}
+    .lead{color:#6f7c8f;margin:6px 0 0 0}
+    .hero{display:flex;gap:18px;align-items:center}
+    .hero-ico{width:72px;height:72px;border-radius:20px;background:#eef3f9;display:grid;place-items:center;color:var(--blue)}
+    .hero-ico svg{width:34px;height:34px}
+    .info-grid{display:grid;gap:14px}
+    .info-grid .item{display:flex;gap:12px;align-items:flex-start;padding:14px 18px;border:1px solid rgba(17,17,17,.08);border-radius:16px;background:rgba(247,249,253,.85)}
+    .info-grid .ico{width:44px;height:44px;border-radius:14px;background:#fcfdff;display:grid;place-items:center;color:var(--blue)}
+    .info-grid .ico svg{width:24px;height:24px}
+    .info-grid .txt{flex:1}
+    .info-grid .title{font-weight:700;color:#0b172b}
+    .info-grid .muted{margin-top:4px}
+    .warnbox{border:1px dashed rgba(58,186,252,.35);border-radius:18px;background:rgba(239,248,255,.9);padding:16px;display:flex;gap:12px;align-items:flex-start}
+    .warnbox strong{color:#0b172b}
+    .cal{display:flex;gap:12px;flex-wrap:wrap}
+    .cal a{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:14px;border:1px solid rgba(17,17,17,.12);background:#ffffff;color:var(--ink);text-decoration:none;transition:border-color .2s ease, box-shadow .2s ease}
+    .cal a:hover{border-color:var(--blue);box-shadow:0 6px 14px rgba(58,186,252,.12)}
+    .pricebox{background:rgba(247,249,253,.9);border:1px solid rgba(17,17,17,.08);border-radius:18px;padding:18px;display:grid;gap:12px}
+    .pricebox .row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+    .repair-details{display:grid;gap:8px;font-size:14px;color:#0b172b;background:#fff;border:1px solid rgba(17,17,17,.05);border-radius:14px;padding:12px}
+    .repair-details span{color:var(--muted)}
+    .price-total{display:flex;justify-content:space-between;align-items:center;font-weight:800;font-size:22px;color:#0b172b}
+    .price-total .value{color:var(--accent)}
+    .tag-pill{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;background:#eef8ff;color:var(--blue);border:1px solid rgba(58,186,252,.35);font-weight:600}
+    .cta{display:flex;justify-content:center;margin-top:6px}
+    .btn{border:none;border-radius:28px;cursor:pointer;font-weight:700;padding:12px 20px}
+    .btn-primary{background:var(--blue);color:#fff;box-shadow:0 10px 24px rgba(58,186,252,.25);transition:transform .08s ease, box-shadow .15s ease}
+    .btn-primary:hover{box-shadow:0 14px 30px rgba(58,186,252,.3)}
+    .btn-primary:active{transform:translateY(1px)}
+    .link{color:var(--blue);text-decoration:underline;text-underline-offset:2px}
+    /* --- Modal contact : version compacte --- */
+.modal{
+  display:none; position:fixed; inset:0; z-index:1000;
+  background: rgba(17,17,17,.35); backdrop-filter: blur(2px);
+  justify-content:center; align-items:center; padding:16px;
+}
+.modal-content{
+  width:min(560px, calc(100% - 24px));
+  background:#fff; border:1px solid var(--border);
+  border-radius:18px; padding:22px 22px 18px;
+  box-shadow:0 18px 50px rgba(17,17,17,.18);
+}
+.modal-title{ 
+  margin:4px 0 14px; text-align:center; font-size:28px; color:var(--blue);
+}
+.modal .close{
+  position:absolute; right:18px; top:14px; cursor:pointer; font-size:22px; line-height:1;
+  color:#98a4b6;
+}
+
+/* Lignes email/téléphone sur une même rangée */
+.contact-item{
+  display:flex; align-items:center; justify-content:space-between; gap:14px;
+  background:#f7f9fd; border:1px solid var(--field-b); border-radius:14px;
+  padding:12px 14px; margin:12px 0;
+}
+.contact-item p{ margin:0; font-size:18px; color:var(--ink); }
+
+/* Bouton compact à droite (plus de 100% width) */
+.btn-contact{
+  width:auto; min-width:96px; flex:0 0 auto;
+  padding:10px 16px; border:none; border-radius:999px;
+  background:var(--blue); color:#fff; font-weight:700;
+  box-shadow:0 6px 16px rgba(58,186,252,.25);
+  transition:transform .06s ease, box-shadow .15s ease;
+}
+.btn-contact:hover{ box-shadow:0 8px 18px rgba(58,186,252,.33); }
+.btn-contact:active{ transform:scale(.98); }
+.btn-danger{
+  display:inline-flex; align-items:center; justify-content:center;
+  gap:8px; padding:12px 20px; border-radius:999px;
+  background:#ff4b4b; color:#fff; font-weight:700; text-decoration:none;
+  box-shadow:0 10px 24px rgba(255,75,75,.25); transition:transform .06s ease, box-shadow .15s ease;
+}
+.btn-danger:hover{ box-shadow:0 14px 26px rgba(255,75,75,.35); }
+.btn-danger:active{ transform:translateY(1px); }
+
+/* Petites largeurs : on garde l'alignement propre */
+@media (max-width:420px){
+  .contact-item{ gap:10px; }
+  .contact-item p{ font-size:16px; }
+  .btn-contact{ min-width:84px; padding:9px 14px; }
+}
+/* ===== Mobile fix & layout compact sans toucher au desktop ===== */
+
+/* Garde-fous anti-débordement */
+html, body { max-width: 100%; overflow-x: hidden; }
+img, svg, video { max-width: 100%; height: auto; }
+.container, .card, .footer, .navbar, .nav-inner, .footer-content { max-width: 100%; }
+
+/* Header/Footer : permettre le wrap et éviter les débordements latéraux */
+.nav-inner, .footer-content{
+  display:flex; flex-wrap:wrap; gap:10px; align-items:center; min-width:0;
+}
+.footer-right{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.social-icon{ width:28px; height:28px; }
+
+/* Modale contact : contenir les boutons et le texte */
+.contact-item{ flex-wrap:wrap; }
+.contact-item p{ flex:1 1 auto; min-width:0; }
+.btn-contact{ flex:0 0 auto; }
+@media (max-width:420px){
+  .btn-contact{ width:100%; }
+}
+
+/* Page confirmation — vue mobile */
+@media (max-width: 640px){
+  main.container{ width:100%; padding:18px 14px; }
+  .card{ padding:16px; gap:16px; border-radius:16px; }
+
+  .hero{ flex-direction:column; align-items:flex-start; gap:12px; }
+  .hero-ico{ width:56px; height:56px; border-radius:16px; }
+  .title-xl{ font-size:clamp(20px, 5.5vw, 28px); }
+  .lead{ font-size:14px; }
+
+  .info-grid .item{ padding:12px; gap:10px; }
+  .info-grid .ico{ width:36px; height:36px; border-radius:10px; }
+  .info-grid .ico svg{ width:20px; height:20px; }
+
+  .pricebox{ padding:14px; gap:10px; }
+  .pricebox .row{ flex-direction:column; align-items:flex-start; gap:6px; }
+  .repair-details{ font-size:13px; }
+  .price-total{ font-size:18px; }
+
+  .cal{ display:grid; grid-template-columns:1fr; gap:8px; }
+  .cal a{ justify-content:center; padding:10px 12px; }
+
+  .cta .btn{ width:100%; }
+}
+.cal a svg{ width:18px; height:18px; }
+
+
+  </style>
+  <script defer src="/assets/js/script.js"></script>
+</head>
+<body>
+<header class="navbar">
+  <div class="nav-inner">
+    <a class="navbar-logo" href="index.html">
+      <img src="assets/img/logo.webp" alt="RIPAIR Logo">
+    </a>
+    <div class="navbar-actions">
+      <button class="icon-btn" aria-label="Ouvrir le menu" id="hamburger" onclick="toggleMenu()">
+        <svg viewBox="0 0 24 24" width="24" height="24" stroke="#111" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+      <nav id="mobileMenu" class="mobile-menu">
+        <a href="/index.html">Accueil - RIPAIR</a>
+        <a href="/services.html">Services</a>
+        <a href="/switch-picofly.html">Switch</a>
+        <a href="/devis.html">Devis</a>
+        <a href="/avis.html">Avis</a>
+        <a href="/contact.html">Contact</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+  <section class="card">
+    <div class="hero">
+      <div class="hero-ico">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="4" ry="4"/>
+          <line x1="16" y1="2" x2="16" y2="6"/>
+          <line x1="8" y1="2" x2="8" y2="6"/>
+          <line x1="3" y1="10" x2="21" y2="10"/>
+          <path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/>
+        </svg>
+      </div>
+      <div>
+        <h2 class="title-xl"><span id="nameAccent" class="accent">—</span>, votre rendez-vous est confirmé</h2>
+        <p class="lead muted">Vous allez recevoir un e-mail récapitulatif dans quelques instants.</p>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+    <p id="introLine" class="muted" style="margin:0">-</p>
+
+    <div id="cancelBlock" class="warnbox" hidden>
+      <div class="ico" style="width:44px;height:44px;border-radius:14px;background:#ffecee;display:grid;place-items:center;color:#ff4b4b">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5L12 2 4 5v7c0 6 8 10 8 10z"/>
+          <path d="M9 10l6 6"/>
+          <path d="M15 10l-6 6"/>
+        </svg>
+      </div>
+      <div>
+        <strong>Besoin d'annuler ?</strong>
+        <p id="cancelMessage" class="muted" style="margin:6px 0 12px 0;">Vous pouvez annuler tant que la pièce n'est pas commandée.</p>
+        <a id="cancelLink" class="btn-danger" href="#" target="_blank" rel="noopener">Annuler mon rendez-vous</a>
+      </div>
+    </div>
+
+    <div class="warnbox">
+      <div class="ico" style="width:44px;height:44px;border-radius:14px;background:#eef8ff;display:grid;place-items:center;color:var(--blue)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 4h16v12a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V4z"/>
+          <line x1="8" y1="2" x2="8" y2="6"/>
+          <line x1="16" y1="2" x2="16" y2="6"/>
+          <path d="M4 10h16"/>
+        </svg>
+      </div>
+      <div>
+        <strong>Suivez RIPAIR</strong> pour profiter d’astuces, jeux-concours et offres exclusives.
+        Retrouvez-nous sur <a class="link" href="https://instagram.com/ripair.pessac" target="_blank" rel="noopener">Instagram</a> &
+        <a class="link" href="https://www.facebook.com/ripair.shop" target="_blank" rel="noopener">Facebook</a> et partagez votre réparation avec #TeamRIPAIR.
+      </div>
+    </div>
+
+    <div>
+      <h3 style="margin:0 0 8px 0">Ajouter à votre calendrier</h3>
+      <div class="cal">
+        <a id="addApple" href="#">
+          <!-- Logo Apple en SVG -->
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+            <path fill="currentColor" d="M16.7 12.9c0 3.5 3.1 4.7 3.2 4.8-.02.1-.5 1.9-1.7 3.7-1 1.5-2.1 3.1-3.8 3.1-1.7 0-2.2-1-4.2-1s-2.6 1-4.3 1c-1.7 0-2.9-1.7-4-3.3-2.2-3.2-3.9-9.1-1.6-13.1 1.1-2 3.2-3.2 5.4-3.3 1.7-.03 3.3 1.1 4.3 1.1 1 0 2.9-1.3 4.9-1.1.9.03 3 .3 4.6 2.6-.13.08-2.6 1.5-2.6 4.5zM14.9 2.7c.9-1.1 1.5-2.6 1.3-4-1.3.05-2.9.9-3.8 1.9-.9 1-1.5 2.5-1.3 4 .9.07 2.2-.6 3.8-1.9z"/>
+          </svg>
+          Apple Calendar
+        </a>
+        <a id="addGoogle" href="#" target="_blank" rel="noopener">🗓️ Google Agenda</a>
+        <a id="addOutlook" href="#" target="_blank" rel="noopener">
+          <!-- Icône Outlook simple -->
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+            <path fill="currentColor" d="M3 7a2 2 0 0 1 2-2h7v14H5a2 2 0 0 1-2-2V7z"/>
+            <path fill="currentColor" d="M22 6H12v12h10a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1zm-6.5 9a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7zm0-1.5A2 2 0 1 0 13.5 11 2 2 0 0 0 15.5 13.5z"/>
+          </svg>
+          Outlook Calendar
+        </a>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <h3 style="margin:0">Détails de votre rendez-vous</h3>
+    <div class="info-grid">
+      <div class="item">
+        <div class="ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+        </div>
+        <div class="txt">
+          <div id="clientName" class="title">—</div>
+          <div id="clientEmail" class="muted">—</div>
+        </div>
+      </div>
+      <div class="item">
+        <div class="ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 1 1 18 0z"/>
+            <circle cx="12" cy="10" r="3"/>
+          </svg>
+        </div>
+        <div class="txt">
+          <div id="storeName" class="title">RIPAIR — Boutique</div>
+          <div id="storeAddress" class="muted">—</div>
+        </div>
+      </div>
+      <div class="item">
+        <div class="ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9"/>
+            <polyline points="12 7 12 12 15 14"/>
+          </svg>
+        </div>
+        <div class="txt">
+          <div id="slotTime" class="title">—</div>
+          <div id="slotDate" class="muted">—</div>
+        </div>
+      </div>
+      <div class="item">
+        <div class="ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="5" y="2" width="14" height="20" rx="3"/>
+            <line x1="12" y1="18" x2="12" y2="18"/>
+          </svg>
+        </div>
+        <div class="txt">
+          <div id="deviceTitle" class="title">—</div>
+          <div id="deviceSub" class="muted">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <h3 style="margin:0">Détails de votre panier</h3>
+    <div class="pricebox" id="basketBox">
+      <div class="row">
+        <div id="serviceLine" style="font-weight:700">—</div>
+        <div id="oldPrice" class="muted" style="text-decoration:line-through">—</div>
+      </div>
+      <div class="repair-details" id="basketDetails">
+        <div><span>Appareil</span> <strong id="repairDevice">—</strong></div>
+        <div><span>Problème</span> <strong id="repairProblem">—</strong></div>
+      </div>
+      <div id="discountLines" class="info-grid" style="gap:10px"></div>
+      <div class="price-total">
+        <div>Total</div>
+        <div class="value" id="totalPrice">—</div>
+      </div>
+      <p id="savingLine" class="muted" style="text-align:center;margin:4px 0 0 0">—</p>
+    </div>
+
+    <div class="cta">
+      <a href="/" class="btn btn-primary" style="text-decoration:none">Retourner à l’accueil</a>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="container footer-content">
+    <div class="footer-left">
+      <p>&copy; 2025 RIPAIR &mdash; Tous droits r&eacute;serv&eacute;s.</p>
+      <p class="footer-meta">EI RIPAIR &middot; 06&nbsp;15&nbsp;58&nbsp;87&nbsp;82 &middot; contact@ripair.shop</p>
+    </div>
+    <div class="footer-links">
+      <a href="mentions.html">Mentions l&eacute;gales</a>
+      <a href="devis.html">Obtenir un devis</a>
+    </div>
+    <div class="footer-right">
+      <a href="https://instagram.com/ripair.pessac" target="_blank" rel="noopener">
+        <img src="assets/img/instagram.webp" alt="Instagram" class="social-icon">
+      </a>
+      <a href="https://www.facebook.com/profile.php?id=61579654974480" target="_blank" rel="noopener">
+        <img src="assets/img/facebook.webp" alt="Facebook" class="social-icon">
+      </a>
+      <a href="#" class="btn-contact" data-contact-modal>Contactez-nous</a>
+    </div>
+  </div>
+</footer>
+
+<div id="contactModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2 class="modal-title">Contactez-nous</h2>
+    <div class="contact-item">
+      <p>📧 contact@ripair.shop</p>
+      <button id="copyEmail" class="btn-contact">Copier</button>
+    </div>
+    <div class="contact-item">
+      <p>📱 06&nbsp;15&nbsp;58&nbsp;87&nbsp;82</p>
+      <button id="phoneAction" class="btn-contact"></button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+(function(){
+  const p = new URLSearchParams(location.search);
+  const ls = localStorage.getItem('ripair_last_booking');
+  let data = {};
+  try { if(ls) data = Object.assign({}, JSON.parse(ls)); } catch(e){}
+  function pick(k, def){ return (p.get(k) !== null ? p.get(k) : (data[k] != null ? data[k] : def)); }
+
+  const name       = pick('name','Client');
+  const email      = pick('email','');
+  const brand      = pick('brand','');
+  const model      = pick('model','');
+  const problem    = pick('problem','Réparation');
+  const device     = pick('device', (brand && model ? (brand+' '+model) : '').trim());
+  const price      = Number(pick('price', data.price || 0));
+  const discount   = Number(pick('discount', data.discount || 0));
+  const bonus      = Number(pick('bonus', data.bonus || 0));
+  const store      = 'RIPAIR - Cestas';
+  const address    = '12 chemin de Guitayne, 33610, Cestas';
+  const startISO   = pick('start',  data.start_datetime || '');
+  const cancelUrl  = pick('cancel_url', data.cancel_url || '');
+  const cancelToken = pick('cancel_token', data.cancel_token || '');
+  const cancelAllowed = Boolean(pick('can_cancel', data.can_cancel || (cancelUrl ? true : false)));
+  const cancelExpiryIso = pick('cancel_token_expires_at', data.cancel_token_expires_at || '');
+
+
+  function extractFirstName(n){
+    const titles = ['monsieur','mr','m','m.','madame','mme','mlle','mademoiselle','dr','docteur'];
+    const parts = (n||'').trim().split(/\s+/);
+    while(parts.length && titles.includes(parts[0].toLowerCase().replace(/\.$/,''))) parts.shift();
+    return parts[0] || 'Client';
+  }
+  const firstName = extractFirstName(name);
+  document.getElementById('nameAccent').textContent = firstName;
+  document.getElementById('clientName').textContent = name;
+
+  document.getElementById('clientEmail').textContent = email || '—';
+  document.getElementById('storeName').textContent = store;
+  document.getElementById('storeAddress').textContent = address;
+  document.getElementById('deviceTitle').textContent = device || 'Appareil';
+  const problemLine = problem ? problem : '—';
+  document.getElementById('deviceSub').textContent   = device && problemLine ? `${device} • ${problemLine}` : problemLine;
+  document.getElementById('repairDevice').textContent = device || (brand || model ? `${brand} ${model}`.trim() : '—');
+  document.getElementById('repairProblem').textContent = problemLine;
+
+  function fmtDateLong(iso){
+    if(!iso) return 'Date à confirmer';
+    const dt = new Date(iso.replace(' ', 'T'));
+    const opts = { weekday:'long', year:'numeric', month:'long', day:'2-digit', hour:'2-digit', minute:'2-digit' };
+    const raw = dt.toLocaleString('fr-FR', opts).replace(',', ' à');
+    return raw.charAt(0).toUpperCase() + raw.slice(1);
+  }
+  function fmtTimeShort(iso){
+    if(!iso) return '—';
+    const dt = new Date(iso.replace(' ', 'T'));
+    return dt.toLocaleTimeString('fr-FR', { hour:'2-digit', minute:'2-digit' });
+  }
+  document.getElementById('slotDate').textContent = fmtDateLong(startISO);
+  document.getElementById('slotTime').textContent = fmtTimeShort(startISO);
+
+  const intro = startISO
+    ? `Nous vous attendons le <strong>${fmtDateLong(startISO)}</strong> au <strong>${address}</strong> chez <strong>RIPAIR</strong>.`
+    : 'Nous vous contacterons très vite pour caler votre rendez-vous.';
+  document.getElementById('introLine').innerHTML = intro;
+
+  function fmtCancelLimit(iso){
+    if(!iso) return '';
+    try{
+      const dt = new Date(iso);
+      return dt.toLocaleString('fr-FR', { weekday:'long', day:'2-digit', month:'long', hour:'2-digit', minute:'2-digit' }).replace(',', ' \u00e0');
+    }catch(e){ return ''; }
+  }
+  const cancelBlock = document.getElementById('cancelBlock');
+  const cancelLinkEl = document.getElementById('cancelLink');
+  const cancelMsg = document.getElementById('cancelMessage');
+  if (cancelBlock && cancelLinkEl && cancelMsg) {
+    if (cancelAllowed && cancelUrl) {
+      cancelBlock.hidden = false;
+      cancelLinkEl.href = cancelUrl;
+      const limit = fmtCancelLimit(cancelExpiryIso);
+      cancelMsg.innerHTML = limit
+        ? `Lien valable jusqu'au <strong>${limit}</strong> (heure de Paris) ou jusqu'à la commande de vos pièces.`
+        : `Vous pouvez annuler en ligne tant que la pièce n'est pas commandée.`;
+    } else if (cancelBlock.hidden === false) {
+      cancelBlock.hidden = true;
+    }
+  }
+
+  function euro(n){ return Number.isFinite(n) ? n.toLocaleString('fr-FR', { style:'currency', currency:'EUR' }) : '-'; }
+  const serviceLine = document.getElementById('serviceLine');
+  const oldPriceEl  = document.getElementById('oldPrice');
+  const totalEl     = document.getElementById('totalPrice');
+  const savingLine  = document.getElementById('savingLine');
+
+  const repairLabel = device ? `${device} • ${problemLine}` : problemLine;
+  serviceLine.textContent = repairLabel;
+  if(price){ oldPriceEl.textContent = euro(price); oldPriceEl.style.visibility = 'visible'; }
+  else { oldPriceEl.style.visibility = 'hidden'; }
+
+  const discountWrap = document.getElementById('discountLines');
+  discountWrap.innerHTML = '';
+  let total = price;
+  if(discount){
+    const amount = Math.round(price * discount) / 100;
+    total -= amount;
+    const div = document.createElement('div');
+    div.className = 'item';
+    div.innerHTML = `<div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1v22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 1 1 0 7H7"/></svg></div><div class="txt"><div class="title">Remise web (${discount}% )</div><div class="muted">- ${euro(amount)}</div></div>`;
+    discountWrap.appendChild(div);
+  }
+  if(bonus){
+    total -= bonus;
+    const div = document.createElement('div');
+    div.className = 'item';
+    div.innerHTML = `<div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-7"/><rect x="2" y="7" width="20" height="5" rx="2"/><path d="M12 22V7"/><path d="M12 7c-1.657 0-3-1.343-3-3S10.343 1 12 1c0 1.657-1.343 3-3 3 1.657 0 3 1.343 3 3z"/><path d="M12 7c1.657 0 3-1.343 3-3s-1.343-3-3-3c0 1.657 1.343 3 3 3-1.657 0-3 1.343-3 3z"/></svg></div><div class="txt"><div class="title">Avantage supplémentaire</div><div class="muted">- ${euro(bonus)}</div></div>`;
+    discountWrap.appendChild(div);
+  }
+  totalEl.textContent = euro(total);
+  const diff = price - total;
+  savingLine.textContent = diff ? `Vous économisez ${euro(diff)} sur ce rendez-vous.` : '';
+
+  // Mettre à jour la décoration de l'ancien prix.
+  // Si aucune remise web n'est appliquée, le prix initial ne doit pas être barré.
+  if (discount && price) {
+    oldPriceEl.style.textDecoration = 'line-through';
+  } else {
+    oldPriceEl.style.textDecoration = 'none';
+  }
+
+const baseUrl = 'https://calendar.google.com/calendar/render';
+const calLabel = device ? `${device} • ${problem || 'Réparation'}` : (problem || 'Réparation');
+
+if (startISO){
+  const start = new Date(startISO.replace(' ', 'T'));
+  const end   = new Date(start.getTime() + 60*60*1000);
+
+  const fmtCal = d => d.toISOString().replace(/[-:]/g,'').split('.')[0] + 'Z';
+  const startStr = fmtCal(start);
+  const endStr   = fmtCal(end);
+  const range    = `${startStr}/${endStr}`;
+
+  // Google Agenda (inchangé)
+  const googleParams = new URLSearchParams({
+    action: 'TEMPLATE',
+    text: `Rendez-vous RIPAIR — ${calLabel}`,
+    dates: range,
+    location: address,
+    details: calLabel
+  });
+  document.getElementById('addGoogle').href = `${baseUrl}?${googleParams.toString()}`;
+
+  // ICS inline (utile pour Apple)
+  const ics =
+    `BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//RIPAIR//rendezvous//FR\r\nBEGIN:VEVENT\r\nSUMMARY:${calLabel}\r\nDTSTART:${startStr}\r\nDTEND:${endStr}\r\nLOCATION:${address}\r\nDESCRIPTION:${calLabel}\r\nEND:VEVENT\r\nEND:VCALENDAR`;
+  const icsDataUri = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics);
+
+  // Apple Calendar : ouvrir l’app au lieu de télécharger
+  const isApple = /Mac|iPhone|iPad|iPod/i.test(navigator.platform) || /Mac OS X|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  const appleLink = document.getElementById('addApple');
+  appleLink.removeAttribute('download');
+  appleLink.setAttribute('target','_blank');
+  appleLink.href = icsDataUri; // sur iOS/macOS, ouvre Calendrier dans la plupart des cas
+
+  // Outlook (web) : deeplink compose
+  const outlookBase = 'https://outlook.live.com/calendar/0/deeplink/compose';
+  const outlookParams = new URLSearchParams({
+    path: '/calendar/action/compose',
+    rru: 'addevent',
+    startdt: start.toISOString(),
+    enddt: end.toISOString(),
+    subject: `Rendez-vous RIPAIR — ${calLabel}`,
+    body: calLabel,
+    location: address
+  });
+  const outlookLink = document.getElementById('addOutlook');
+  outlookLink.removeAttribute('download');
+  outlookLink.setAttribute('target','_blank');
+  outlookLink.setAttribute('rel','noopener');
+  outlookLink.href = `${outlookBase}?${outlookParams.toString()}`;
+}
+
+})();
+</script>
+<script>
+(function(){
+  const modal = document.getElementById('contactModal');
+  const triggers = document.querySelectorAll('[data-contact-modal]');
+  const toast = document.getElementById('toast');
+  if(!modal || !toast) return;
+
+  const closeBtn = modal.querySelector('.close');
+  const copyEmailBtn = document.getElementById('copyEmail');
+  const phoneAction = document.getElementById('phoneAction');
+  const phoneNumber = '0615588782';
+
+  function showToast(message){
+    toast.textContent = message;
+    toast.className = 'show';
+    setTimeout(()=>{ toast.className = toast.className.replace('show',''); }, 2000);
+  }
+
+  function copyToClipboard(text){
+    if(!navigator.clipboard){ showToast('Copie non supportée'); return; }
+    navigator.clipboard.writeText(text).then(()=> showToast('📋 Copié : ' + text));
+  }
+
+  if(triggers.length){
+    const openModal = (e)=>{ e.preventDefault(); modal.style.display = 'flex'; };
+    triggers.forEach(btn => btn.addEventListener('click', openModal));
+  }
+  if(closeBtn){ closeBtn.addEventListener('click', ()=> modal.style.display = 'none'); }
+  window.addEventListener('click', (e)=>{ if(e.target === modal) modal.style.display = 'none'; });
+
+  if(copyEmailBtn){
+    copyEmailBtn.addEventListener('click', (e)=>{ e.preventDefault(); copyToClipboard('contact@ripair.shop'); });
+  }
+
+  if(phoneAction){
+    if(/Mobi|Android/i.test(navigator.userAgent)){
+      phoneAction.textContent = 'Appeler';
+      phoneAction.addEventListener('click', (e)=>{ e.preventDefault(); window.location.href = 'tel:' + phoneNumber; });
+    } else {
+      phoneAction.textContent = 'Copier';
+      phoneAction.addEventListener('click', (e)=>{ e.preventDefault(); copyToClipboard(phoneNumber); });
+    }
+  }
+
+  // Afficher les informations de débogage SumUp si elles existent dans la session
+  (function(){
+    try {
+      const dbg = sessionStorage.getItem('ripair_last_debug');
+      if (dbg) {
+        try {
+          const obj = JSON.parse(dbg);
+          console.log('SumUp debug info', obj);
+        } catch(e){
+          console.log('SumUp debug raw', dbg);
+        }
+        // Nettoyer après utilisation
+        sessionStorage.removeItem('ripair_last_debug');
+      }
+    } catch(err) {
+      console.warn('Impossible de lire les infos de débogage SumUp :', err);
+    }
+  })();
+})();
+</script>
+</body>
+</html>
+

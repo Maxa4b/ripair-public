@@ -1,0 +1,271 @@
+﻿<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Services - RIPAIR</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script defer src="assets/js/script.js"></script>
+</head>
+<body>
+<!-- NAV -->
+<header class="navbar">
+  <div class="nav-inner">
+    <a class="navbar-logo" href="index.html">
+      <img src="assets/img/logo.webp" alt="RIPAIR Logo">
+    </a>
+
+    <!-- Menu horizontal (tablette + desktop) -->
+    <nav class="navbar-links">
+      <a href="/index.html">Accueil</a>
+      <a href="/services.html">Services</a>
+      <a href="/switch-picofly.html">Switch</a>
+      <a href="/devis.html">Devis</a>
+      <a href="/avis.html">Avis</a>
+      <a href="/contact.html">Contact</a>
+    </nav>
+
+    <!-- Menu mobile (hamburger) -->
+    <button class="icon-btn" aria-label="Ouvrir le menu" id="hamburger" onclick="toggleMenu()">
+      <svg viewBox="0 0 24 24" width="24" height="24" stroke="#111" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <line x1="3" y1="12" x2="21" y2="12"/>
+        <line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+
+    <nav id="mobileMenu" class="mobile-menu">
+      <a href="/index.html">Accueil</a>
+      <a href="/services.html">Services</a>
+      <a href="/switch-picofly.html">Switch</a>
+      <a href="/devis.html">Devis</a>
+      <a href="/avis.html">Avis</a>
+      <a href="/contact.html">Contact</a>
+    </nav>
+  </div>
+</header>
+
+
+  <main>
+    
+<!-- Hero Section -->
+<section class="page-hero">
+  <div class="hero-content">
+    <h1>Nos Services</h1>
+    <p class="hero-subtitle">
+      <span class="dynamic-text"></span>
+    </p>
+
+    <div class="hero-buttons">
+      <a href="devis.html" class="btn btn-primary">📅 Prendre rendez-vous</a>
+      <a href="contact.html" class="btn btn-secondary">📞 Contactez-nous</a>
+    </div>
+  </div>
+
+  <!-- Bandeau arguments défilants -->
+  <div class="hero-marquee">
+    <div class="marquee-content">
+      ⚡ Réparation en 30 min — 💸 Prix bas garantis — 🔋 Batteries neuves —
+      ✅ Garantie 3 mois — 🔨 Diagnostic offert — 🎮 Consoles réparées
+    </div>
+  </div>
+</section>
+
+
+<section class="container services-list">
+  <article id="switch-picofly" class="service-row">
+    <img src="assets/img/consoles.webp" alt="Nintendo Switch (Picofly)">
+    <div>
+      <h3>Nintendo Switch - Picofly</h3>
+      <ul class="service-steps">
+        <li>Installation Picofly en micro-soudure</li>
+        <li>Contrôles et tests avant restitution</li>
+        <li>Finition propre et accompagnement</li>
+        <li><strong>Usage légal uniquement</strong></li>
+      </ul>
+      <a class="btn btn-primary" href="switch-picofly.html">Découvrir le service</a>
+      <a class="btn btn-secondary" href="contact.html">Demander un devis</a>
+    </div>
+  </article>
+
+  <article id="smartphones" class="service-row">
+    <img src="assets/img/service1.webp" alt="Smartphones">
+    <div>
+      <h3>Réparation Express</h3>
+        <ol class="service-steps">
+          <li>Changement d’écran</li>
+          <li>Remplacement batterie</li>
+          <li>Connecteur de charge</li>
+          <li>Caméras, boutons, haut-parleur…</li>
+        </ol>
+        <a class="btn btn-primary" href="devis.html" target="_blank" rel="noopener noreferrer">
+          Obtenir mon devis
+        </a>
+    </div>
+  </article>
+
+  <article id="protection" class="service-row reverse">
+    <img src="assets/img/service2.webp" alt="Protection">
+    <div>
+      <h3>Boost de Performances</h3>
+      <ul class="service-steps">
+        <li>Upgrade SSD / RAM</li>
+        <li>Optimisation complète</li>
+        <li>Remise à neuf</li>
+      </ul>
+      <a class="btn btn-primary" href="https://docs.google.com/forms/d/e/1FAIpQLScRFEeke5iHlHLmft08tV1-hO5lx9Ftlh-5On9XsMSIibHa3w/viewform?usp=sharing&ouid=101998237635275710176" target="_blank" rel="noopener noreferrer">
+        Booster mon appareil
+      </a>
+    </div>
+  </article>
+
+  <article id="ordinateurs" class="service-row">
+    <img src="assets/img/service3.webp" alt="Ordinateurs">
+    <div>
+      <h3>Récupération de Données</h3>
+      <ul class="service-steps">
+        <li>Récupération données appareils HS</li>
+        <li>Transfert sécurisé de vos fichiers</li>
+        <li>Restauration photos perdues</li>
+      </ul>
+        <a class="btn btn-primary" href="https://docs.google.com/forms/d/e/1FAIpQLSeJEKuWuNthW7X05lhig8Kmsm6ttLmSb_uCZMbLIBXE8c-YfQ/viewform?usp=sharing&ouid=101998237635275710176" target="_blank" rel="noopener noreferrer">
+        Retrouver mes données
+      </a>
+    </div>
+  </article>
+</section>
+
+  </main>
+
+  <!-- FOOTER -->
+<footer class="footer">
+  <div class="container footer-content">
+    <div class="footer-left">
+      <p>&copy; 2025 RIPAIR &mdash; Tous droits r&eacute;serv&eacute;s.</p>
+      <p class="footer-meta">EI RIPAIR &middot; 06&nbsp;15&nbsp;58&nbsp;87&nbsp;82 &middot; contact@ripair.shop</p>
+    </div>
+    <div class="footer-links">
+      <a href="mentions.html">Mentions l&eacute;gales</a>
+      <a href="devis.html">Obtenir un devis</a>
+    </div>
+    <div class="footer-right">
+      <a href="https://instagram.com/ripair.shop" target="_blank" rel="noopener">
+        <img src="assets/img/instagram.webp" alt="Instagram" class="social-icon">
+      </a>
+      <a href="https://www.facebook.com/profile.php?id=61579654974480" target="_blank" rel="noopener">
+        <img src="assets/img/facebook.webp" alt="Facebook" class="social-icon">
+      </a>
+      <a href="#" class="btn-contact" data-contact-modal>Contactez-nous</a>
+    </div>
+  </div>
+</footer>
+
+
+
+<!-- Popup Modal -->
+<div id="contactModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2 class="modal-title">Contactez-nous</h2>
+
+    <!-- Email -->
+    <div class="contact-item">
+      <p>📧 contact@ripair.shop</p>
+      <button id="copyEmail" class="btn-contact">Copier</button>
+    </div>
+
+    <!-- Téléphone -->
+    <div class="contact-item">
+      <p>📱 06 15 58 87 82</p>
+      <button id="phoneAction" class="btn-contact"></button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+
+
+
+<script>
+(function(){
+  const modal = document.getElementById("contactModal");
+  const triggers = document.querySelectorAll("[data-contact-modal]");
+  const closeBtn = modal ? modal.querySelector(".close") : null;
+  const toast = document.getElementById("toast");
+  const copyEmailBtn = document.getElementById("copyEmail");
+  const phoneAction = document.getElementById("phoneAction");
+  const phoneNumber = "0615588782";
+
+  if(modal && triggers.length){
+    const openModal = (e)=>{
+      e.preventDefault();
+      modal.style.display = "flex";
+    };
+    triggers.forEach(btn => btn.addEventListener("click", openModal));
+  }
+
+  if(closeBtn){
+    closeBtn.addEventListener("click", ()=> modal.style.display = "none");
+  }
+  window.addEventListener("click", (e)=>{ if(e.target === modal){ modal.style.display = "none"; }});
+
+  function copyToClipboard(text){
+    navigator.clipboard.writeText(text).then(()=> showToast("📋 Copié : " + text));
+  }
+
+  if(copyEmailBtn){
+    copyEmailBtn.addEventListener("click", (e)=>{
+      e.preventDefault();
+      copyToClipboard("contact@ripair.shop");
+    });
+  }
+
+  if(phoneAction){
+    if(/Mobi|Android/i.test(navigator.userAgent)){
+      phoneAction.textContent = "Appeler";
+      phoneAction.addEventListener("click", (e)=>{
+        e.preventDefault();
+        window.location.href = "tel:" + phoneNumber;
+      });
+    } else {
+      phoneAction.textContent = "Copier";
+      phoneAction.addEventListener("click", (e)=>{
+        e.preventDefault();
+        copyToClipboard(phoneNumber);
+      });
+    }
+  }
+
+  function showToast(message){
+    if(!toast) return;
+    toast.textContent = message;
+    toast.className = "show";
+    setTimeout(()=>{ toast.className = toast.className.replace("show",""); }, 2000);
+  }
+})();
+
+// Sélectionne les services
+const rows = document.querySelectorAll(".service-row");
+
+window.addEventListener("scroll", () => {
+  const triggerBottom = window.innerHeight * 0.85;
+
+  rows.forEach(row => {
+    const boxTop = row.getBoundingClientRect().top;
+
+    if (boxTop < triggerBottom) {
+      row.classList.add("show");
+    }
+  });
+});
+
+
+</script>
+
+</body>
+</html>
+

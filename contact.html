@@ -1,0 +1,211 @@
+﻿<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contact - RIPAIR</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script defer src="assets/js/script.js"></script>
+</head>
+<body>
+
+<!-- NAV -->
+<header class="navbar">
+  <div class="nav-inner">
+    <a class="navbar-logo" href="index.html">
+      <img src="assets/img/logo.webp" alt="RIPAIR Logo">
+    </a>
+
+    <!-- Menu horizontal (tablette + desktop) -->
+    <nav class="navbar-links">
+      <a href="/index.html">Accueil</a>
+      <a href="/services.html">Services</a>
+      <a href="/switch-picofly.html">Switch</a>
+      <a href="/devis.html">Devis</a>
+      <a href="/avis.html">Avis</a>
+      <a href="/contact.html">Contact</a>
+    </nav>
+
+    <!-- Menu mobile (hamburger) -->
+    <button class="icon-btn" aria-label="Ouvrir le menu" id="hamburger" onclick="toggleMenu()">
+      <svg viewBox="0 0 24 24" width="24" height="24" stroke="#111" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <line x1="3" y1="12" x2="21" y2="12"/>
+        <line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+
+    <nav id="mobileMenu" class="mobile-menu">
+      <a href="/index.html">Accueil</a>
+      <a href="/services.html">Services</a>
+      <a href="/switch-picofly.html">Switch</a>
+      <a href="/devis.html">Devis</a>
+      <a href="/avis.html">Avis</a>
+      <a href="/contact.html">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="page-hero">
+    <div class="container">
+      <h1>Contact</h1>
+      <p>Une question ? Un devis ? Écrivez-nous.</p>
+    </div>
+  </section>
+
+  <section class="contact container">
+    <form class="contact-form" id="contactForm">
+      <input type="text" name="name" placeholder="Nom" required>
+      <input type="email" name="email" placeholder="Email" required>
+      <textarea name="message" rows="5" placeholder="Votre message" required></textarea>
+
+      <!-- Champ caché honeypot -->
+      <input type="text" name="website" style="display:none">
+
+      <!-- reCAPTCHA -->
+      <input type="hidden" name="recaptcha_token" id="recaptcha_token">
+
+      <button type="submit" class="btn btn-primary">Envoyer</button>
+    </form>
+
+    <div class="contact-info">
+      <h3>Infos</h3>
+      <p><strong>Email :</strong> contact@ripair.shop</p>
+      <p><strong>Tél :</strong> 06 15 58 87 82</p>
+      <div class="map-frame small">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d45307.90377641035!2d-0.7221897139957635!3d44.78602444397337!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd54d8f9227cb8a3%3A0x3ace1d334bf95f98!2s33600%20Pessac!5e0!3m2!1sfr!2sfr!4v1756930813798!5m2!1sfr!2sfr"
+          title="Localisation de RIPAIR" width="400" height="300" style="border:0;" allowfullscreen="" loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="container footer-content">
+    <div class="footer-left">
+      <p>&copy; 2025 RIPAIR &mdash; Tous droits r&eacute;serv&eacute;s.</p>
+      <p class="footer-meta">EI RIPAIR &middot; 06&nbsp;15&nbsp;58&nbsp;87&nbsp;82 &middot; contact@ripair.shop</p>
+    </div>
+    <div class="footer-links">
+      <a href="mentions.html">Mentions l&eacute;gales</a>
+      <a href="devis.html">Obtenir un devis</a>
+    </div>
+    <div class="footer-right">
+      <a href="https://instagram.com/ripair.pessac" target="_blank" rel="noopener">
+        <img src="assets/img/instagram.webp" alt="Instagram" class="social-icon">
+      </a>
+      <a href="https://www.facebook.com/profile.php?id=61579654974480" target="_blank" rel="noopener">
+        <img src="assets/img/facebook.webp" alt="Facebook" class="social-icon">
+      </a>
+      <a href="contact.html" class="btn-contact">Contactez-nous</a>
+    </div>
+  </div>
+</footer>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<!-- reCAPTCHA v3 -->
+<script src="https://www.google.com/recaptcha/api.js?render=6LdIse4rAAAAAIk-3rMq26OrCSqfXoGJYEyaHu-C"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('contactForm');
+  const siteKey = '6LdIse4rAAAAAIk-3rMq26OrCSqfXoGJYEyaHu-C';
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    grecaptcha.ready(() => {
+      grecaptcha.execute(siteKey, {action: 'submit'}).then(token => {
+        console.log("✅ Token reCAPTCHA reçu :", token);
+        document.getElementById('recaptcha_token').value = token;
+
+        const data = new FormData(form);
+        const email = data.get('email').trim();
+        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+        if (!emailPattern.test(email)) {
+          showToast("❌ Adresse email invalide", "error");
+          return;
+        }
+
+        // Détermine la base de l'API : si la page est ouverte depuis le système de fichiers (file://) ou avec un origin null (sur mobile), alors utiliser le domaine ripair.shop
+        const API = (location.protocol === 'file:' || location.origin === 'null')
+          ? 'https://ripair.shop/api'
+          : 'api';
+
+        fetch(API + '/contact.php', { method: 'POST', body: data })
+          .then(res => res.json())
+          .then(res => {
+            if (res.success) {
+              showToast("✅ Message envoyé !", "success");
+              form.reset();
+            } 
+            else if (res.error === "too_many_requests") {
+              let remaining = res.remaining || 30;
+              const toast = document.getElementById("toast");
+
+              // On garde le toast visible pendant tout le décompte
+              toast.className = "toast warning show";
+
+              const updateText = () => {
+                toast.textContent = `⏳ Merci d'attendre ${remaining}s avant de réessayer.`;
+                remaining--;
+                if (remaining < 0) {
+                  clearInterval(timer);
+                  toast.className = toast.className.replace("show", "");
+                }
+              };
+              updateText();
+              const timer = setInterval(updateText, 1000);
+            }
+            else if (res.error) {
+              showToast("❌ " + res.error, "error");
+            }
+          })
+          .catch(() => showToast("❌ Erreur serveur", "error"));
+      }).catch(err => {
+        console.error("❌ Erreur reCAPTCHA :", err);
+        showToast("❌ Erreur reCAPTCHA", "error");
+      });
+    });
+  });
+});
+
+function showToast(message, type = "success") {
+  const toast = document.getElementById("toast");
+  toast.textContent = message;
+  toast.className = "toast " + type + " show";
+  setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
+}
+</script>
+
+<style>
+.toast {
+  visibility: hidden;
+  min-width: 250px;
+  margin-left: -125px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 10px;
+  padding: 16px;
+  position: fixed;
+  left: 50%;
+  bottom: 30px;
+  font-size: 15px;
+  z-index: 1000;
+  transition: opacity 0.3s ease;
+}
+.toast.show { visibility: visible; opacity: 1; }
+.toast.success { background-color: #2ecc71; }
+.toast.error { background-color: #e74c3c; }
+</style>
+
+</body>
+</html>
+

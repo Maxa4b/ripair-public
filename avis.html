@@ -1,0 +1,504 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RIPAIR - Avis clients</title>
+
+  <meta name="description" content="Découvrez les avis clients RIPAIR (Google + avis RIPAIR), et laissez le vôtre en quelques secondes." />
+  <meta property="og:title" content="RIPAIR - Avis clients" />
+  <meta property="og:description" content="Découvrez les avis clients RIPAIR et laissez le vôtre." />
+  <meta property="og:image" content="/assets/img/preview.jpg" />
+  <meta property="og:url" content="https://ripair.shop/avis.html" />
+  <meta property="og:type" content="website" />
+
+  <link rel="icon" href="assets/img/logoweb.webp" type="image/png">
+  <link rel="preconnect" href="https://ripair.shop">
+
+  <link rel="stylesheet" href="/assets/css/critical.css">
+  <link rel="preload" href="/assets/css/style.css" as="style">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <noscript><link rel="stylesheet" href="/assets/css/style.css"></noscript>
+
+  <script defer src="/assets/js/script.js"></script>
+</head>
+<body>
+<header class="navbar">
+  <div class="nav-inner">
+    <a class="navbar-logo" href="index.html">
+      <img src="assets/img/logo.webp" alt="RIPAIR Logo">
+    </a>
+
+    <nav class="navbar-links">
+      <a href="/index.html">Accueil</a>
+      <a href="/services.html">Services</a>
+      <a href="/switch-picofly.html">Switch</a>
+      <a href="/devis.html">Devis</a>
+      <a href="/avis.html">Avis</a>
+      <a href="/contact.html">Contact</a>
+    </nav>
+
+    <button class="icon-btn" aria-label="Ouvrir le menu" id="hamburger" onclick="toggleMenu()">
+      <svg viewBox="0 0 24 24" width="24" height="24" stroke="#111" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <line x1="3" y1="12" x2="21" y2="12"/>
+        <line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+
+    <nav id="mobileMenu" class="mobile-menu">
+      <a href="/index.html">Accueil</a>
+      <a href="/services.html">Services</a>
+      <a href="/switch-picofly.html">Switch</a>
+      <a href="/devis.html">Devis</a>
+      <a href="/avis.html">Avis</a>
+      <a href="/contact.html">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="page-hero">
+    <div class="container">
+      <h1>Nos clients parlent pour nous</h1>
+      <p id="reviewsSummary">Chargement des avis…</p>
+    </div>
+  </section>
+
+  <section class="reviews-section">
+    <div class="reviews-carousel" aria-live="polite"></div>
+    <div class="review-nav" aria-label="Navigation des avis"></div>
+  </section>
+
+  <section class="leave-review">
+    <div class="leave-review__actions">
+      <button type="button" class="btn-review" id="openReviewModal">Laisser un avis</button>
+      <a
+        href="https://www.google.com/maps/place/RIPAIR/@44.7860319,-0.6809904,13z/data=!4m18!1m9!3m8!1s0xadf912cbd1ad2027:0x281ecb6cf21e4ec6!2sRIPAIR!8m2!3d44.7860318!4d-0.6809904!9m1!1b1!16s%2Fg%2F11xvqh9x7m!3m7!1s0xadf912cbd1ad2027:0x281ecb6cf21e4ec6!8m2!3d44.7860318!4d-0.6809904!9m1!1b1!16s%2Fg%2F11xvqh9x7m?entry=ttu"
+        target="_blank"
+        rel="noopener"
+        class="btn-review btn-review--secondary"
+      >
+        Laisser un avis sur Google
+      </a>
+    </div>
+    <p class="leave-review__hint">Votre avis est publié après validation (anti-spam) et s’affiche ensuite partout sur le site.</p>
+  </section>
+
+  <div id="reviewModal" class="review-modal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="review-modal-content">
+      <button type="button" class="review-close" id="closeReviewModal" aria-label="Fermer">&times;</button>
+
+      <div id="reviewFormPanel">
+        <h2 style="margin-top:0">Laisser un avis</h2>
+
+        <form id="reviewForm">
+          <div>
+            <label style="display:block; font-weight:700; margin-bottom:8px">Votre note</label>
+            <div class="stars-input" role="radiogroup" aria-label="Votre note (1 à 5)">
+              <input type="radio" id="star5" name="rating" value="5"><label for="star5" title="5/5">&#9733;</label>
+              <input type="radio" id="star4" name="rating" value="4"><label for="star4" title="4/5">&#9733;</label>
+              <input type="radio" id="star3" name="rating" value="3"><label for="star3" title="3/5">&#9733;</label>
+              <input type="radio" id="star2" name="rating" value="2"><label for="star2" title="2/5">&#9733;</label>
+              <input type="radio" id="star1" name="rating" value="1"><label for="star1" title="1/5">&#9733;</label>
+            </div>
+          </div>
+
+          <div>
+            <label for="comment" style="display:block; font-weight:700; margin-bottom:8px">Votre commentaire</label>
+            <textarea id="comment" name="comment" rows="4" placeholder="Décrivez votre expérience (min. 10 caractères)" required></textarea>
+          </div>
+
+          <div class="review-consent">
+            <input type="checkbox" id="showName" name="show_name">
+            <label for="showName">Afficher mon prénom/nom (optionnel)</label>
+          </div>
+
+          <div class="review-name-fields" id="nameFields" style="display:none">
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px">
+              <div>
+                <label for="firstName">Prénom</label>
+                <input type="text" id="firstName" name="first_name" placeholder="Ex: Marie">
+              </div>
+              <div>
+                <label for="lastName">Nom</label>
+                <input type="text" id="lastName" name="last_name" placeholder="Ex: L.">
+              </div>
+            </div>
+          </div>
+
+          <p id="reviewError" class="review-error" role="alert" hidden></p>
+          <button type="submit" class="btn-submit" id="submitReviewBtn">Envoyer</button>
+        </form>
+      </div>
+
+      <div id="reviewSuccessPanel" class="review-success" hidden>
+        <div class="review-success__icon" aria-hidden="true">&#10003;</div>
+        <h2 style="margin: 0 0 8px">Merci pour votre avis</h2>
+        <p id="reviewSuccessText" style="margin:0 0 18px; color: var(--muted, #5b6b80); line-height:1.55"></p>
+        <button type="button" class="btn-submit" id="closeReviewAfterSuccess">Fermer</button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="container footer-content">
+    <div class="footer-left">
+      <p>&copy; 2025 RIPAIR &mdash; Tous droits r&eacute;serv&eacute;s.</p>
+      <p class="footer-meta">EI RIPAIR &middot; 06&nbsp;15&nbsp;58&nbsp;87&nbsp;82 &middot; contact@ripair.shop</p>
+    </div>
+    <div class="footer-links">
+      <a href="mentions.html">Mentions l&eacute;gales</a>
+      <a href="devis.html">Obtenir un devis</a>
+    </div>
+    <div class="footer-right">
+      <a href="https://instagram.com/ripair.shop" target="_blank" rel="noopener">
+        <img src="assets/img/instagram.webp" alt="Instagram" class="social-icon">
+      </a>
+      <a href="https://www.facebook.com/profile.php?id=61579654974480" target="_blank" rel="noopener">
+        <img src="assets/img/facebook.webp" alt="Facebook" class="social-icon">
+      </a>
+      <a href="#" class="btn-contact" data-contact-modal>Contactez-nous</a>
+    </div>
+  </div>
+</footer>
+
+<div id="contactModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2 class="modal-title">Contactez-nous</h2>
+    <div class="contact-item">
+      <p>contact@ripair.shop</p>
+      <button id="copyEmail" class="btn-contact">Copier</button>
+    </div>
+    <div class="contact-item">
+      <p>06&nbsp;15&nbsp;58&nbsp;87&nbsp;82</p>
+      <button id="phoneAction" class="btn-contact"></button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+(function(){
+  const modal = document.getElementById("contactModal");
+  const triggers = document.querySelectorAll("[data-contact-modal]");
+  const closeBtn = modal ? modal.querySelector(".close") : null;
+  const toast = document.getElementById("toast");
+  const copyEmailBtn = document.getElementById("copyEmail");
+  const phoneAction = document.getElementById("phoneAction");
+  const phoneNumber = "0615588782";
+
+  if(modal && triggers.length){
+    const openModal = (e)=>{
+      e.preventDefault();
+      modal.style.display = "flex";
+    };
+    triggers.forEach(btn => btn.addEventListener("click", openModal));
+  }
+
+  if(closeBtn){
+    closeBtn.addEventListener("click", ()=> modal.style.display = "none");
+  }
+  window.addEventListener("click", (e)=>{ if(e.target === modal){ modal.style.display = "none"; }});
+
+  function copyToClipboard(text){
+    navigator.clipboard.writeText(text).then(()=> showToast("Copié : " + text));
+  }
+
+  if(copyEmailBtn){
+    copyEmailBtn.addEventListener("click", (e)=>{
+      e.preventDefault();
+      copyToClipboard("contact@ripair.shop");
+    });
+  }
+
+  if(phoneAction){
+    if(/Mobi|Android/i.test(navigator.userAgent)){
+      phoneAction.textContent = "Appeler";
+      phoneAction.addEventListener("click", (e)=>{
+        e.preventDefault();
+        window.location.href = "tel:" + phoneNumber;
+      });
+    } else {
+      phoneAction.textContent = "Copier";
+      phoneAction.addEventListener("click", (e)=>{
+        e.preventDefault();
+        copyToClipboard(phoneNumber);
+      });
+    }
+  }
+
+  function showToast(message){
+    if(!toast) return;
+    toast.textContent = message;
+    toast.className = "show";
+    setTimeout(()=>{ toast.className = toast.className.replace("show",""); }, 2000);
+  }
+})();
+
+function getApiBase() {
+  return (location.protocol === "file:" || location.origin === "null") ? "https://ripair.shop/api" : "api";
+}
+
+let reviewIndex = 0;
+let reviewTimer = null;
+
+function showReview(index){
+  const cards = document.querySelectorAll(".review-card");
+  const dots = document.querySelectorAll(".review-dot");
+  cards.forEach((c,i)=>c.classList.toggle("active", i === index));
+  dots.forEach((d,i)=>d.classList.toggle("active", i === index));
+  reviewIndex = index;
+}
+
+function setupCarousel(){
+  if (reviewTimer) window.clearInterval(reviewTimer);
+  reviewTimer = window.setInterval(()=>{
+    const cards = document.querySelectorAll(".review-card");
+    if(cards.length===0) return;
+    reviewIndex = (reviewIndex + 1) % cards.length;
+    showReview(reviewIndex);
+  }, 5000);
+}
+
+function getStars(rating){
+  const safe = Math.max(1, Math.min(5, Number(rating) || 0));
+  return "★".repeat(safe);
+}
+
+function getInitial(name){
+  const safe = String(name || "").trim();
+  if (!safe) return "R";
+  return safe[0].toUpperCase();
+}
+
+async function loadReviews(){
+  const container = document.querySelector(".reviews-carousel");
+  const navContainer = document.querySelector(".review-nav");
+  const summary = document.getElementById("reviewsSummary");
+
+  try{
+    const API = getApiBase();
+    const res = await fetch(API + "/get_reviews.php", { cache: "no-store" });
+    const data = await res.json();
+
+    const reviews = Array.isArray(data?.reviews)
+      ? data.reviews
+      : (Array.isArray(data) ? data : (data?.result?.reviews || []));
+
+    const rating = data?.meta?.rating ?? data?.result?.rating ?? null;
+    const count = data?.meta?.count ?? data?.result?.user_ratings_total ?? null;
+    if (summary) {
+      if (rating && count) {
+        summary.textContent = `Note moyenne ${Number(rating).toFixed(1)} / 5 — ${count} avis`;
+      } else if (count) {
+        summary.textContent = `${count} avis`;
+      } else {
+        summary.textContent = "Avis clients (Google + RIPAIR)";
+      }
+    }
+
+    if(!container || !navContainer) return;
+    container.innerHTML = "";
+    navContainer.innerHTML = "";
+
+    if(!Array.isArray(reviews) || reviews.length === 0){
+      container.innerHTML = "<p>Aucun avis disponible pour le moment.</p>";
+      return;
+    }
+
+    reviews.slice(0, 60).forEach((r,i)=>{
+      const author = r?.author_name || "Client RIPAIR";
+      const text = r?.text || "";
+      const ratingValue = r?.rating || 5;
+
+      const card = document.createElement("div");
+      card.className = "review-card" + (i === 0 ? " active" : "");
+
+      const header = document.createElement("div");
+      header.className = "review-header";
+
+      const avatar = document.createElement("div");
+      avatar.className = "review-avatar";
+      avatar.textContent = getInitial(author);
+
+      const authorNode = document.createElement("p");
+      authorNode.className = "review-author";
+      authorNode.textContent = author;
+
+      header.appendChild(avatar);
+      header.appendChild(authorNode);
+
+      const quote = document.createElement("blockquote");
+      quote.textContent = text;
+
+      const stars = document.createElement("p");
+      stars.className = "review-stars";
+      stars.textContent = getStars(ratingValue);
+
+      card.appendChild(header);
+      card.appendChild(quote);
+      card.appendChild(stars);
+      container.appendChild(card);
+
+      const dot = document.createElement("span");
+      dot.className = "review-dot" + (i === 0 ? " active" : "");
+      dot.addEventListener("click", ()=>showReview(i));
+      navContainer.appendChild(dot);
+    });
+
+    reviewIndex = 0;
+    showReview(0);
+    setupCarousel();
+  }catch(err){
+    console.error("Erreur en récupérant les avis:", err);
+    if (container) container.innerHTML = "<p>Impossible de charger les avis.</p>";
+    if (summary) summary.textContent = "Impossible de charger les avis.";
+  }
+}
+
+function normalizeError(code){
+  switch(String(code || "")){
+    case "invalid_rating": return "Merci de choisir une note entre 1 et 5.";
+    case "comment_too_short": return "Votre commentaire est trop court (min. 10 caractères).";
+    case "comment_too_long": return "Votre commentaire est trop long (max. 1200 caractères).";
+    case "name_required_when_public": return "Si vous affichez votre nom, merci de renseigner au moins un prénom ou un nom.";
+    case "too_many_requests": return "Vous avez déjà envoyé un avis récemment. Merci de réessayer dans une minute.";
+    default: return "Impossible d'envoyer l'avis pour le moment. Réessayez plus tard.";
+  }
+}
+
+function initReviewModal(){
+  const modal = document.getElementById("reviewModal");
+  const openBtn = document.getElementById("openReviewModal");
+  const closeBtn = document.getElementById("closeReviewModal");
+  const closeSuccessBtn = document.getElementById("closeReviewAfterSuccess");
+  const showName = document.getElementById("showName");
+  const nameFields = document.getElementById("nameFields");
+  const form = document.getElementById("reviewForm");
+  const errorNode = document.getElementById("reviewError");
+  const submitBtn = document.getElementById("submitReviewBtn");
+  const formPanel = document.getElementById("reviewFormPanel");
+  const successPanel = document.getElementById("reviewSuccessPanel");
+  const successText = document.getElementById("reviewSuccessText");
+
+  const open = () => {
+    if (!modal) return;
+    modal.style.display = "flex";
+    modal.setAttribute("aria-hidden", "false");
+    if (errorNode) {
+      errorNode.textContent = "";
+      errorNode.hidden = true;
+    }
+  };
+  const close = () => {
+    if (!modal) return;
+    modal.style.display = "none";
+    modal.setAttribute("aria-hidden", "true");
+    resetFormUi();
+  };
+
+  const showError = (message) => {
+    if (!errorNode) return;
+    errorNode.textContent = message;
+    errorNode.hidden = false;
+  };
+
+  const resetFormUi = () => {
+    if (formPanel) formPanel.hidden = false;
+    if (successPanel) successPanel.hidden = true;
+    if (successText) successText.textContent = "";
+    if (errorNode) {
+      errorNode.textContent = "";
+      errorNode.hidden = true;
+    }
+    if (form) form.reset();
+    if (nameFields) nameFields.style.display = "none";
+  };
+
+  if (openBtn) openBtn.addEventListener("click", open);
+  if (closeBtn) closeBtn.addEventListener("click", close);
+  if (modal) {
+    modal.addEventListener("click", (e)=>{ if(e.target === modal) close(); });
+  }
+  if (closeSuccessBtn) closeSuccessBtn.addEventListener("click", () => { close(); loadReviews(); });
+
+  if (showName && nameFields) {
+    showName.addEventListener("change", () => {
+      nameFields.style.display = showName.checked ? "block" : "none";
+    });
+  }
+
+  if (form) {
+    form.addEventListener("submit", async (e)=>{
+      e.preventDefault();
+      if (!submitBtn) return;
+      if (errorNode) { errorNode.textContent = ""; errorNode.hidden = true; }
+
+      const ratingEl = form.querySelector('input[name="rating"]:checked');
+      const rating = Number(ratingEl ? ratingEl.value : 0);
+      const comment = String(document.getElementById("comment")?.value || "").trim();
+      const showNameValue = Boolean(showName && showName.checked);
+      const firstName = String(document.getElementById("firstName")?.value || "").trim();
+      const lastName = String(document.getElementById("lastName")?.value || "").trim();
+
+      if (!rating || rating < 1 || rating > 5) return showError("Merci de choisir une note.");
+      if (comment.length < 10) return showError("Votre commentaire est trop court (min. 10 caractères).");
+      if (showNameValue && !firstName && !lastName) return showError("Merci de renseigner au moins un prénom ou un nom.");
+
+      submitBtn.disabled = true;
+      const prevText = submitBtn.textContent;
+      submitBtn.textContent = "Envoi…";
+
+      try{
+        const API = getApiBase();
+        const resp = await fetch(API + "/submit_review.php", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            rating,
+            comment,
+            show_name: showNameValue,
+            first_name: firstName,
+            last_name: lastName,
+            source_page: location.pathname || "avis.html",
+          }),
+        });
+
+        const payload = await resp.json().catch(()=> ({}));
+        if (!resp.ok || !payload?.success) {
+          throw new Error(payload?.error || "server_error");
+        }
+
+        if (formPanel) formPanel.hidden = true;
+        if (successPanel) successPanel.hidden = false;
+        if (successText) successText.textContent = payload?.message || "Votre avis a été envoyé et sera publié après validation.";
+      }catch(err){
+        console.error(err);
+        showError(normalizeError(err?.message));
+      }finally{
+        submitBtn.disabled = false;
+        submitBtn.textContent = prevText;
+      }
+    });
+  }
+
+  if (modal) {
+    modal.addEventListener("keydown", (e)=>{
+      if (e.key === "Escape") close();
+    });
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  loadReviews();
+  initReviewModal();
+  window.setInterval(loadReviews, 10 * 60 * 1000);
+});
+</script>
+</body>
+</html>
+

@@ -1,0 +1,41 @@
+# --- Secrets ---
+.env
+.env.*
+!.env.example
+
+# --- OS / Editor ---
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# --- Logs / caches ---
+*.log
+
+# --- Runtime files ---
+api/locks/*
+!api/locks/.gitkeep
+
+# --- Separate repos (kept outside public repo) ---
+Helix/
+ripair-ecommerce/
+
+# --- Node ---
+**/node_modules/
+**/.vite/
+**/dist/
+**/.cache/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# --- PHP / Composer ---
+**/vendor/
+composer.phar
+
+# --- Laravel ---
+Helix/backend/storage/app/public/*
+Helix/backend/storage/framework/*
+Helix/backend/storage/logs/*
+Helix/backend/.phpunit.result.cache

@@ -1,0 +1,1745 @@
+﻿<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>Devis automatique — RIPAIR</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Styles globaux du site -->
+  <link rel="stylesheet" href="/assets/css/critical.css">
+  <link rel="preload" href="/assets/css/style.css" as="style">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <noscript><link rel="stylesheet" href="/assets/css/style.css"></noscript>
+  <style>
+    :root {
+      /* Harmonisation avec le thème clair du site */
+      --bg:#ffffff; --panel:#ffffff; --border:rgba(17,17,17,.08); --ink:#111111; --muted:#667085;
+      --accent: var(--blue); --accent-ink:#ffffff; --field:#f7f9fd; --field-b:#dfe6f0; --ok:#16a34a; --err:#ef4444;
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+      --nav-h: 72px;
+      --slide-up: clamp(24px, 8vh, 80px);
+    }
+    *{box-sizing:border-box}
+
+    /* Ajout d'un fond élégant et moderne pour la page devis */
+    /* On utilise un mélange de dégradés linéaires et radiaux pour créer des touches
+       subtiles de couleur, inspirées de la charte bleue de RIPAIR. Le fond est fixé
+       pour suivre la page et apporter de la profondeur sans distraire. */
+    body {
+      /* Couleurs de base claires pour un look aéré */
+      background-image:
+        radial-gradient(circle at 20% 30%, rgba(58, 186, 252, 0.25), transparent 45%),
+        radial-gradient(circle at 80% 60%, rgba(58, 186, 252, 0.18), transparent 50%),
+        linear-gradient(120deg, #f6fafe 0%, #eaf4fe 100%);
+      background-attachment: fixed;
+      background-size: cover;
+    }
+    /* main conteneur harmonisé avec .container globale */
+    main.container{max-width:1200px;margin:0 auto;padding:20px;width:min(1200px,92%)}
+    .card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px}
+    .muted{color:var(--muted);font-size:14px}
+
+    /* Form */
+    form.grid{display:grid;gap:12px}
+    .row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+    @media (max-width:980px){.row{grid-template-columns:repeat(2,1fr)}}
+    @media (max-width:640px){.row{grid-template-columns:1fr}}
+    label{font-size:14px;color:var(--muted);display:block;margin-bottom:6px;font-weight:600}
+    select,button{width:100%}
+    /* Select moderne (dark) */
+    select {
+      /* reset style natif */
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+
+      /* couleurs de ta DA */
+      background: var(--field);
+      border: 1px solid var(--field-b);
+      color: var(--ink);
+
+      /* arrondi/rythme */
+      padding: 12px 44px 12px 14px; /* espace pour la flèche à droite */
+      border-radius: 14px;
+      line-height: 1.2;
+      font-size: 16px;
+
+      /* feedback */
+      transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.03), 0 0 0 rgba(0,0,0,0);
+
+      /* flèche intégrée (SVG encodé) */
+      background-image:
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23aeb7c7' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 18px 18px;
+    }
+
+    select:hover { border-color: var(--blue); }
+
+    select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(58,186,252,.18); /* halo doux bleu */
+    }
+
+    select:disabled { opacity: .6; cursor: not-allowed; }
+
+    /* (optionnel) couleur du menu sur navigateurs qui le supportent */
+    select option { background: #ffffff; color: var(--ink); }
+
+    select:disabled{opacity:.6;cursor:not-allowed}
+    /* On laisse .btn globale de style.css gérer les boutons principaux */
+    .btn-ghost{background:var(--field);color:var(--ink);border:1px solid var(--field-b);padding:10px 14px;border-radius:12px}
+    .btn-ghost:hover{border-color:var(--blue)}
+    .actions{display:flex;gap:10px;justify-content:flex-end}
+
+    /* Result */
+    .result{margin-top:14px;display:grid;gap:10px}
+    .price-box{background:#ffffff;border:1px solid var(--border);border-radius:14px;padding:16px;box-shadow:0 6px 18px rgba(17,17,17,.06)}
+    .price-box h3{margin:0 0 6px 0;font-size:18px}
+    .line{margin:4px 0}
+    .success{color:var(--ok)} .error{color:var(--err)}
+    .skeleton{height:14px;border-radius:6px;background:linear-gradient(90deg,#eef3f9, #f6faff, #eef3f9);background-size:200% 100%;animation:sk 1.2s infinite}
+    @keyframes sk{0%{background-position:0% 0}100%{background-position:200% 0}}
+    .actions.center { justify-content: center; }
+    /* ========== Fancy Select (combobox) ========== */
+    .fs-wrap{position:relative}
+    .fs-wrap .fs-control{
+      display:flex; align-items:center; gap:8px;
+      background:var(--field); color:var(--ink);
+      border:1px solid var(--field-b); border-radius:14px;
+      padding:11px 14px; cursor:pointer;
+      transition:border-color .15s ease, box-shadow .15s ease;
+      font-family: inherit; font-size:16px; font-weight:400;
+    }
+    .fs-wrap .fs-control:hover{border-color:var(--blue)}
+    .fs-wrap .fs-control:focus{outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(58,186,252,.18)}
+    .fs-wrap .fs-value{flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; opacity:.95; font-family: inherit; font-size:16px}
+    .fs-wrap .fs-chevron{width:18px;height:18px;opacity:.8; color: var(--muted)}
+    .fs-wrap .fs-menu{
+      position:absolute; left:0; right:0; top:calc(100% + 8px); z-index:100;
+      background:#ffffff; border:1px solid var(--border); border-radius:14px; box-shadow:0 14px 44px rgba(17,17,17,.12);
+      display:none; padding:8px;
+    }
+    .fs-wrap.open .fs-menu{display:block}
+    .fs-wrap .fs-search{
+      display:flex; align-items:center; gap:8px; border:1px solid var(--field-b); border-radius:10px; background:var(--field); padding:8px 10px; margin:4px 4px 8px 4px;
+    }
+    .fs-wrap .fs-search .fs-icon{ color: var(--muted) }
+    .fs-wrap .fs-search input{
+      background:transparent; border:none; color:var(--ink); width:100%; outline:none; padding:0; font-size:14px; font-family: inherit;
+    }
+    .fs-wrap .fs-list{max-height:260px; overflow:auto; padding:4px}
+    .fs-item{
+      display:flex; align-items:center; gap:10px;
+      padding:10px 12px; border-radius:10px; cursor:pointer;
+      color:var(--ink);
+    }
+    .fs-item:hover{background:rgba(58,186,252,0.08)}
+    .fs-item.active{background:rgba(58,186,252,0.12); outline:1px solid rgba(58,186,252,0.35)}
+    .fs-item .fs-icon{width:18px;height:18px;opacity:.9; color: var(--muted)}
+    .fs-item .fs-label{flex:1; font-family: inherit; font-size:15px}
+    .fs-empty{padding:10px 12px; color:var(--muted)}
+    /* cacher le select mais le garder dans le flux pour le POST */
+    select.fs{
+      position:absolute !important; left:-9999px !important; width:1px;height:1px; clip:rect(0 0 0 0); clip-path:inset(50%); overflow:hidden;
+    }
+    .fs-wrap.disabled .fs-control{opacity:.6; cursor:not-allowed}
+    /* ===== Checkbox moderne ===== */
+    .chk{
+      display:flex; gap:10px; align-items:flex-start;
+      user-select:none; cursor:pointer;
+    }
+    .chk input{
+      /* on garde l'accessibilité, mais on cache le rendu natif */
+      position:absolute; opacity:0; width:1px; height:1px; pointer-events:none;
+    }
+    .chk .box{
+      position:relative; top:2px;
+      width:20px; height:20px; flex:0 0 20px;
+      border-radius:6px;
+      background:var(--field);
+      border:1px solid var(--field-b);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.03);
+      transition: border-color .15s ease, background .15s ease, box-shadow .15s ease, transform .06s ease;
+    }
+    .chk .lbl{ color:var(--muted); line-height:1.35 }
+
+    /* checkmark */
+    .chk .box::after{
+      content:''; position:absolute; left:50%; top:50%;
+      width:14px; height:14px; transform:translate(-50%,-50%) scale(.7);
+      opacity:0; transition:opacity .12s ease, transform .12s ease; 
+      background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><polyline points='20 6 9 17 4 12'/></svg>") no-repeat center / 14px 14px;
+    }
+    /* états */
+    .chk input:focus-visible + .box{
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(58,186,252,.18);
+    }
+    .chk input:active + .box{ transform:scale(.98); }
+
+    .chk input:checked + .box{
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+    .chk input:checked + .box::after{
+      opacity:1; transform:translate(-50%,-50%) scale(1);
+    }
+
+    /* disabled */
+    .chk input:disabled + .box{ opacity:.5; cursor:not-allowed }
+    .chk input:disabled ~ .lbl{ opacity:.6; cursor:not-allowed }
+
+    /* === Multi-problem controls === */
+    /* container for problem selects to allow absolute positioning of the plus button */
+    .plus-wrap { position:absolute; left:8px; bottom:-10px; }
+    #problemContainer { position:relative; padding-bottom:36px; }
+    .plus-btn {
+      width: 36px; height: 36px;
+      border-radius: 9999px;
+      border: 1px solid rgba(0,0,0,.08);
+      background: linear-gradient(180deg, rgba(255,255,255,.96), rgba(245,245,245,.96));
+      box-shadow: 0 4px 12px rgba(0,0,0,.08);
+      display:flex; align-items:center; justify-content:center;
+      font-size: 20px; line-height: 1; font-weight:600;
+      cursor: pointer;
+      transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease, background .12s ease, opacity .12s ease;
+    }
+    .plus-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 18px rgba(0,0,0,.12); }
+    .plus-btn:active { transform: translateY(0); box-shadow: 0 4px 12px rgba(0,0,0,.08); }
+    .plus-btn.disabled,[aria-disabled="true"].plus-btn { opacity:.45; cursor:not-allowed; filter:grayscale(1); }
+    .problem-row { position:relative; margin-top:8px; }
+    .remove-btn {
+      position:absolute; right:8px; top:50%; transform:translateY(-50%);
+      width: 30px; height: 30px; border-radius: 9999px;
+      display:flex; align-items:center; justify-content:center;
+      border: 1px solid rgba(0,0,0,.08);
+      background: rgba(255,255,255,.95);
+      box-shadow: 0 2px 8px rgba(0,0,0,.08);
+      font-size: 18px; line-height:1; cursor:pointer;
+      transition: transform .12s ease, box-shadow .12s ease, opacity .12s ease;
+    }
+    .remove-btn:hover { transform: translateY(-50%) scale(1.04); box-shadow: 0 6px 14px rgba(0,0,0,.12); }
+    .remove-btn:active { transform: translateY(-50%) scale(1.0); }
+
+    
+
+  /* === Récapitulatif enrichi === */
+.recap { margin-top:10px; }
+@media (max-width:640px){ .recap{ margin-top:8px } }
+.recap-head { display:flex; align-items:baseline; gap:14px; margin-bottom:10px;}
+.recap h2 { font-size:20px; margin:0; }
+.recap-grid { display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
+.recap-card { background:#ffffff; border:1px solid var(--border); border-radius:14px; padding:16px; box-shadow:0 6px 18px rgba(17,17,17,.06) }
+.recap-card h3 { margin:0 0 10px 0; }
+.list { list-style:none; padding:0; margin:0; display:grid; gap:8px; }
+.list li { display:flex; justify-content:space-between; gap:10px; padding:6px 0; border-bottom:1px dashed rgba(154,167,189,.15); }
+.list li:last-child { border-bottom:none; }
+.totals { display:grid; gap:6px; }
+.tot-row { display:grid; grid-template-columns:1fr auto; align-items:center; padding:4px 0; }
+.tot-row.with-toggle { grid-template-columns: 1fr auto auto; gap:10px; }
+.tot-row.info .discount-label{ color: var(--blue); font-weight:600 }
+.tot-row.total { border-top:1px solid var(--border); padding-top:10px; font-size:18px; }
+.trust { display:grid; grid-template-columns: repeat(4,1fr); gap:10px; margin-top:12px; }
+.trust-item { background:#ffffff; border:1px solid var(--border); border-radius:12px; padding:12px; box-shadow:0 4px 12px rgba(17,17,17,.05) }
+.ti-title { font-weight:700; }
+.ti-text { color:var(--muted); font-size:14px; margin-top:4px; }
+
+/* FAQ */
+.faq h2{font-size:20px;margin:0 0 10px 0}
+.faq details{background:#ffffff;border:1px solid var(--border);border-radius:12px;padding:12px;margin:8px 0;box-shadow:0 4px 12px rgba(17,17,17,.05)}
+.faq summary{cursor:pointer;font-weight:600}
+.faq p{margin:8px 0 0 0;color:var(--muted)}
+
+/* Sticky bar */
+.sticky-bar {
+  position: sticky;
+  bottom: 0; left: 0; right: 0;
+  display:flex; justify-content:space-between; align-items:center; gap:12px;
+  background:rgba(255,255,255,.92); backdrop-filter:saturate(1.2) blur(8px);
+  border-top:1px solid var(--border);
+  padding:12px 16px; margin-top:14px; border-radius:12px;
+}
+.sticky-left { color:var(--muted); }
+@media (max-width:800px){ .recap-grid{ grid-template-columns:1fr } .trust{ grid-template-columns:repeat(2,1fr) } }
+
+/* Recap anchor accounts for sticky navbar */
+#recapSection{ scroll-margin-top: calc(var(--nav-h, 72px) + 12px); }
+
+    .hidden-zone {
+      opacity: 0;
+      transform: translateY(40px);
+      pointer-events: none;
+      transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+      /* collapse layout while hidden to allow centering the cascade */
+      height: 0 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      overflow: hidden !important;
+    }
+
+    .visible-zone {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: all;
+    }
+
+.btn:active {
+  transform: scale(0.97);
+  transition: transform 0.1s ease;
+}
+.btn-primary{ position: relative; }
+.btn-primary:hover { box-shadow: 0 0 12px rgba(58, 186, 252, .35); }
+
+/* Loading spinner removed per request */
+
+select {
+  transition: border-color .2s ease, box-shadow .2s ease, opacity .3s ease;
+}
+select:disabled {
+  opacity: 0.5;
+}
+body.transitioning {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+  transition: background 1.2s ease;
+}
+
+/* Intro centering + cascade slide */
+body.intro main{ min-height: calc(100vh - var(--nav-h, 72px)); display:flex; align-items:center; }
+.cascade{ transition: transform .7s var(--ease), filter .45s ease, opacity .45s ease; will-change: transform; position:relative }
+body.submitted .cascade{ transform: translateY(calc(-1 * var(--slide-up))); }
+body.submitting .cascade{ transform: translateY(-12px) scale(.995); filter: blur(.4px); }
+body.submitting .cascade::after{ content:''; position:absolute; inset:0; pointer-events:none; opacity:0; transition: opacity .4s var(--ease); background: radial-gradient(120% 120% at 50% 0%, rgba(255,255,255,.03), rgba(0,0,0,0)); }
+body.submitting .cascade::after{ opacity:1 }
+@media (prefers-reduced-motion: reduce){ .cascade{ transition:none } body.submitted .cascade{ transform:none } }
+
+/* Give headroom inside the first card when cascade slides up */
+body.submitted main .card:first-of-type{ padding-top: calc(16px + var(--slide-up)); }
+
+/* On short viewports, reduce slide distance and disable vertical centering */
+@media (max-height: 740px){
+  :root{ --slide-up: clamp(12px, 4vh, 48px); }
+  body.intro main{ align-items:flex-start; padding-top: calc(var(--nav-h, 72px) + 12px); }
+}
+
+/* Smooth staggered reveal */
+@keyframes fadeUp { from { opacity:0; transform: translateY(10px) scale(.98); } to { opacity:1; transform: translateY(0) scale(1); } }
+
+#recapSection.visible-zone .recap-head { opacity:0; animation: fadeUp .55s var(--ease) forwards; }
+#recapSection.visible-zone .recap-grid .recap-card { opacity:0; animation: fadeUp .6s var(--ease) forwards; }
+#recapSection.visible-zone .recap-grid .recap-card:nth-child(1){ animation-delay: .05s }
+#recapSection.visible-zone .recap-grid .recap-card:nth-child(2){ animation-delay: .12s }
+
+#recapSection.visible-zone .trust .trust-item { opacity:0; animation: fadeUp .55s var(--ease) forwards; }
+#recapSection.visible-zone .trust .trust-item:nth-child(1){ animation-delay:.00s }
+#recapSection.visible-zone .trust .trust-item:nth-child(2){ animation-delay:.06s }
+#recapSection.visible-zone .trust .trust-item:nth-child(3){ animation-delay:.12s }
+#recapSection.visible-zone .trust .trust-item:nth-child(4){ animation-delay:.18s }
+
+.faq.visible-zone details { opacity:0; animation: fadeUp .55s var(--ease) forwards; }
+.faq.visible-zone details:nth-of-type(1){ animation-delay:.0s }
+.faq.visible-zone details:nth-of-type(2){ animation-delay:.06s }
+.faq.visible-zone details:nth-of-type(3){ animation-delay:.12s }
+
+.sticky-bar.visible-zone { opacity:0; animation: fadeUp .55s var(--ease) forwards; }
+
+@media (prefers-reduced-motion: reduce){
+  #recapSection.visible-zone .recap-head,
+  #recapSection.visible-zone .recap-grid .recap-card,
+  #recapSection.visible-zone .trust .trust-item,
+  .faq.visible-zone details,
+  .sticky-bar.visible-zone { animation:none; opacity:1; transform:none }
+}
+
+/* Reduce visual gap between cascade and recap after submit */
+body.submitted #recapSection{ margin-top: calc(10px - var(--slide-up)); }
+/* --- Modal contact : version compacte --- */
+.modal{
+  display:none; position:fixed; inset:0; z-index:1000;
+  background: rgba(17,17,17,.35); backdrop-filter: blur(2px);
+  justify-content:center; align-items:center; padding:16px;
+}
+.modal-content{
+  width:min(560px, calc(100% - 24px));
+  background:#fff; border:1px solid var(--border);
+  border-radius:18px; padding:22px 22px 18px;
+  box-shadow:0 18px 50px rgba(17,17,17,.18);
+}
+.modal-title{ 
+  margin:4px 0 14px; text-align:center; font-size:28px; color:var(--blue);
+}
+.modal .close{
+  position:absolute; right:18px; top:14px; cursor:pointer; font-size:22px; line-height:1;
+  color:#98a4b6;
+}
+
+/* Lignes email/téléphone sur une même rangée */
+.contact-item{
+  display:flex; align-items:center; justify-content:space-between; gap:14px;
+  background:#f7f9fd; border:1px solid var(--field-b); border-radius:14px;
+  padding:12px 14px; margin:12px 0;
+}
+.contact-item p{ margin:0; font-size:18px; color:var(--ink); }
+
+/* Bouton compact à droite (plus de 100% width) */
+.btn-contact{
+  width:auto; min-width:96px; flex:0 0 auto;
+  padding:10px 16px; border:none; border-radius:999px;
+  background:var(--blue); color:#fff; font-weight:700;
+  box-shadow:0 6px 16px rgba(58,186,252,.25);
+  transition:transform .06s ease, box-shadow .15s ease;
+}
+.btn-contact:hover{ box-shadow:0 8px 18px rgba(58,186,252,.33); }
+.btn-contact:active{ transform:scale(.98); }
+
+/* Petites largeurs : on garde l’alignement propre */
+@media (max-width:420px){
+  .contact-item{ gap:10px; }
+  .contact-item p{ font-size:16px; }
+  .btn-contact{ min-width:84px; padding:9px 14px; }
+}
+/* Forcer la cascade au-dessus du récap */
+.cascade { position: relative; z-index: 10; }
+
+/* Laisser le récap en dessous */
+#recapSection { position: relative; z-index: 1; }
+
+/* S'assurer que le menu flottant passe vraiment par-dessus */
+.fs-wrap .fs-menu { z-index: 1000; }
+
+/* (optionnel) si la barre sticky recouvre le menu sur mobile */
+.sticky-bar { z-index: 5; }
+
+/* Affichage détaillé des composants et prix dans le récapitulatif */
+.price-breakdown .line {
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  margin:4px 0;
+}
+.price-breakdown .line strong {
+  font-weight:700;
+}
+.fs-wrap .fs-menu{
+  position:absolute;
+  left:0;
+  right:0;
+  top:calc(100% + 8px);
+  z-index:1000;
+  background:#ffffff;
+  border:1px solid var(--border);
+  border-radius:14px;
+  box-shadow:0 14px 44px rgba(17,17,17,0.12);
+  padding:8px;
+  display:none;
+  max-height:320px;
+  overflow:hidden;
+}
+
+.fs-wrap.open .fs-menu{
+  display:block;
+}
+
+.fs-wrap .fs-list{
+  max-height:260px;
+  overflow-y:auto;
+  padding:4px;
+}
+.fs-wrap .fs-list{
+  max-height:120px; /* ~3 items visibles */
+  overflow-y:auto;
+  padding:4px;
+}
+
+
+
+  </style>
+  <!-- JS global (menu burger, etc.) -->
+  <script defer src="/assets/js/script.js"></script>
+</head>
+<body>
+<!-- NAV -->
+<header class="navbar">
+  <div class="nav-inner">
+    <a class="navbar-logo" href="index.html">
+      <img src="assets/img/logo.webp" alt="RIPAIR Logo">
+    </a>
+
+    <!-- Menu horizontal (tablette + desktop) -->
+    <nav class="navbar-links">
+      <a href="/index.html">Accueil</a>
+      <a href="/services.html">Services</a>
+      <a href="/switch-picofly.html">Switch</a>
+      <a href="/devis.html">Devis</a>
+      <a href="/avis.html">Avis</a>
+      <a href="/contact.html">Contact</a>
+    </nav>
+
+    <!-- Menu mobile (hamburger) -->
+    <button class="icon-btn" aria-label="Ouvrir le menu" id="hamburger" onclick="toggleMenu()">
+      <svg viewBox="0 0 24 24" width="24" height="24" stroke="#111" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <line x1="3" y1="12" x2="21" y2="12"/>
+        <line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+
+    <nav id="mobileMenu" class="mobile-menu">
+      <a href="/index.html">Accueil</a>
+      <a href="/services.html">Services</a>
+      <a href="/switch-picofly.html">Switch</a>
+      <a href="/devis.html">Devis</a>
+      <a href="/avis.html">Avis</a>
+      <a href="/contact.html">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+  <section class="card">
+    <div id="cascade" class="cascade">
+    <form id="devisForm" class="grid" novalidate>
+      <div class="row">
+        <div>
+          <label for="category">Type d’appareil</label>
+          <select id="category" class="fs" name="category" required>
+            <option value="" selected disabled hidden>Choisir…</option>
+          </select>
+        </div>
+        <div>
+          <label for="brand">Marque</label>
+          <select id="brand" class="fs" name="brand" required disabled>
+            <option value="" selected disabled hidden>Choisir…</option>
+          </select>
+        </div>
+        <div>
+          <label for="model">Modèle</label>
+          <select id="model" class="fs" name="model" required disabled>
+            <option value="" selected disabled hidden>Choisir…</option>
+          </select>
+        </div>
+        <div id="problemContainer">
+          <label for="problem">Problème</label>
+          <select id="problem" class="fs" name="problem" required disabled>
+            <option value="" selected disabled hidden>Choisir…</option>
+          </select>
+          <div class="plus-wrap"><button type="button" id="addProblemBtn" class="plus-btn disabled" aria-disabled="true" title="Ajouter un problème">+</button></div>
+        </div>
+      </div>
+      <p class="devis-help"><a href="contact.html">Je ne trouve pas mon appareil ou mon problème</a></p>
+      <div class="actions">
+        <button type="button" class="btn btn-ghost" id="resetBtn">Réinitialiser</button>
+        <button type="submit" class="btn btn-primary">Voir le devis</button>
+      </div>
+    </form>
+
+    <div id="result" class="result"></div>
+    </div>
+  <section id="recapSection" class="card recap" aria-live="polite">
+      <div class="recap-head">
+        <h2>Votre récapitulatif</h2>
+        <p class="muted">Estimation indicative. Le prix peut évoluer après diagnostic.</p>
+      </div>
+
+      <div class="recap-grid">
+        <div class="recap-card">
+          <h3>Votre sélection</h3>
+          <ul class="list" id="selectionList">
+            <li><span>Type d’appareil</span><strong id="selCategory">—</strong></li>
+            <li><span>Marque</span><strong id="selBrand">—</strong></li>
+            <li><span>Modèle</span><strong id="selModel">—</strong></li>
+            <li><span>Problème</span><strong id="selProblem">—</strong></li>
+            <li><span>Durée estimée</span><strong id="selDuration">—</strong></li>
+          </ul>
+        </div>
+
+        <div class="recap-card">
+          <h3>Total estimé</h3>
+          <div class="totals">
+            <div class="tot-row"><span>Prix catalogue</span><strong id="basePrice">—</strong></div>
+            <div class="tot-row total">
+              <span>Total</span><strong id="finalTotal">—</strong>
+            </div>
+          </div>
+          <!-- Liste détaillée des problèmes sélectionnés avec leur prix respectif -->
+          <div id="priceBreakdown" class="price-breakdown"></div>
+          <div class="actions center" style="margin-top:12px;">
+            <a id="ctaTop" class="btn btn-primary" href="#" aria-disabled="true">Prendre rendez-vous</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="trust">
+        <div class="trust-item">
+          <div class="ti-title">Garantie</div>
+          <div class="ti-text">6 mois pièces & main d’œuvre.</div>
+        </div>
+        <div class="trust-item">
+          <div class="ti-title">Pièces premium</div>
+          <div class="ti-text">Qualité équivalente origine.</div>
+        </div>
+        <div class="trust-item">
+          <div class="ti-title">Rapide</div>
+          <div class="ti-text">La plupart des réparations en ~1&nbsp;h.</div>
+        </div>
+        <div class="trust-item">
+          <div class="ti-title">Paiement</div>
+          <div class="ti-text">CB, espèces, facture fournie.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card faq">
+      <h2>Questions fréquentes</h2>
+      <details>
+        <summary>Le prix affiché est-il garanti&nbsp;?</summary>
+        <p>Le prix est une estimation basée sur votre sélection. Il peut être ajusté après diagnostic si d’autres éléments sont découverts.</p>
+      </details>
+      <details>
+        <summary>Combien de temps faut-il&nbsp;?</summary>
+        <p>La plupart des réparations sont réalisées sous une heure. Certaines interventions peuvent nécessiter plus de temps selon la complexité.</p>
+      </details>
+      <details>
+        <summary>Dois-je payer en ligne&nbsp;?</summary>
+        <p>Non. La réservation est gratuite. Le paiement s’effectue à la fin de l’intervention.</p>
+      </details>
+    </section>
+
+    <div class="sticky-bar" id="stickyBar" hidden>
+      <div class="sticky-left">
+        Total estimé&nbsp;: <strong id="stickyTotal">—</strong>
+      </div>
+      <a id="ctaSticky" class="btn btn-primary" href="#" aria-disabled="true">Prendre rendez-vous</a>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="container footer-content">
+    <div class="footer-left">
+      <p>&copy; 2025 RIPAIR &mdash; Tous droits r&eacute;serv&eacute;s.</p>
+      <p class="footer-meta">EI RIPAIR &middot; 06&nbsp;15&nbsp;58&nbsp;87&nbsp;82 &middot; contact@ripair.shop</p>
+    </div>
+    <div class="footer-links">
+      <a href="mentions.html">Mentions l&eacute;gales</a>
+      <a href="devis.html">Obtenir un devis</a>
+    </div>
+    <div class="footer-right">
+      <a href="https://instagram.com/ripair.pessac" target="_blank" rel="noopener">
+        <img src="assets/img/instagram.webp" alt="Instagram" class="social-icon">
+      </a>
+      <a href="https://www.facebook.com/profile.php?id=61579654974480" target="_blank" rel="noopener">
+        <img src="assets/img/facebook.webp" alt="Facebook" class="social-icon">
+      </a>
+      <a href="#" class="btn-contact" data-contact-modal>Contactez-nous</a>
+    </div>
+  </div>
+</footer>
+
+<div id="contactModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2 class="modal-title">Contactez-nous</h2>
+
+    <!-- Email -->
+    <div class="contact-item">
+      <p>📧 contact@ripair.shop</p>
+      <button id="copyEmail" class="btn-contact">Copier</button>
+    </div>
+
+    <!-- Téléphone -->
+    <div class="contact-item">
+      <p>📱 06&nbsp;15&nbsp;58&nbsp;87&nbsp;82</p>
+      <button id="phoneAction" class="btn-contact"></button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+(function(){
+  // Déterminer la base de l'API : utiliser le domaine distant lorsqu'on est en file:// ou origin null
+  const API_BASE = (location.protocol === 'file:' || location.origin === 'null')
+    ? 'https://ripair.shop/api'
+    : 'api';
+
+  const form = document.getElementById('devisForm');
+  const resultDiv = document.getElementById('result');
+
+  const category = document.getElementById('category');
+  const brand    = document.getElementById('brand');
+  const model    = document.getElementById('model');
+  const problem  = document.getElementById('problem');
+  const resetBtn = document.getElementById('resetBtn');
+
+  // ===== Multi-problem support =====
+  // Container holding all problem selects (first and dynamically added ones)
+  const problemContainer = document.getElementById('problemContainer');
+  const addProblemBtn = document.getElementById('addProblemBtn');
+  // Track number of problem select elements (for unique IDs)
+  let problemCount = 1;
+
+  // Preserve selected value when rebuilding a select with new items
+  const setSelPreserve = (el, items) => {
+    const prev = el.value;
+    setSel(el, items);
+    if (prev && items.includes(prev)) {
+      el.value = prev;
+      refreshFancy(el);
+    }
+  };
+
+  // Obtain the list of all problems available for the current category/brand/model
+  function problemsList() {
+    if (!optionsFacade || !category.value || !brand.value || !model.value) return [];
+    return optionsFacade.getProblems(category.value, brand.value, model.value) || [];
+  }
+
+  // Return an array of the currently selected problem values (ignoring empty selects)
+  function currentProblemValues() {
+    return Array.from(problemContainer.querySelectorAll('select[name="problem"]')).map(s => s.value).filter(Boolean);
+  }
+
+  // Return an array of all problem select elements (first and any extras)
+  function allProblemsSelects() {
+    return Array.from(problemContainer.querySelectorAll('select[name="problem"]'));
+  }
+
+  // Base list of problems (used to rebuild selects)
+  function baseProblems() { return problemsList(); }
+
+  // Rebuild the problem selects ensuring there are no duplicate values selected
+  function rebuildProblemOptionsNoDup() {
+    const chosen = new Set(currentProblemValues());
+    const full = baseProblems();
+    allProblemsSelects().forEach(sel => {
+      const cur = sel.value;
+      const items = full.filter(v => !chosen.has(v) || v === cur);
+      const prev = sel.value;
+      setSel(sel, items);
+      if (prev && items.includes(prev)) {
+        sel.value = prev;
+        refreshFancy(sel);
+      }
+      if (prev && !items.includes(prev)) {
+        sel.value = '';
+        refreshFancy(sel);
+      }
+    });
+    updatePlusState();
+  }
+
+  // Return the last problem select element
+  function lastProblemSelect() {
+    const all = problemContainer.querySelectorAll('select[name="problem"]');
+    return all[all.length - 1];
+  }
+
+  // Enable or disable the plus button based on the state of the last select
+  function updatePlusState() {
+    const last = lastProblemSelect();
+    const canUse = !!last && !last.disabled && !!last.value;
+    addProblemBtn.classList.toggle('disabled', !canUse);
+    addProblemBtn.setAttribute('aria-disabled', canUse ? 'false' : 'true');
+  }
+
+  // Move the plus button (its wrapper) after a given element
+  function movePlusAfter(el) {
+    const wrap = addProblemBtn.parentElement;
+    el.after(wrap);
+  }
+
+  // Create a new problem select with a remove button
+  function addProblemSelect() {
+    const probs = problemsList();
+    if (probs.length === 0) return;
+    problemCount += 1;
+    const id = 'problem' + problemCount;
+    const row = document.createElement('div');
+    row.className = 'problem-row';
+    const sel = document.createElement('select');
+    sel.id = id;
+    sel.name = 'problem';
+    sel.className = 'fs';
+    sel.required = false;
+    // Disable the new select if the last select was disabled
+    sel.disabled = !!(lastProblemSelect() && lastProblemSelect().disabled);
+    sel.setAttribute('aria-label', 'Problème supplémentaire');
+    row.appendChild(sel);
+    const rm = document.createElement('button');
+    rm.type = 'button';
+    rm.className = 'remove-btn';
+    rm.setAttribute('aria-label', 'Supprimer');
+    rm.textContent = '×';
+    rm.addEventListener('click', () => {
+      row.remove();
+      rebuildProblemOptionsNoDup();
+    });
+    row.appendChild(rm);
+    problemContainer.appendChild(row);
+    setSel(sel, probs);
+    if (window.FancySelect) window.FancySelect.upgradeAll();
+    sel.addEventListener('change', () => { rebuildProblemOptionsNoDup(); });
+    movePlusAfter(row);
+    rebuildProblemOptionsNoDup();
+  }
+
+  // Click handler for the plus button
+  if (addProblemBtn) {
+    addProblemBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      if (addProblemBtn.classList.contains('disabled')) return;
+      addProblemSelect();
+    });
+  }
+
+  // helpers
+  const refreshFancy = (el) => {
+    if (!el) return;
+    if (window.FancySelect && typeof window.FancySelect.refresh === 'function') {
+      window.FancySelect.refresh(el);
+    } else if (el._fs && typeof el._fs.rebuildFromSelect === 'function') {
+      el._fs.rebuildFromSelect();
+    }
+  };
+
+  const setSel = (el, items) => {
+    el.innerHTML = '<option value="" selected disabled hidden>Choisir...</option>';
+    (items || []).forEach(v => { el.innerHTML += `\u003coption value="${v}">${v}\u003c/option>`; });
+    refreshFancy(el);
+  };
+  const lock = (...els) => els.forEach(e => { if (!e) return; e.disabled = true; refreshFancy(e); });
+  const unlock = (...els) => els.forEach(e => { if (!e) return; e.disabled = false; refreshFancy(e); });
+
+  // Parse une durée exprimée de différentes façons (h, m, décimal) en minutes
+  const parseDurationToMinutes = (val) => {
+    if (val == null) return 0;
+    const str = String(val).toLowerCase().replace(/\s|~|approx\.?/g, '');
+    let minutes = 0;
+    const matchH = str.match(/(\d+(?:\.\d+)?)h/);
+    const matchM = str.match(/(\d+(?:\.\d+)?)m/);
+    if (matchH) {
+      minutes += parseFloat(matchH[1]) * 60;
+    }
+    if (matchM) {
+      minutes += parseFloat(matchM[1]);
+    }
+    // Si aucune unité trouvée et que c'est un nombre, on l'interprète comme des heures
+    if (!matchH && !matchM && /^\d+(?:\.\d+)?$/.test(str)) {
+      minutes += parseFloat(str) * 60;
+    }
+    return minutes || 0;
+  };
+
+  let optionsFacade = null;
+
+  /**
+   * Préremplit les sélecteurs selon les paramètres d'URL.
+   * Accepte category/type, brand, model ainsi que plusieurs issue/problem.
+   * Doit être appelée après le chargement des options (optionsFacade et les selects chargés).
+   */
+  function preselectFromUrl(){
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const catParam   = (params.get('category') || params.get('type') || '').trim();
+      const brandParam = (params.get('brand') || '').trim();
+      const modelParam = (params.get('model') || '').trim();
+      const issues  = params.getAll('issue');
+      const problemsParams = params.getAll('problem');
+      const srcParam  = (params.get('src') || params.get('source') || '').trim();
+      // Utilise 'issue' s'il est présent, sinon 'problem' (évite les doublons car les deux sont envoyés)
+      const probList = (issues && issues.length) ? issues : problemsParams;
+      if (!catParam || !optionsFacade) return;
+      // Find matching category (case-insensitive)
+      const cats = optionsFacade.categories || [];
+      const catMatch = cats.find(c => c.toLowerCase() === catParam.toLowerCase());
+      if (!catMatch) return;
+      category.value = catMatch;
+      refreshFancy(category);
+      // Trigger change to load brands
+      category.dispatchEvent(new Event('change'));
+      if (brandParam) {
+        const brands = optionsFacade.getBrands(catMatch) || [];
+        const brandMatch = brands.find(b => b.toLowerCase() === brandParam.toLowerCase());
+        if (brandMatch) {
+          brand.value = brandMatch;
+          refreshFancy(brand);
+          brand.dispatchEvent(new Event('change'));
+        }
+      }
+      if (modelParam && brand.value) {
+        const models = optionsFacade.getModels(catMatch, brand.value) || [];
+        const modelMatch = models.find(m => m.toLowerCase() === modelParam.toLowerCase());
+        if (modelMatch) {
+          model.value = modelMatch;
+          refreshFancy(model);
+          model.dispatchEvent(new Event('change'));
+        }
+      }
+      if (probList.length > 0 && model.value) {
+        // Function to apply the problem selections once the base problem select is enabled
+        const applyProblems = () => {
+          const baseProblems = optionsFacade.getProblems(catMatch, brand.value, model.value) || [];
+          // Set first problem
+          const firstProbParam = probList[0];
+          const firstMatch = baseProblems.find(p => p.toLowerCase() === firstProbParam.toLowerCase());
+          if (firstMatch) {
+            problem.value = firstMatch;
+            refreshFancy(problem);
+            // Trigger change on base problem to prime quote and rebuild duplicates
+            problem.dispatchEvent(new Event('change'));
+          }
+          // Handle additional problems
+          for (let i = 1; i < probList.length; i++) {
+            const nextParam = probList[i];
+            const match = baseProblems.find(p => p.toLowerCase() === nextParam.toLowerCase());
+            if (match) {
+              addProblemSelect();
+              const sels = problemContainer.querySelectorAll('select[name="problem"]');
+              const sel = sels[sels.length - 1];
+              sel.value = match;
+              refreshFancy(sel);
+              sel.dispatchEvent(new Event('change'));
+            }
+          }
+          rebuildProblemOptionsNoDup();
+          updatePlusState();
+
+          // Si l'utilisateur vient de la page d'accueil (src=home), soumettre automatiquement le formulaire une fois toutes les sélections faites
+          try {
+            // Soumettre uniquement si au moins une panne est sélectionnée
+            const probsNow = currentProblemValues();
+            if (srcParam.toLowerCase() === 'home' && category.value && brand.value && model.value && probsNow.length > 0) {
+              const formEl = document.getElementById('devisForm');
+              // Précharger le devis sans attendre la soumission
+              ensureQuote().catch(() => {});
+              if (formEl) {
+                // Retarder légèrement la soumission pour laisser le temps aux UI de se mettre à jour
+                setTimeout(() => {
+                  formEl.requestSubmit();
+                }, 10);
+              }
+            }
+          } catch(autoErr) {
+            console.warn('auto submit failed', autoErr);
+          }
+        };
+        // If the base problem select is currently disabled, wait a tick for the model change handler to unlock it
+        if (problem.disabled) {
+          setTimeout(applyProblems, 50);
+        } else {
+          applyProblems();
+        }
+      }
+    } catch (e) {
+      console.warn('preselectFromUrl failed', e);
+    }
+  }
+
+  const quoteState = {
+    key: '',
+    promise: null,
+    result: null,
+    entry: null
+  };
+
+  const resetQuoteState = () => {
+    quoteState.key = '';
+    quoteState.promise = null;
+    quoteState.result = null;
+    quoteState.entry = null;
+  };
+
+  const selectionKey = () => {
+    const c = (category.value || '').trim();
+    const b = (brand.value || '').trim();
+    const m = (model.value || '').trim();
+    const p = (problem.value || '').trim();
+    if (!c || !b || !m || !p) return '';
+    return [c, b, m, p].join('||');
+  };
+
+  const getEntryFromSelection = () => {
+    if (!optionsFacade) return null;
+    return optionsFacade.getEntry(category.value, brand.value, model.value, problem.value);
+  };
+
+
+  const statusEl = document.createElement('div');
+  statusEl.className = 'options-status muted';
+  statusEl.setAttribute('role', 'status');
+  statusEl.style.display = 'none';
+  form.insertBefore(statusEl, form.firstElementChild);
+
+  const showStatus = (message, tone = 'info') => {
+    statusEl.textContent = message;
+    statusEl.dataset.tone = tone;
+    statusEl.style.display = 'block';
+  };
+
+  const hideStatus = () => {
+    statusEl.textContent = '';
+    statusEl.style.display = 'none';
+    delete statusEl.dataset.tone;
+  };
+
+  const waitForLoader = () => {
+    if (window.RipairOptions && typeof window.RipairOptions.load === 'function') {
+      return Promise.resolve(window.RipairOptions);
+    }
+    return new Promise((resolve, reject) => {
+      let timer = null;
+      function cleanup() {
+        document.removeEventListener('ripair:options-ready', handleReady);
+        if (timer !== null) clearTimeout(timer);
+      }
+      function handleReady() {
+        if (window.RipairOptions && typeof window.RipairOptions.load === 'function') {
+          cleanup();
+          resolve(window.RipairOptions);
+        }
+      }
+      timer = setTimeout(() => {
+        cleanup();
+        reject(new Error('options_loader_unavailable'));
+      }, 10000);
+      document.addEventListener('ripair:options-ready', handleReady, { once: true });
+    });
+  };
+
+  const ensureQuote = (force = false) => {
+    const key = selectionKey();
+    if (!key) {
+      return Promise.reject(new Error('selection_incomplete'));
+    }
+    if (!optionsFacade) {
+      return Promise.reject(new Error('options_not_ready'));
+    }
+
+    if (!force && quoteState.key === key) {
+      if (quoteState.result) return Promise.resolve(quoteState.result);
+      if (quoteState.promise) return quoteState.promise;
+    }
+
+    const entry = getEntryFromSelection();
+    if (!entry) {
+      return Promise.reject(new Error('entry_not_found'));
+    }
+
+    const fd = new FormData();
+    fd.set('category', entry.category);
+    fd.set('brand', entry.brand);
+    fd.set('model', entry.model);
+    fd.set('problem', entry.problem);
+
+    const requestKey = key;
+
+    const request = fetch(`${API_BASE}/get_devis.php`, { method: 'POST', body: fd })
+      .then(r => r.text())
+      .then(text => {
+        try { return JSON.parse(text); }
+        catch (e) {
+          console.error('Reponse non-JSON:\n', text);
+          const err = new Error('response_non_json');
+          err.cause = e;
+          throw err;
+        }
+      })
+      .then(res => {
+        if (!res || !res.success) {
+          const err = new Error(res?.error || 'server_error');
+          err.payload = res;
+          throw err;
+        }
+        const tag = res.tag ?? res.tag_id ?? res.quote_id ?? null;
+        const data = (res.data && typeof res.data === 'object') ? res.data : entry;
+        const normalized = { data, tag, entry };
+        if (quoteState.key === requestKey) {
+          quoteState.result = normalized;
+          quoteState.entry = entry;
+        }
+        return normalized;
+      })
+      .catch(err => {
+        if (quoteState.key === requestKey) {
+          quoteState.result = null;
+        }
+        throw err;
+      })
+      .finally(() => {
+        if (quoteState.promise === request) {
+          quoteState.promise = null;
+        }
+      });
+
+    quoteState.key = requestKey;
+    quoteState.promise = request;
+    quoteState.result = null;
+    quoteState.entry = entry;
+
+    return request;
+  };
+
+  const primeQuote = () => {
+    const key = selectionKey();
+    if (!key) return;
+    ensureQuote().catch(err => {
+      console.warn('quote prefetch failed', err);
+    });
+  };
+
+  const initOptions = async () => {
+    resetQuoteState();
+    lock(brand, model, problem);
+    category.disabled = true;
+    refreshFancy(category);
+    showStatus('Chargement des options...', 'loading');
+
+    try {
+      const loader = await waitForLoader();
+      const data = await loader.load();
+      if (!data || !Array.isArray(data.categories) || data.categories.length == 0) {
+        throw new Error('options_dataset_empty');
+      }
+
+      optionsFacade = data;
+      setSel(category, data.categories);
+      category.disabled = false;
+      refreshFancy(category);
+      hideStatus();
+      // Après chargement des options, appliquer les pré-sélections d'URL le cas échéant
+      preselectFromUrl();
+
+      if (data.meta && data.meta.stale) {
+        loader.load({ force: true })
+          .then(fresh => {
+            optionsFacade = fresh;
+            if (!category.value) {
+              setSel(category, fresh.categories);
+              refreshFancy(category);
+            }
+          })
+          .catch(err => console.warn('[RipairOptions] refresh failed', err));
+      }
+    } catch (err) {
+      console.error('Devis options load failed', err);
+      showStatus('Impossible de charger les options. Verifiez votre connexion.', 'error');
+      category.disabled = true;
+      lock(brand, model, problem);
+    }
+  };
+
+  const startOptions = () => {
+    initOptions().catch(err => console.error('init options failed', err));
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', startOptions, { once: true });
+  } else {
+    startOptions();
+  }
+
+  category.addEventListener('change', function () {
+    // Reset any cached quote state
+    resetQuoteState();
+    // Remove any dynamically added problem rows and reset counter
+    problemContainer.querySelectorAll('.problem-row').forEach(function(row){ row.remove(); });
+    problemCount = 1;
+    // Clear selects and lock dependent fields
+    setSel(brand, []);
+    setSel(model, []);
+    setSel(problem, []);
+    lock(brand, model, problem);
+    updatePlusState();
+
+    if (!optionsFacade) return;
+
+    const brands = optionsFacade.getBrands(category.value) || [];
+    setSel(brand, brands);
+    if (brands.length > 0) {
+      unlock(brand);
+    } else {
+      lock(brand);
+    }
+  });
+
+  brand.addEventListener('change', function () {
+    resetQuoteState();
+    // Remove any dynamically added problem rows and reset counter
+    problemContainer.querySelectorAll('.problem-row').forEach(function(row){ row.remove(); });
+    problemCount = 1;
+    // Clear selects and lock dependent fields
+    setSel(model, []);
+    setSel(problem, []);
+    lock(model, problem);
+    updatePlusState();
+
+    if (!optionsFacade || !category.value || !brand.value) return;
+
+    const models = optionsFacade.getModels(category.value, brand.value) || [];
+    setSel(model, models);
+    if (models.length > 0) {
+      unlock(model);
+    } else {
+      lock(model);
+    }
+  });
+
+  model.addEventListener('change', function () {
+    resetQuoteState();
+    // When the model changes, update the list of problems and refresh all problem selects
+    setSel(problem, []);
+    lock(problem);
+
+    if (!optionsFacade || !category.value || !brand.value || !model.value) return;
+
+    const problems = optionsFacade.getProblems(category.value, brand.value, model.value) || [];
+    // Update all problem selects (base and extra) preserving current selections where possible
+    problemContainer.querySelectorAll('select[name="problem"]').forEach(function(sel){
+      setSelPreserve(sel, problems);
+    });
+    if (problems.length > 0) {
+      unlock(problem);
+    } else {
+      lock(problem);
+    }
+    // Remove any selected values that are no longer valid and rebuild duplicate rules
+    rebuildProblemOptionsNoDup();
+    updatePlusState();
+  });
+
+  problem.addEventListener('change', function () {
+    // Called when the base problem select changes
+    resetQuoteState();
+    if (!optionsFacade) return;
+    // Rebuild duplicate filtering since the selection has changed
+    rebuildProblemOptionsNoDup();
+    updatePlusState();
+    // Prefetch quote only when a valid primary problem is chosen
+    if (!category.value || !brand.value || !model.value || !problem.value) return;
+    primeQuote();
+  });
+
+  resetBtn.addEventListener('click', () => {
+    resetQuoteState();
+    form.reset();
+    if (optionsFacade) {
+      setSel(category, optionsFacade.categories);
+      category.disabled = false;
+      refreshFancy(category);
+    }
+    // Remove any dynamically added problem rows and reset counter on reset
+    problemContainer.querySelectorAll('.problem-row').forEach(function(row){ row.remove(); });
+    problemCount = 1;
+    setSel(brand, []);
+    setSel(model, []);
+    setSel(problem, []);
+    lock(brand, model, problem);
+    updatePlusState();
+    hideStatus();
+    resultDiv.innerHTML = '';
+    document.body.classList.add('intro');
+    document.body.classList.remove('submitted', 'transitioning');
+    document.querySelectorAll('#recapSection, .faq, .sticky-bar').forEach(el => {
+      el.classList.remove('visible-zone');
+      void el.offsetWidth;
+      el.classList.add('hidden-zone');
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+  // Submit
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    if (!category.value || !brand.value || !model.value || !problem.value) {
+      alert('Merci de completer les 4 champs.');
+      return;
+    }
+
+    document.body.classList.add('submitting');
+    const submitBtn = form.querySelector('button[type="submit"]');
+    if (submitBtn) { submitBtn.disabled = true; }
+
+    const entryData = getEntryFromSelection();
+    if (!entryData) {
+      document.body.classList.remove('submitting');
+      if (submitBtn) { submitBtn.disabled = false; }
+      alert('Impossible de retrouver les informations du devis.');
+      return;
+    }
+
+    // Compute the list of all selected problems (primary + additional)
+    const selectedProbs = currentProblemValues();
+    // Aggregate price, durations and build detail lines for all selected problems
+    let aggPrice = 0;
+    const durationsList = [];
+    const details = [];
+    selectedProbs.forEach(function(p){
+      const ent = optionsFacade && optionsFacade.getEntry(category.value, brand.value, model.value, p);
+      if(ent){
+        const priceNum = parseFloat(String(ent.price).replace(/\s/g,'').replace(',', '.').replace(/[^0-9.]/g,''));
+        if(!isNaN(priceNum)){
+          aggPrice += priceNum;
+          details.push({ problem: p, price: priceNum });
+        }
+        if(ent.duration != null) durationsList.push(ent.duration);
+      }
+    });
+    let aggDurationDisplay;
+    // Durée totale en minutes (pour transfert ultérieur)
+    let aggDurationMinutes = 0;
+    if(durationsList.length === 1){
+      // Durée unique : convertir en minutes et formater pour l'affichage
+      let dur = durationsList[0];
+      const minutes = parseDurationToMinutes(dur);
+      aggDurationMinutes = minutes;
+      // Pour l'affichage, si on a un nombre d'heures entier ou décimal, on garde le format "xh"
+      if(minutes > 0 && minutes % 60 === 0){
+        const hrs = minutes / 60;
+        aggDurationDisplay = hrs + 'h';
+      } else if (minutes > 0) {
+        // minutes non multiples d'une heure : on garde le format "xh" (arrondi) ou "xh ym"
+        const hrs = Math.floor(minutes / 60);
+        const mins = minutes % 60;
+        aggDurationDisplay = (hrs ? hrs + 'h' : '') + (mins ? mins + 'm' : '');
+      } else {
+        // fallback : on utilise la valeur brute
+        aggDurationDisplay = String(dur);
+      }
+    } else if(durationsList.length > 1){
+      // Additionner toutes les durées (en minutes) si possible
+      let totalMin = 0;
+      let allParsable = true;
+      durationsList.forEach(function(d){
+        const m = parseDurationToMinutes(d);
+        if(m){ totalMin += m; } else { allParsable = false; }
+      });
+      if(allParsable && totalMin > 0){
+        aggDurationMinutes = totalMin;
+        // Format affichage : convertir en heures + minutes
+        const hrs = Math.floor(totalMin / 60);
+        const mins = totalMin % 60;
+        if(mins === 0){ aggDurationDisplay = hrs + 'h'; }
+        else if(hrs === 0){ aggDurationDisplay = mins + 'm'; }
+        else { aggDurationDisplay = hrs + 'h' + mins + 'm'; }
+      } else {
+        // Non parsable : afficher la liste jointe
+        aggDurationDisplay = durationsList.join(' + ');
+      }
+    } else {
+      aggDurationDisplay = '—';
+    }
+    // Build aggregated data object used for recap (including detail breakdown)
+    const aggregatedData = {
+      category: category.value,
+      brand:    brand.value,
+      model:    model.value,
+      problem:  selectedProbs.join(', '),
+      price:    aggPrice,
+      duration: aggDurationDisplay,
+      durationMin: aggDurationMinutes,
+      details:  details
+    };
+
+    resultDiv.innerHTML = '';
+    // Show recap with aggregated data but without tag for now
+    updateRecap(aggregatedData, null);
+    document.body.classList.add('transitioning');
+    document.body.classList.remove('submitting');
+    document.body.classList.remove('intro');
+    document.body.classList.add('submitted');
+
+    requestAnimationFrame(() => {
+      const recap = document.getElementById('recapSection');
+      if (recap) { recap.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    });
+    document.querySelectorAll('#recapSection, .faq, .sticky-bar').forEach(el => {
+      el.classList.remove('hidden-zone');
+      void el.offsetWidth;
+      el.classList.add('visible-zone');
+    });
+
+    // Always call ensureQuote on the primary problem to obtain a tag, then attach it to the aggregated recap
+    ensureQuote().then(result => {
+      const tag = result && typeof result.tag !== 'undefined' ? result.tag : null;
+      updateRecap(aggregatedData, tag);
+      if (submitBtn) { submitBtn.disabled = false; }
+    }).catch(err => {
+      console.error('fetch devis:', err);
+      const serverError = err && err.payload && typeof err.payload.error === 'string' ? err.payload.error : '';
+      const message = serverError.trim() || (err && err.message) || 'Erreur de communication avec le serveur.';
+      resultDiv.innerHTML =
+        '<div class="price-box"><span class="error">Erreur : ' + message + '</span></div>';
+      if (submitBtn) { submitBtn.disabled = false; }
+    });
+  });
+
+  // Redirection vers la page RDV
+  window.prendreRDV = function(tag){
+    if(!tag) return alert('Tag manquant');
+    location.href = `rendezvous.html?tag=\${encodeURIComponent(tag)}`;
+  };
+})();
+// ========== FancySelect ==========
+(function(){
+  function el(tag, cls, html){ var e=document.createElement(tag); if(cls) e.className=cls; if(html!=null) e.innerHTML=html; return e; }
+  function chevronSVG(color){return '<svg viewBox="0 0 24 24" fill="none" stroke="'+(color||'currentColor')+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>'}
+  function searchSVG(){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>'}
+  function phoneSVG(){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18"/></svg>'}
+  function brandSVG(){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M14.31 8l5.74 9.94"/><path d="M9.69 8h11.48"/><path d="M7.38 12l5.74-9.94"/></svg>'}
+  function modelSVG(){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 20h8"/></svg>'}
+  function wrenchSVG(){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 1 0-5.66 5.66L3 18l3 3 6.04-6.04a4 4 0 0 0 5.66-5.66z"/></svg>'}
+
+  var ICONS = {
+    category: phoneSVG(),
+    brand:    brandSVG(),
+    model:    modelSVG(),
+    problem:  wrenchSVG()
+  };
+
+  function FancySelect(select){
+    this.select = select;
+    this.disabled = select.disabled;
+    this.wrap = el('div','fs-wrap'+(this.disabled?' disabled':'')); select.parentNode.insertBefore(this.wrap, select); this.wrap.appendChild(select);
+    var ctrl = this.ctrl = el('button','fs-control'); ctrl.type='button';
+    var value = this.valueEl = el('div','fs-value', (select.options[select.selectedIndex]||{}).text || 'Choisir…');
+    var chev  = this.chevEl  = el('div','fs-chevron', chevronSVG());
+    ctrl.appendChild(value); ctrl.appendChild(chev);
+    this.wrap.appendChild(ctrl);
+
+    // menu
+    var menu = this.menu = el('div','fs-menu');
+    var search = el('div','fs-search'); search.innerHTML = '<span class="fs-icon">'+searchSVG()+'</span>';
+    var input = this.searchInput = el('input'); input.type='text'; input.placeholder='Rechercher …';
+    search.appendChild(input); menu.appendChild(search);
+    var list = this.list = el('div','fs-list'); menu.appendChild(list);
+    this.wrap.appendChild(menu);
+
+    // items init
+    this.buildItems();
+
+    // events
+    var self=this;
+    ctrl.addEventListener('click', function(){ if(self.disabled) return; self.toggle(); });
+    input.addEventListener('input', function(){ self.filter(this.value); });
+    document.addEventListener('click', function(e){ if(!self.wrap.contains(e.target)) self.close(); });
+
+    // keyboard
+    this.wrap.addEventListener('keydown', function(e){
+      if(!self.isOpen()) return;
+      var items = Array.prototype.slice.call(self.list.querySelectorAll('.fs-item'));
+      var idx = items.findIndex(function(n){return n.classList.contains('active');});
+      if(e.key==='ArrowDown'){ e.preventDefault(); var ni=Math.min(items.length-1, (idx<0?0:idx+1)); self.activate(items[ni]); }
+      if(e.key==='ArrowUp'){ e.preventDefault(); var pi=Math.max(0, (idx<0?0:idx-1)); self.activate(items[pi]); }
+      if(e.key==='Enter'){ e.preventDefault(); var act=self.list.querySelector('.fs-item.active'); if(act) act.click(); }
+      if(e.key==='Escape'){ self.close(); }
+    });
+
+    // react to native changes (for your API flow)
+    var observer = new MutationObserver(function(){ self.rebuildFromSelect(); });
+    observer.observe(select, {childList:true, attributes:true, subtree:false});
+    this.observer = observer;
+
+    // expose instance
+    select._fs = this;
+  }
+
+  FancySelect.prototype.iconFor = function(){
+    var id = this.select.id || '';
+    if (ICONS[id]) return ICONS[id];
+    return phoneSVG();
+  }
+
+  FancySelect.prototype.buildItems = function(){
+    var self=this; this.list.innerHTML='';
+    var opts = this.select.options;
+    if(!opts || !opts.length){ this.list.appendChild(el('div','fs-empty','Aucune option')); return; }
+
+    for(var i=0;i<opts.length;i++){
+      var o = opts[i]; if(!o.value){ continue; } // skip placeholder
+      var item = el('div','fs-item');
+      item.innerHTML = '<span class="fs-icon">'+this.iconFor()+'</span><span class="fs-label">'+o.text+'</span>';
+      item.dataset.value = o.value;
+      item.addEventListener('click', function(){
+        self.choose(this.dataset.value, this.querySelector('.fs-label').textContent);
+      });
+      this.list.appendChild(item);
+    }
+    this.markActive();
+  }
+
+  FancySelect.prototype.markActive = function(){
+    var v = this.select.value;
+    Array.prototype.forEach.call(this.list.children, function(n){
+      if(!n.classList) return;
+      n.classList.toggle('active', n.dataset.value===v);
+    });
+  }
+
+  FancySelect.prototype.choose = function(value, label){
+    this.select.value = value;
+    this.valueEl.textContent = label || value;
+    this.markActive();
+    this.close();
+    // propage l'événement 'change' natif pour ton JS existant
+    var evt = new Event('change', {bubbles:true});
+    this.select.dispatchEvent(evt);
+  }
+
+  FancySelect.prototype.filter = function(q){
+    q = (q||'').toLowerCase().trim();
+    var any=false;
+    Array.prototype.forEach.call(this.list.querySelectorAll('.fs-item'), function(n){
+      var show = n.textContent.toLowerCase().indexOf(q) >= 0;
+      n.style.display = show ? '' : 'none';
+      if(show) any=true;
+    });
+    var empty = this.list.querySelector('.fs-empty');
+    if(!any){
+      if(!empty){ empty = el('div','fs-empty','Aucun résultat'); this.list.appendChild(empty); }
+    } else if(empty){ empty.remove(); }
+  }
+
+  FancySelect.prototype.toggle = function(){ this.wrap.classList.toggle('open'); if(this.isOpen()){ this.searchInput.value=''; this.filter(''); this.searchInput.focus(); } }
+  FancySelect.prototype.open   = function(){ this.wrap.classList.add('open');  this.searchInput.value=''; this.filter(''); this.searchInput.focus(); }
+  FancySelect.prototype.close  = function(){ this.wrap.classList.remove('open'); }
+
+  FancySelect.prototype.isOpen = function(){ return this.wrap.classList.contains('open'); }
+
+  FancySelect.prototype.setDisabled = function(dis){ this.disabled = !!dis; this.wrap.classList.toggle('disabled', this.disabled); }
+  FancySelect.prototype.rebuildFromSelect = function(){
+    this.setDisabled(this.select.disabled);
+    this.valueEl.textContent = (this.select.options[this.select.selectedIndex]||{}).text || 'Choisir…';
+    this.buildItems();
+  }
+
+  // util public
+  window.FancySelect = {
+    upgradeAll: function(){
+      document.querySelectorAll('select.fs').forEach(function(s){
+        if(!s._fs) new FancySelect(s);
+        else s._fs.rebuildFromSelect();
+      });
+    },
+    refresh: function(selectEl){
+      if(selectEl && selectEl._fs){ selectEl._fs.rebuildFromSelect(); }
+    }
+  };
+
+  // auto-upgrade au chargement
+  document.addEventListener('DOMContentLoaded', function(){ 
+    window.FancySelect.upgradeAll(); 
+    document.body.classList.add('intro');
+  });
+  document.querySelectorAll('#recapSection, .faq, .sticky-bar').forEach(el => {
+    el.classList.add('hidden-zone');
+  });
+})();
+
+</script>
+<script>
+(function(){
+  function parsePrice(v){
+    if(v == null) return NaN;
+    var s = String(v).replace(/\s/g,'').replace(',', '.').replace(/[^0-9.]/g,'');
+    var n = parseFloat(s);
+    return isFinite(n) ? n : NaN;
+  }
+  function euro(n){
+    if(isNaN(n)) return '—';
+    return n.toLocaleString('fr-FR', { style:'currency', currency:'EUR' });
+  }
+
+  function updateSticky(total, href){
+    var bar = document.getElementById('stickyBar');
+    var tot = document.getElementById('stickyTotal');
+    var cta = document.getElementById('ctaSticky');
+
+    if (!isNaN(total)){
+      bar.hidden = false;
+      tot.textContent = euro(total);
+      cta.href = href || '#';
+      cta.setAttribute('aria-disabled', href ? 'false' : 'true');
+    } else {
+      bar.hidden = true;
+    }
+  }
+
+  window.updateRecap = function(d, tag){
+    try{
+      // sélection
+      document.getElementById('selCategory').textContent = d.category || '—';
+      document.getElementById('selBrand').textContent    = d.brand || '—';
+      document.getElementById('selModel').textContent    = d.model || '—';
+      document.getElementById('selProblem').textContent  = d.problem || '—';
+      // Format and display duration with an 'h' suffix when numeric
+      var durEl = document.getElementById('selDuration');
+      var durVal = d.duration;
+      var durText = '—';
+      if (durVal != null && durVal !== '') {
+        durText = String(durVal);
+        // If the entire string is a number (e.g., "30"), append 'h'
+        if (/^[0-9]+(\.[0-9]+)?$/.test(durText)) {
+          durText = durText + 'h';
+        }
+      }
+      durEl.textContent = durText;
+
+      // totaux
+      var base = parsePrice(d.price);
+      document.getElementById('basePrice').textContent = isNaN(base) ? '—' : euro(base);
+
+      // Déterminer si plusieurs problèmes sont sélectionnés (pour transfert du prix)
+      var isMulti = Array.isArray(d.details) && d.details.length > 1;
+      // Stocker ou supprimer les informations de devis multiple dans la session
+      try {
+        var durationStore = durText;
+        if (isMulti) {
+        var storeObj = { price: isNaN(base) ? 0 : base, problems: d.problem || '', duration: durationStore || '' };
+        // Ajouter la durée en minutes si fournie
+        if (typeof d.durationMin !== 'undefined' && d.durationMin !== null) {
+          storeObj.durationMin = d.durationMin;
+        }
+        // Conserver le détail des lignes (problème + prix) pour utilisation ultérieure
+        if (Array.isArray(d.details)) {
+          storeObj.details = d.details;
+        }
+          sessionStorage.setItem('ripairMulti', JSON.stringify(storeObj));
+        } else {
+          sessionStorage.removeItem('ripairMulti');
+        }
+      } catch(storeErr) {
+        console.warn('sessionStorage save failed', storeErr);
+      }
+
+      function recompute(){
+        var total = isNaN(base) ? NaN : base;
+        document.getElementById('finalTotal').textContent = isNaN(total) ? '—' : euro(total);
+        var href = null;
+        if (tag) {
+          href = 'rendezvous.html?tag=' + encodeURIComponent(String(tag));
+          if (isMulti) href += '&multi=1';
+        }
+        var ctaTop = document.getElementById('ctaTop');
+        ctaTop.href = href || '#';
+        ctaTop.setAttribute('aria-disabled', href ? 'false' : 'true');
+        updateSticky(total, href);
+      }
+      recompute();
+
+      // Affiche le détail des prix dans le récapitulatif
+      try {
+        var breakdownEl = document.getElementById('priceBreakdown');
+        if (breakdownEl) {
+          breakdownEl.innerHTML = '';
+          if (d.details && Array.isArray(d.details) && d.details.length) {
+            d.details.forEach(function(item){
+              var lineDiv = document.createElement('div');
+              lineDiv.className = 'line';
+              lineDiv.textContent = item.problem + ' : ' + euro(item.price);
+              breakdownEl.appendChild(lineDiv);
+            });
+            var totVal2 = parsePrice(d.price);
+            var totalDiv = document.createElement('div');
+            totalDiv.className = 'line';
+            var strongEl = document.createElement('strong');
+            strongEl.textContent = 'Total : ' + euro(totVal2);
+            totalDiv.appendChild(strongEl);
+            breakdownEl.appendChild(totalDiv);
+          }
+        }
+      } catch(ex) {
+        console.warn('price breakdown update failed', ex);
+      }
+      // Nettoie l'ancienne zone de résultat pour éviter les doublons
+      var resultDiv = document.getElementById('result');
+      if (resultDiv) {
+        resultDiv.innerHTML = '';
+      }
+    }catch(e){ console.warn('updateRecap failed:', e); }
+  };
+
+  // Réinitialisation : vide le récap
+  var rb = document.getElementById('resetBtn');
+  if(rb){
+    rb.addEventListener('click', function(){
+      ['selCategory','selBrand','selModel','selProblem','selDuration','basePrice','finalTotal','stickyTotal'].forEach(function(id){
+        var el = document.getElementById(id); if(el) el.textContent = '—';
+      });
+      var bar = document.getElementById('stickyBar'); if(bar) bar.hidden = true;
+      var ctaTop = document.getElementById('ctaTop'); if(ctaTop){ ctaTop.href = '#'; ctaTop.setAttribute('aria-disabled','true'); }
+      var submitBtn = document.querySelector('#devisForm button[type="submit"]');
+      if (submitBtn){ submitBtn.disabled = false; }
+    });
+  }
+})();
+</script>
+<script>
+(function(){
+  const modal = document.getElementById("contactModal");
+  const triggers = document.querySelectorAll("[data-contact-modal]");
+  const closeBtn = modal ? modal.querySelector(".close") : null;
+  const toast = document.getElementById("toast");
+  const copyEmailBtn = document.getElementById("copyEmail");
+  const phoneAction = document.getElementById("phoneAction");
+  const phoneNumber = "0615588782";
+
+  if(modal && triggers.length){
+    const openModal = (e)=>{
+      e.preventDefault();
+      modal.style.display = "flex";
+    };
+    triggers.forEach(btn => btn.addEventListener("click", openModal));
+  }
+
+  function closeModal(){
+    if(modal) modal.style.display = "none";
+  }
+
+  if(closeBtn){ closeBtn.addEventListener("click", closeModal); }
+  window.addEventListener("click", (e)=>{ if(e.target === modal){ closeModal(); }});
+
+  function copyToClipboard(text){
+    navigator.clipboard.writeText(text).then(()=> showToast("?? Copié : " + text));
+  }
+
+  if(copyEmailBtn){
+    copyEmailBtn.addEventListener("click", (e)=>{
+      e.preventDefault();
+      copyToClipboard("contact@ripair.shop");
+    });
+  }
+
+  if(phoneAction){
+    if(/Mobi|Android/i.test(navigator.userAgent)){
+      phoneAction.textContent = "Appeler";
+      phoneAction.addEventListener("click", (e)=>{
+        e.preventDefault();
+        window.location.href = "tel:" + phoneNumber;
+      });
+    } else {
+      phoneAction.textContent = "Copier";
+      phoneAction.addEventListener("click", (e)=>{
+        e.preventDefault();
+        copyToClipboard(phoneNumber);
+      });
+    }
+  }
+
+  function showToast(message){
+    if(!toast) return;
+    toast.textContent = message;
+    toast.className = "show";
+    setTimeout(()=>{ toast.className = toast.className.replace("show",""); }, 2000);
+  }
+})();
+</script>
+<!-- Préremplissage automatique retiré : la logique est gérée par preselectFromUrl -->
+
+</body>
+</html>
+
+
+

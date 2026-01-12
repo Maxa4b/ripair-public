@@ -1,0 +1,1499 @@
+﻿<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>RIPAIR – Réparations Smartphones, Consoles & PC à Pessac</title>
+  <meta name="description" content="RIPAIR répare vos smartphones, consoles et ordinateurs à Pessac. Réparations express, garanties 3 mois, pièces de qualité. Devis en ligne instantané.">
+  <meta name="author" content="RIPAIR">
+  <meta name="theme-color" content="#3abafc">
+
+  <!-- Validation Microsoft -->
+  <meta name="msvalidate.01" content="849581C25EE16AB1A9820D0CDD86F513">
+
+  <!-- ===================== -->
+  <!-- 🌐 Open Graph (Facebook, Discord, WhatsApp, etc.) -->
+  <!-- ===================== -->
+  <meta property="og:title" content="RIPAIR – Réparations Smartphones, Consoles & PC à Pessac">
+  <meta property="og:description" content="Devis en ligne instantané, réparations express et garanties 3 mois. Découvrez la qualité RIPAIR à Pessac.">
+  <meta property="og:image" content="https://ripair.shop/assets/img/preview.jpg">
+  <meta property="og:url" content="https://ripair.shop">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="RIPAIR">
+
+  <!-- ===================== -->
+  <!-- 🐦 Twitter Cards -->
+  <!-- ===================== -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="RIPAIR – Réparations Smartphones, Consoles & PC à Pessac">
+  <meta name="twitter:description" content="Réparations express, garanties 3 mois, pièces de qualité à Pessac. Devis en ligne instantané.">
+  <meta name="twitter:image" content="https://ripair.shop/assets/img/preview.jpg">
+
+  <!-- ===================== -->
+  <!-- 🧩 Favicons -->
+  <!-- ===================== -->
+  <link rel="icon" href="https://ripair.shop/assets/img/logoweb.png" sizes="32x32">
+  <link rel="icon" href="https://ripair.shop/assets/img/logoweb.png" sizes="192x192">
+  <link rel="apple-touch-icon" href="https://ripair.shop/assets/img/logoweb.png">
+  <meta name="msapplication-TileImage" content="https://ripair.shop/assets/img/logoweb.png">
+
+<!-- ===================== -->
+<!-- 🎨 Feuilles de style -->
+<!-- ===================== -->
+<link rel="preconnect" href="https://ripair.shop">
+<link rel="stylesheet" href="/assets/css/critical.css">
+<link rel="stylesheet" href="/assets/css/style.css">
+
+<!-- ===================== -->
+<!-- ⚙️ Script principal -->
+<!-- ===================== -->
+<script defer src="/assets/js/script.js"></script>
+
+
+  <!-- ===================== -->
+  <!-- 💠 Styles internes spécifiques (multi-problèmes) -->
+  <!-- ===================== -->
+  <style>
+    .plus-wrap { position:absolute; left:8px; bottom:-10px; }
+    #issueContainer, #problemContainer { position:relative; padding-bottom:36px; }
+    .plus-btn {
+      width:36px; height:36px; border-radius:9999px;
+      border:1px solid rgba(0,0,0,.08);
+      background:linear-gradient(180deg,rgba(255,255,255,.96),rgba(245,245,245,.96));
+      box-shadow:0 4px 12px rgba(0,0,0,.08);
+      display:flex; align-items:center; justify-content:center;
+      font-size:20px; font-weight:600; cursor:pointer;
+      transition:transform .12s ease, box-shadow .12s ease, opacity .12s ease;
+    }
+    .plus-btn:hover { transform:translateY(-1px); box-shadow:0 8px 18px rgba(0,0,0,.12); }
+    .plus-btn:active { transform:translateY(0); box-shadow:0 4px 12px rgba(0,0,0,.08); }
+    .plus-btn.disabled,[aria-disabled="true"].plus-btn { opacity:.45; cursor:not-allowed; filter:grayscale(1); }
+    .issue-row, .problem-row { position:relative; margin-top:8px; }
+    .remove-btn {
+      position:absolute; right:8px; top:50%; transform:translateY(-50%);
+      width:30px; height:30px; border-radius:9999px;
+      display:flex; align-items:center; justify-content:center;
+      border:1px solid rgba(0,0,0,.08); background:rgba(255,255,255,.95);
+      box-shadow:0 2px 8px rgba(0,0,0,.08);
+      font-size:18px; cursor:pointer; transition:transform .12s ease, box-shadow .12s ease, opacity .12s ease;
+    }
+    .remove-btn:hover { transform:translateY(-50%) scale(1.04); box-shadow:0 6px 14px rgba(0,0,0,.12); }
+    .remove-btn:active { transform:translateY(-50%) scale(1.0); }
+    .sr-only { position:absolute !important; left:-10000px; width:1px; height:1px; overflow:hidden; }
+  </style>
+</head>
+
+<body>
+<!-- NAV -->
+<header class="navbar">
+  <div class="nav-inner">
+    <a class="navbar-logo" href="index.html">
+      <img src="assets/img/logo.webp" alt="RIPAIR Logo">
+    </a>
+
+    <!-- Menu horizontal (tablette + desktop) -->
+    <nav class="navbar-links">
+      <a href="/index.html">Accueil</a>
+      <a href="/services.html">Services</a>
+      <a href="/switch-picofly.html">Switch</a>
+      <a href="/devis.html">Devis</a>
+      <a href="/avis.html">Avis</a>
+      <a href="/contact.html">Contact</a>
+    </nav>
+
+    <!-- Menu mobile (hamburger) -->
+    <button class="icon-btn" aria-label="Ouvrir le menu" id="hamburger" onclick="toggleMenu()">
+      <svg viewBox="0 0 24 24" width="24" height="24" stroke="#111" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <line x1="3" y1="12" x2="21" y2="12"/>
+        <line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+
+    <nav id="mobileMenu" class="mobile-menu">
+      <a href="/index.html">Accueil</a>
+      <a href="/services.html">Services</a>
+      <a href="/switch-picofly.html">Switch</a>
+      <a href="/devis.html">Devis</a>
+      <a href="/avis.html">Avis</a>
+      <a href="/contact.html">Contact</a>
+    </nav>
+  </div>
+</header>
+
+
+
+  <main>
+    
+<section class="hero">
+  <div class="carousel" id="carousel">
+
+    <!-- Track : contient UNIQUEMENT les slides -->
+    <div class="carousel-track" id="carousel-track">
+
+      <!-- Slide 1 -->
+      <div class="carousel-slide slide-1">
+          <img 
+            src="assets/img/bande3.webp" 
+            alt="Offre spéciale -30% sur les réparations de consoles" 
+            class="carousel-bg" 
+            fetchpriority="high" 
+            decoding="async"
+            width="1920" height="600">
+        <div class="slide-content container">
+          <div class="text-block-promo">
+            <h1 class="hero-title hero-title-offre animatable">OFFRE SPÉCIALE WEB RIPAIR</h1>
+            <p class="hero-sub animatable">
+              <span class="promo animatable">-30%</span>
+              <span class="texte-offre animatable">
+                <strong>sur les réparations</strong> <br>
+                <strong>de vos anciennes consoles !</strong>
+              </span>
+            </p>
+            <a href="devis.html" class="btn btn-primary animatable">Prendre rendez-vous</a>
+          </div>  
+            <img src="assets/img/ligne.webp" 
+                alt="Trait bleu" 
+                class="hero-deco animatable" 
+                loading="lazy" 
+                decoding="async">
+          <div class="hero-image animatable">
+            <img src="assets/img/consoles.webp" alt="PS5" class="console consoles animatable">
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 2 -->
+      <div class="carousel-slide slide-2">
+          <img 
+            src="assets/img/bande4.webp" 
+            alt="Garantie tranquillité 3 mois sur vos réparations" 
+            class="carousel-bg" 
+            fetchpriority="high" 
+            decoding="async"
+            width="1920" height="600">
+        <div class="slide-content container">
+          <div class="text-block-garantie">
+            <h2 class="hero-title hero-title-garantie animatable">GARANTIE TRANQUILLITÉ</h2>
+            <p class="hero-sub animatable">
+              <span class="garantie animatable">3 MOIS</span>
+              <span class="texte-offre animatable">
+                <strong>sur toutes vos réparations</strong> <br>
+                <strong>pièces et main-d’œuvre inclus !</strong>
+              </span>
+            </p>
+            <a href="services.html" class="btn btn-garantie animatable">Découvrir nos services</a>
+          </div>
+          <img src="assets/img/ligne2.webp" alt="Trait vert" class="hero-deco animatable">
+          <div class="hero-image animatable">
+            <img src="assets/img/garantie.webp" alt="garantie" class="console consoles animatable">
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 3 -->
+      <div class="carousel-slide slide-3">
+          <img 
+            src="assets/img/bande5.webp" 
+            alt="Diagnostic gratuit pour vos réparations" 
+            class="carousel-bg" 
+            fetchpriority="high" 
+            decoding="async"
+            width="1920" height="600">
+        <div class="slide-content container">
+          <div class="text-block-diagnostic">
+            <h3 class="hero-title hero-title-diagnostic animatable">DIAGNOSTIC GRATUIT</h3>
+            <p class="hero-sub animatable">
+              <span class="diagnostic animatable">0€</span>
+              <span class="texte-offre animatable">
+                <strong>pour identifier la panne</strong> <br>
+                <strong>avant toute réparation</strong>
+              </span>
+            </p>
+            <a href="services.html" class="btn btn-diagnostic animatable">Profiter du diagnostic</a>
+          </div>
+            <img src="assets/img/ligne3.webp" alt="Trait vert" class="hero-deco animatable">
+            <div class="hero-image animatable">
+            <img src="assets/img/diagnostic.webp" alt="diagnostic" class="console consoles animatable">
+          </div>
+        </div>
+      </div>
+
+    </div> <!-- fin du track -->
+
+    <!-- Flèches en dehors du track -->
+    <button class="carousel-btn prev" id="prev-btn" aria-label="Slide précédent">‹</button>
+    <button class="carousel-btn next" id="next-btn" aria-label="Slide suivant">›</button>
+
+    <!-- Dots en dehors du track -->
+    <div class="carousel-dots" id="carousel-dots"></div>
+    
+  </div>
+<div class="phone-cta">
+  <button id="phoneCtaBtn" class="phone-cta-btn" type="button">
+    <div class="phone-cta-icon">📞</div>
+    <div class="phone-cta-label">
+      <span class="line1">Besoin d'une réponse immédiate ?</span>
+      <span class="line2">Appeler RIPAIR · <strong>06 15 58 87 82</strong></span>
+    </div>
+  </button>
+</div>
+</section>
+<!-- Bloc devis en overlay -->
+<div class="devis-overlay" id="devis-overlay">
+  <form id="devis-hero-form" class="devis-card" autocomplete="off">
+    <div class="devis-grid">
+      <label for="type"><span>Type d'appareil</span>
+        <select id="type" class="fs" name="type" required>
+          <option value="" selected disabled hidden>Choisir...</option>
+        </select>
+      </label>
+      <label for="brand"><span>Marque</span>
+        <select id="brand" class="fs" name="brand" required disabled>
+          <option value="" selected disabled hidden>Choisir...</option>
+        </select>
+      </label>
+      <label for="model"><span>Modèle</span>
+        <select id="model" class="fs" name="model" required disabled>
+          <option value="" selected disabled hidden>Choisir...</option>
+        </select>
+      </label>
+      <div id="issueContainer">
+<label for="issue"><span>Problème</span>
+        <select id="issue" class="fs" name="issue" required disabled>
+          <option value="" selected disabled hidden>Choisir...</option>
+        </select>
+      </label>
+<div class="plus-wrap"><button type="button" id="addIssueBtn" class="plus-btn disabled" aria-disabled="true" title="Ajouter un problème">+</button></div>
+</div>
+    </div>
+    <p class="devis-help"><a href="contact.html">Je ne trouve pas mon appareil ou mon problème</a></p>
+
+    <div class="devis-actions">
+      <button type="button" class="btn" id="devis-reset">Réinitialiser</button>
+      <button type="submit" class="btn btn-primary">Voir le devis</button>
+    </div>
+  </form>
+</div>
+
+
+
+
+<script>  
+  function toggleMenu() {
+  const menu = document.getElementById('mobileMenu');
+  menu.classList.toggle('show');
+
+  // Ferme le menu dès qu’un lien est cliqué
+  menu.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => menu.classList.remove('show'));
+  });
+}
+
+</script>
+
+<section class="services">
+  <div class="container">
+    <h2 class="section-title">Les services chez RIPAIR</h2>
+    <div class="service-grid">
+      <article class="service-card">
+        <img src="assets/img/service1.webp" alt="Réparation smartphone">
+        <div class="service-content">
+          <h3>⚡ Réparation Express ⚡</h3>
+          <p>Écrans, batteries, connecteurs <br> Toutes marques, réparé en <strong>30 min</strong> à <strong>1h</strong></p>
+          <a class="btn btn-primary" href="services.html#smartphones">Réparer maintenant</a>
+        </div>
+      </article>
+      <article class="service-card">
+        <img src="assets/img/service2.webp" alt="Protection">
+        <div class="service-content">
+          <h3>💪 Boost de Performances 💪</h3>
+          <p>Appareil <strong>lent ?</strong> SSD, RAM, optimisation Appareils plus <strong>rapides</strong>, plus <strong>fiables</strong></p>
+          <a class="btn btn-primary" href="services.html#protection">Booster mon appareil</a>
+        </div>
+      </article>
+      <article class="service-card">
+        <img src="assets/img/service3.webp" alt="Réparation ordinateur">
+        <div class="service-content">
+          <h3>🔍 Récupération de Données 🔍</h3>
+          <p>Disque dur, téléphone ou clé USB <strong>HS ?</strong> <br> On <strong>sauve</strong> vos fichiers <strong>importants</strong></p>
+          <a class="btn btn-primary" href="services.html#ordinateurs">Sauver mes données</a>
+        </div>
+      </article>
+      <article class="service-card">
+        <img src="assets/img/consoles.webp" alt="Nintendo Switch (service Picofly)">
+        <div class="service-content">
+          <h3>Nintendo Switch - Picofly</h3>
+          <p>Installation pro en micro-soudure, tests complets et restitution soignée.<br><strong>Usage légal uniquement.</strong></p>
+          <a class="btn btn-primary" href="switch-picofly.html">Découvrir le service</a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="promo-banner">
+  <div class="promo-slide active" data-color="#3abafc">
+    <div class="promo-track">
+      ⚡ Réparation express 30 min
+    </div>
+    <div class="progress-bar"></div>
+  </div>
+
+  <div class="promo-slide" data-color="#62ea91">
+    <div class="promo-track">
+      💸 Prix bas & pièces de qualité
+    </div>
+    <div class="progress-bar"></div>
+  </div>
+
+  <div class="promo-slide" data-color="#ff9800">
+    <div class="promo-track">
+      🔋 Batteries 100% neuves
+    </div>
+    <div class="progress-bar"></div>
+  </div>
+
+  <div class="promo-slide" data-color="#2196f3">
+    <div class="promo-track">
+      📱 Écrans cassés réparés rapidement
+    </div>
+    <div class="progress-bar"></div>
+  </div>
+
+  <div class="promo-slide" data-color="#3ddb44">
+    <div class="promo-track">
+      🔨 Diagnostic 100% offert 
+    </div>
+    <div class="progress-bar"></div>
+  </div>
+
+  <div class="promo-slide" data-color="#673ab7">
+    <div class="promo-track">
+      💻 Optimisation PC & Mac
+    </div>
+    <div class="progress-bar"></div>
+  </div>
+
+  <div class="promo-slide" data-color="#e91e63">
+    <div class="promo-track">
+      🎮 Consoles réparées toutes générations
+    </div>
+    <div class="progress-bar"></div>
+  </div>
+
+  <div class="promo-slide" data-color="#009688">
+    <div class="promo-track">
+      🧹 Nettoyage complet + réinstallation OS
+    </div>
+    <div class="progress-bar"></div>
+  </div>
+
+  <div class="promo-slide" data-color="#ff5722">
+    <div class="promo-track">
+      ✅ Garantie 3 mois sur toutes réparations
+    </div>
+    <div class="progress-bar"></div>
+  </div>
+
+  <div class="promo-slide" data-color="#795548">
+    <div class="promo-track">
+      📍 Boutique RIPAIR à Pessac - Sur rendez-vous
+    </div>
+    <div class="progress-bar"></div>
+  </div>
+</section>
+
+<section class="avis">
+  <div class="container">
+    <h2 class="section-title">Avis Clients</h2>
+    <div class="avis-grid">
+      
+      <figure class="testimonial">
+        <div class="avatar">M</div>
+        <blockquote>“Super service, rapide et efficace !”</blockquote>
+        <figcaption>— Marie L.</figcaption>
+        <div class="stars">★★★★★</div>
+      </figure>
+      
+      <figure class="testimonial">
+        <div class="avatar">T</div>
+        <blockquote>“iPhone réparé en 30 min, parfait.”</blockquote>
+        <figcaption>— Thomas R.</figcaption>
+        <div class="stars">★★★★★</div>
+      </figure>
+      
+      <figure class="testimonial">
+        <div class="avatar">S</div>
+        <blockquote>“Accueil top et tarifs honnêtes.”</blockquote>
+        <figcaption>— Sarah K.</figcaption>
+        <div class="stars">★★★★★</div>
+      </figure>
+      
+    </div>
+  </div>
+</section>
+
+<section class="map">
+  <div class="container">
+    <h2 class="section-title">Nous Trouver</h2>
+    <p class="map-sub">Trouvez votre boutique RIPAIR.</p>
+    <div class="map-frame">
+      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d45307.90377641035!2d-0.7221897139957635!3d44.78602444397337!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd54d8f9227cb8a3%3A0x3ace1d334bf95f98!2s33600%20Pessac!5e0!3m2!1sfr!2sfr!4v1756909429054!5m2!1sfr!2sfr" title="Localisation de RIPAIR" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+  </div>
+</section>
+
+  </main>
+
+  <!-- FOOTER -->
+<footer class="footer">
+  <div class="container footer-content">
+    <div class="footer-left">
+      <p>&copy; 2025 RIPAIR &mdash; Tous droits r&eacute;serv&eacute;s.</p>
+      <p class="footer-meta">EI RIPAIR &middot; 06&nbsp;15&nbsp;58&nbsp;87&nbsp;82 &middot; contact@ripair.shop</p>
+    </div>
+    <div class="footer-links">
+      <a href="mentions.html">Mentions l&eacute;gales</a>
+      <a href="devis.html">Obtenir un devis</a>
+    </div>
+    <div class="footer-right">
+      <a href="https://instagram.com/ripair.shop" target="_blank" rel="noopener">
+        <img src="assets/img/instagram.webp" alt="Instagram" class="social-icon">
+      </a>
+      <a href="https://www.facebook.com/profile.php?id=61579654974480" target="_blank" rel="noopener">
+        <img src="assets/img/facebook.webp" alt="Facebook" class="social-icon">
+      </a>
+      <a href="#" class="btn-contact" data-contact-modal>Contactez-nous</a>
+    </div>
+  </div>
+</footer>
+
+
+
+<!-- Popup Modal -->
+<div id="contactModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2 class="modal-title">Contactez-nous</h2>
+
+    <!-- Email -->
+    <div class="contact-item">
+      <p>📧 contact@ripair.shop</p>
+      <button id="copyEmail" class="btn-contact">Copier</button>
+    </div>
+
+    <!-- Téléphone -->
+    <div class="contact-item">
+      <p>📱 06&nbsp;15&nbsp;58&nbsp;87&nbsp;82</p>
+      <button id="phoneAction" class="btn-contact"></button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+
+
+
+<script>
+(function(){
+  const modal = document.getElementById("contactModal");
+  const triggers = document.querySelectorAll("[data-contact-modal]");
+  const closeBtn = modal ? modal.querySelector(".close") : null;
+  const toast = document.getElementById("toast");
+  const copyEmailBtn = document.getElementById("copyEmail");
+  const phoneAction = document.getElementById("phoneAction");
+  const phoneNumber = "0615588782";
+
+  if(modal && triggers.length){
+    const openModal = (e)=>{
+      e.preventDefault();
+      modal.style.display = "flex";
+    };
+    triggers.forEach(btn=> btn.addEventListener("click", openModal));
+  }
+
+  function closeModal(){
+    if(modal) modal.style.display = "none";
+  }
+
+  if(closeBtn){ closeBtn.addEventListener("click", closeModal); }
+  window.addEventListener("click", (e)=>{ if(e.target === modal){ closeModal(); }});
+
+  function copyToClipboard(text){
+    navigator.clipboard.writeText(text).then(()=> showToast("📋 Copié : " + text));
+  }
+
+  if(copyEmailBtn){
+    copyEmailBtn.addEventListener("click", (e)=>{
+      e.preventDefault();
+      copyToClipboard("contact@ripair.shop");
+    });
+  }
+
+  if(phoneAction){
+    if(/Mobi|Android/i.test(navigator.userAgent)){
+      phoneAction.textContent = "Appeler";
+      phoneAction.addEventListener("click", (e)=>{
+        e.preventDefault();
+        window.location.href = "tel:" + phoneNumber;
+      });
+    } else {
+      phoneAction.textContent = "Copier";
+      phoneAction.addEventListener("click", (e)=>{
+        e.preventDefault();
+        copyToClipboard(phoneNumber);
+      });
+    }
+  }
+
+  function showToast(message){
+    if(!toast) return;
+    toast.textContent = message;
+    toast.className = "show";
+    setTimeout(()=>{ toast.className = toast.className.replace("show",""); }, 2000);
+  }
+})();
+</script>
+<style>
+/* ===== Overlay devis sur carrousel ===== */
+
+/* Si ton carrousel n'est pas positionné, on le fait ici (sans impacter la mise en page) */
+.hero, .carousel, .slider, .swiper, .hero-container { position: relative; }
+
+.devis-overlay{
+  position:absolute;
+  left:50%;
+  bottom:clamp(12px,4vw,28px);
+  transform:translateX(-50%);
+  width:min(1120px,calc(100% - 32px));
+  z-index:8000;
+}
+
+.devis-card{
+  background:rgba(255,255,255,.94);
+  backdrop-filter:saturate(1.05) blur(8px);
+  border-radius:16px;
+  box-shadow:0 18px 40px rgba(0,0,0,.12);
+  padding:16px;
+}
+
+.devis-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:14px;
+}
+.devis-card label{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  font-weight:600;
+  font-size:14px;
+  color:#667085;
+}
+.devis-card select{
+  width:100%;
+  min-height:48px;
+  border-radius:14px;
+  border:1px solid #dfe6f0;
+  padding:12px 44px 12px 14px;
+  background:#f7f9fd;
+  color:#111111;
+  font-family:'Montserrat',sans-serif;
+  font-weight:500;
+  appearance:none;
+  -webkit-appearance:none;
+  -moz-appearance:none;
+  line-height:1.2;
+  font-size:16px;
+  transition:border-color .15s ease, box-shadow .15s ease, background .15s ease;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.03);
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23aeb7c7' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat:no-repeat;
+  background-position:right 12px center;
+  background-size:18px 18px;
+}
+.devis-card select:hover{border-color:#3abafc;}
+.devis-card select:focus{
+  outline:none;
+  border-color:#3abafc;
+  box-shadow:0 0 0 3px rgba(58,186,252,.18);
+  background:#ffffff;
+}
+.devis-card select:disabled{opacity:.6;cursor:not-allowed;}
+.devis-card select option{background:#ffffff;color:#111111;}
+
+.fs-wrap{position:relative;}
+.fs-wrap .fs-control{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  width:100%;
+  background:#f7f9fd;
+  color:#111111;
+  border:1px solid #dfe6f0;
+  border-radius:14px;
+  padding:11px 14px;
+  cursor:pointer;
+  transition:border-color .15s ease, box-shadow .15s ease, background .15s ease;
+  font-family:'Montserrat',sans-serif;
+  font-size:16px;
+  font-weight:500;
+  line-height:1.2;
+  min-height:48px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.03);
+}
+.fs-wrap .fs-control:hover{border-color:#3abafc;}
+.fs-wrap .fs-control:focus{
+  outline:none;
+  border-color:#3abafc;
+  box-shadow:0 0 0 3px rgba(58,186,252,.18);
+  background:#ffffff;
+}
+.fs-wrap .fs-value{
+  flex:1;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  opacity:.95;
+}
+.fs-wrap .fs-chevron{width:18px;height:18px;opacity:.75;color:#667085;}
+.fs-wrap .fs-menu{
+  position:absolute;
+  left:0;
+  right:0;
+  top:calc(100% + 8px);
+  z-index:40;
+  background:#ffffff;
+  border:1px solid rgba(17,17,17,.08);
+  border-radius:14px;
+  box-shadow:0 14px 44px rgba(17,17,17,.12);
+  display:none;
+  padding:8px;
+}
+.fs-wrap.open .fs-menu{display:block;}
+.fs-wrap .fs-search{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  border:1px solid #dfe6f0;
+  border-radius:10px;
+  background:#f7f9fd;
+  padding:8px 10px;
+  margin:4px 4px 8px;
+}
+.fs-wrap .fs-search .fs-icon{color:#667085;display:flex;}
+.fs-wrap .fs-search input{
+  background:transparent;
+  border:none;
+  color:#111111;
+  width:100%;
+  outline:none;
+  padding:0;
+  font-size:14px;
+  font-family:'Montserrat',sans-serif;
+}
+.fs-wrap .fs-list{max-height:260px;overflow:auto;padding:4px;}
+.fs-item{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 12px;
+  border-radius:10px;
+  cursor:pointer;
+  color:#111111;
+  transition:background .15s ease, outline .15s ease;
+}
+.fs-item:hover{background:rgba(58,186,252,0.08);}
+.fs-item.active{background:rgba(58,186,252,0.12);outline:1px solid rgba(58,186,252,0.35);}
+.fs-item .fs-icon{width:18px;height:18px;opacity:.85;color:#667085;display:flex;}
+.fs-item .fs-label{flex:1;font-family:'Montserrat',sans-serif;font-size:15px;}
+.fs-empty{padding:10px 12px;color:#667085;font-size:14px;}
+select.fs{
+  position:absolute !important;
+  left:-9999px !important;
+  width:1px;
+  height:1px;
+  clip:rect(0 0 0 0);
+  clip-path:inset(50%);
+  overflow:hidden;
+}
+.fs-wrap.disabled .fs-control{opacity:.6;cursor:not-allowed;}
+
+/* Fancy select combobox */
+.fs-wrap{position:relative;}
+.fs-wrap .fs-control{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  width:100%;
+  background:#f7f9fd;
+  color:#111111;
+  border:1px solid #dfe6f0;
+  border-radius:14px;
+  padding:11px 14px;
+  cursor:pointer;
+  transition:border-color .15s ease, box-shadow .15s ease, background .15s ease;
+  font-family:'Montserrat',sans-serif;
+  font-size:16px;
+  font-weight:500;
+  line-height:1.2;
+  min-height:48px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.03);
+}
+.fs-wrap .fs-control:hover{border-color:#3abafc;}
+.fs-wrap .fs-control:focus{
+  outline:none;
+  border-color:#3abafc;
+  box-shadow:0 0 0 3px rgba(58,186,252,.18);
+  background:#ffffff;
+}
+.fs-wrap .fs-value{
+  flex:1;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  opacity:.95;
+}
+.fs-wrap .fs-chevron{width:18px;height:18px;opacity:.75;color:#667085;}
+.fs-wrap .fs-menu{
+  position:absolute;
+  left:0;
+  right:0;
+  top:calc(100% + 8px);
+  z-index:40;
+  background:#ffffff;
+  border:1px solid rgba(17,17,17,.08);
+  border-radius:14px;
+  box-shadow:0 14px 44px rgba(17,17,17,.12);
+  display:none;
+  padding:8px;
+}
+.fs-wrap.open .fs-menu{display:block;}
+.fs-wrap .fs-search{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  border:1px solid #dfe6f0;
+  border-radius:10px;
+  background:#f7f9fd;
+  padding:8px 10px;
+  margin:4px 4px 8px;
+}
+.fs-wrap .fs-search .fs-icon{color:#667085;display:flex;}
+.fs-wrap .fs-search input{
+  background:transparent;
+  border:none;
+  color:#111111;
+  width:100%;
+  outline:none;
+  padding:0;
+  font-size:14px;
+  font-family:'Montserrat',sans-serif;
+}
+.fs-wrap .fs-list{max-height:260px;overflow:auto;padding:4px;}
+.fs-item{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 12px;
+  border-radius:10px;
+  cursor:pointer;
+  color:#111111;
+  transition:background .15s ease, outline .15s ease;
+}
+.fs-item:hover{background:rgba(58,186,252,0.08);}
+.fs-item.active{background:rgba(58,186,252,0.12);outline:1px solid rgba(58,186,252,0.35);}
+.fs-item .fs-icon{width:18px;height:18px;opacity:.85;color:#667085;display:flex;}
+.fs-item .fs-label{flex:1;font-family:'Montserrat',sans-serif;font-size:15px;}
+.fs-empty{padding:10px 12px;color:#667085;font-size:14px;}
+select.fs{
+  position:absolute !important;
+  left:-9999px !important;
+  width:1px;
+  height:1px;
+  clip:rect(0 0 0 0);
+  clip-path:inset(50%);
+  overflow:hidden;
+}
+.fs-wrap.disabled .fs-control{opacity:.6;cursor:not-allowed;}
+
+.devis-actions{
+  display:grid;
+  grid-template-columns:1fr 1.6fr;
+  gap:14px;margin-top:12px;
+}
+.devis-actions .btn{
+  height:48px;border-radius:999px;border:none;cursor:pointer;
+}
+.devis-actions .btn.btn-primary{
+  background:#07b1ff;color:#fff;
+  box-shadow:0 12px 20px rgba(7,177,255,.25);
+}
+.devis-actions .btn:not(.btn-primary){background:#f4f7fb;color:#000000}
+
+/* Désactive la superposition partout */
+.devis-overlay{
+  position: static !important;
+  transform: none !important;
+  left: auto !important;
+  bottom: auto !important;
+  width: 100% !important;
+  max-width: 1120px;
+  margin: 16px auto 0;
+  z-index: auto !important;
+}
+
+
+
+</style>
+
+<style>
+/* ===== Styles essentiels pour l'étape de cascade ===== */
+
+.devis-card{
+  background:rgba(255,255,255,.94);
+  backdrop-filter:saturate(1.05) blur(8px);
+  border-radius:16px;
+  box-shadow:0 18px 40px rgba(0,0,0,.12);
+  padding:16px;
+}
+
+.devis-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:14px;
+}
+.devis-card label{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  font-weight:600;
+  font-size:14px;
+  color:#667085;
+}
+.devis-card select{
+  width:100%;
+  min-height:48px;
+  border-radius:14px;
+  border:1px solid #dfe6f0;
+  padding:12px 44px 12px 14px;
+  background:#f7f9fd;
+  color:#111111;
+  font-family:'Montserrat',sans-serif;
+  font-weight:500;
+  appearance:none;
+  -webkit-appearance:none;
+  -moz-appearance:none;
+  line-height:1.2;
+  font-size:16px;
+  transition:border-color .15s ease, box-shadow .15s ease, background .15s ease;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.03);
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23aeb7c7' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat:no-repeat;
+  background-position:right 12px center;
+  background-size:18px 18px;
+}
+.devis-card select:hover{border-color:#3abafc;}
+.devis-card select:focus{
+  outline:none;
+  border-color:#3abafc;
+  box-shadow:0 0 0 3px rgba(58,186,252,.18);
+  background:#ffffff;
+}
+.devis-card select:disabled{opacity:.6;cursor:not-allowed;}
+.devis-card select option{background:#ffffff;color:#111111;}
+
+.devis-actions{
+  display:grid;
+  grid-template-columns:1fr 1.6fr;
+  gap:14px;margin-top:12px;
+}
+.devis-actions .btn{
+  height:48px;border-radius:999px;border:none;cursor:pointer;
+}
+.devis-actions .btn.btn-primary{
+  background:#07b1ff;color:#fff;
+  box-shadow:0 12px 20px rgba(7,177,255,.25);
+}
+.devis-actions .btn:not(.btn-primary){background:#f4f7fb;color:#000}
+
+/* Responsive */
+@media (max-width: 768px){
+  .devis-grid{grid-template-columns:1fr 1fr}
+  .devis-actions{grid-template-columns:1fr;gap:10px}
+}
+@media (max-width: 480px){
+  .devis-grid{grid-template-columns:1fr}
+}
+
+/* Cascade : supprimer le gras partout */
+.fs-wrap .fs-item .fs-label,
+.fs-wrap .fs-item.active .fs-label,
+.fs-wrap .fs-control .fs-value {
+  font-weight: 400 !important;
+}
+
+/* Si tu as un fallback natif (sans FancySelect) */
+#type, #brand, #model, #issue {
+  font-weight: 400;
+}
+.fs-wrap .fs-menu{
+  position:absolute;
+  left:0;
+  right:0;
+  top:calc(100% + 8px);
+  z-index:1000;
+  background:#ffffff;
+  border:1px solid #dfe6f0;
+  border-radius:14px;
+  box-shadow:0 14px 44px rgba(17,17,17,0.12);
+  padding:8px;
+  display:none;
+  max-height:320px;
+  overflow:hidden;
+}
+
+.fs-wrap.open .fs-menu{
+  display:block;
+}
+
+.fs-wrap .fs-list{
+  max-height:260px;
+  overflow-y:auto;
+  padding:4px;
+}
+.fs-wrap .fs-list{
+  max-height:120px; /* ~3 items visibles */
+  overflow-y:auto;
+  padding:4px;
+}
+
+
+
+
+</style>
+<script>
+/* ===== Fancy Select (enhanced dropdown) ===== */
+(function(){
+  function el(tag, cls, html){
+    var node = document.createElement(tag);
+    if(cls) node.className = cls;
+    if(html != null) node.innerHTML = html;
+    return node;
+  }
+  function chevronSVG(){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>'; }
+  function searchSVG(){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>'; }
+  function phoneSVG(){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18"/></svg>'; }
+  function brandSVG(){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M14.31 8l5.74 9.94"/><path d="M9.69 8h11.48"/><path d="M7.38 12l5.74-9.94"/></svg>'; }
+  function modelSVG(){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 20h8"/></svg>'; }
+  function wrenchSVG(){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 1 0-5.66 5.66L3 18l3 3 6.04-6.04a4 4 0 0 0 5.66-5.66z"/></svg>'; }
+
+  var ICONS = {
+    type:     phoneSVG(),
+    category: phoneSVG(),
+    brand:    brandSVG(),
+    model:    modelSVG(),
+    issue:    wrenchSVG(),
+    problem:  wrenchSVG()
+  };
+
+  function FancySelect(select){
+    this.select = select;
+    this.disabled = select.disabled;
+    this.wrap = el('div','fs-wrap'+(this.disabled?' disabled':'')); select.parentNode.insertBefore(this.wrap, select); this.wrap.appendChild(select);
+    var ctrl = this.ctrl = el('button','fs-control'); ctrl.type='button';
+    ctrl.setAttribute('aria-haspopup','listbox');
+    ctrl.setAttribute('aria-expanded','false');
+    var value = this.valueEl = el('div','fs-value', (select.options[select.selectedIndex]||{}).text || 'Choisir...');
+    var chev  = this.chevEl  = el('div','fs-chevron', chevronSVG());
+    ctrl.appendChild(value); ctrl.appendChild(chev);
+    this.wrap.appendChild(ctrl);
+
+    var menu = this.menu = el('div','fs-menu');
+    var search = el('div','fs-search'); search.innerHTML = '<span class="fs-icon">'+searchSVG()+'</span>';
+    var input = this.searchInput = el('input'); input.type='text'; input.placeholder='Rechercher ...';
+    search.appendChild(input); menu.appendChild(search);
+    var list = this.list = el('div','fs-list'); menu.appendChild(list);
+    this.wrap.appendChild(menu);
+
+    this.buildItems();
+
+    var self=this;
+    ctrl.addEventListener('click', function(){
+      if(self.disabled) return;
+      self.toggle();
+    });
+    input.addEventListener('input', function(){
+      self.filter(this.value);
+    });
+    document.addEventListener('click', function(e){
+      if(!self.wrap.contains(e.target)) self.close();
+    });
+
+    this.wrap.addEventListener('keydown', function(e){
+      if(!self.isOpen()) return;
+      var items = Array.prototype.slice.call(self.list.querySelectorAll('.fs-item'));
+      var idx = items.findIndex(function(n){return n.classList.contains('active');});
+      if(e.key === 'ArrowDown'){
+        e.preventDefault();
+        var ni = Math.min(items.length - 1, (idx < 0 ? 0 : idx + 1));
+        self.activate(items[ni]);
+      }
+      if(e.key === 'ArrowUp'){
+        e.preventDefault();
+        var pi = Math.max(0, (idx < 0 ? 0 : idx - 1));
+        self.activate(items[pi]);
+      }
+      if(e.key === 'Enter'){
+        e.preventDefault();
+        var act = self.list.querySelector('.fs-item.active');
+        if(act) act.click();
+      }
+      if(e.key === 'Escape'){ self.close(); ctrl.focus(); }
+    });
+
+    var observer = new MutationObserver(function(){ self.rebuildFromSelect(); });
+    observer.observe(select, {childList:true, attributes:true, subtree:false});
+    this.observer = observer;
+
+    select._fs = this;
+  }
+
+  FancySelect.prototype.iconFor = function(){
+    var id = this.select.id || '';
+    return ICONS[id] || phoneSVG();
+  };
+
+  FancySelect.prototype.buildItems = function(){
+    var self=this; this.list.innerHTML='';
+    var opts = this.select.options;
+    if(!opts || !opts.length){
+      this.list.appendChild(el('div','fs-empty','Aucune option'));
+      return;
+    }
+    for(var i=0;i<opts.length;i++){
+      var o = opts[i]; if(!o.value){ continue; }
+      var item = el('div','fs-item');
+      item.innerHTML = '<span class="fs-icon">'+this.iconFor()+'</span><span class="fs-label">'+o.text+'</span>';
+      item.dataset.value = o.value;
+      item.addEventListener('click', function(){
+        self.choose(this.dataset.value, this.querySelector('.fs-label').textContent);
+      });
+      this.list.appendChild(item);
+    }
+    this.markActive();
+  };
+
+  FancySelect.prototype.activate = function(node){
+    if(!node) return;
+    Array.prototype.forEach.call(this.list.querySelectorAll('.fs-item'), function(n){
+      if(!n.classList) return;
+      n.classList.toggle('active', n === node);
+    });
+    node.scrollIntoView({block:'nearest'});
+  };
+
+  FancySelect.prototype.markActive = function(){
+    var v = this.select.value;
+    var activeItem = null;
+    Array.prototype.forEach.call(this.list.children, function(n){
+      if(!n.classList) return;
+      var isActive = n.dataset.value === v;
+      n.classList.toggle('active', isActive);
+      if(isActive) activeItem = n;
+    });
+    if(activeItem){ activeItem.scrollIntoView({block:'nearest'}); }
+  };
+
+  FancySelect.prototype.choose = function(value, label){
+    this.select.value = value;
+    this.valueEl.textContent = label || value;
+    this.markActive();
+    this.close();
+    var evt = new Event('change', {bubbles:true});
+    this.select.dispatchEvent(evt);
+  };
+
+  FancySelect.prototype.filter = function(q){
+    q = (q||'').toLowerCase().trim();
+    var any=false;
+    Array.prototype.forEach.call(this.list.querySelectorAll('.fs-item'), function(n){
+      var show = n.textContent.toLowerCase().indexOf(q) >= 0;
+      n.style.display = show ? '' : 'none';
+      if(show) any=true;
+    });
+    var empty = this.list.querySelector('.fs-empty');
+    if(!any){
+      if(!empty){ empty = el('div','fs-empty','Aucun résultat'); this.list.appendChild(empty); }
+    } else if(empty){ empty.remove(); }
+  };
+
+  FancySelect.prototype.toggle = function(){
+    if(this.isOpen()){ this.close(); return; }
+    this.open();
+  };
+  FancySelect.prototype.open = function(){
+    this.wrap.classList.add('open');
+    this.ctrl.setAttribute('aria-expanded','true');
+    this.searchInput.value = '';
+    this.filter('');
+    this.searchInput.focus();
+  };
+  FancySelect.prototype.close = function(){
+    this.wrap.classList.remove('open');
+    this.ctrl.setAttribute('aria-expanded','false');
+  };
+
+  FancySelect.prototype.isOpen = function(){ return this.wrap.classList.contains('open'); };
+
+  FancySelect.prototype.setDisabled = function(dis){
+    this.disabled = !!dis;
+    this.wrap.classList.toggle('disabled', this.disabled);
+    this.ctrl.disabled = this.disabled;
+  };
+  FancySelect.prototype.rebuildFromSelect = function(){
+    this.setDisabled(this.select.disabled);
+    this.valueEl.textContent = (this.select.options[this.select.selectedIndex]||{}).text || 'Choisir...';
+    this.buildItems();
+  };
+
+  window.FancySelect = {
+    upgradeAll: function(){
+      document.querySelectorAll('select.fs').forEach(function(s){
+        if(!s._fs) new FancySelect(s);
+        else s._fs.rebuildFromSelect();
+      });
+    },
+    refresh: function(selectEl){
+      if(selectEl && selectEl._fs){ selectEl._fs.rebuildFromSelect(); }
+    }
+  };
+
+  function init(){ window.FancySelect.upgradeAll(); }
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+
+<script>
+/* ===== Cascade uniquement (workflow API) ===== */
+(function(){
+  const form    = document.getElementById('devis-hero-form');
+  if (!form) return;
+
+  const typeEl  = document.getElementById('type');   // <select name="type">
+  const brand   = document.getElementById('brand');  // <select name="brand">
+  const model   = document.getElementById('model');  // <select name="model">
+  const issue   = document.getElementById('issue');  // <select name="issue">
+  const resetBtn = document.getElementById('devis-reset');
+
+  const refreshFancy = (el) => {
+    if (window.FancySelect && el) {
+      window.FancySelect.refresh(el);
+    }
+  };
+
+  const setSel = (el, items) => {
+    el.innerHTML = '<option value="" selected disabled hidden>Choisir...</option>';
+    (items || []).forEach(v => { el.innerHTML += `\u003coption value="${v}">${v}\u003c/option>`; });
+    refreshFancy(el);
+  };
+  const lock   = (...els) => els.forEach(e => { e.disabled = true; refreshFancy(e); });
+  const unlock = (...els) => els.forEach(e => { e.disabled = false; refreshFancy(e); });
+
+  let optionsFacade = null;
+
+  const statusEl = document.createElement('p');
+  statusEl.className = 'options-status';
+  statusEl.setAttribute('role', 'status');
+  statusEl.style.display = 'none';
+  form.insertBefore(statusEl, form.firstElementChild);
+
+  const showStatus = (message, tone = 'info') => {
+    statusEl.textContent = message;
+    statusEl.dataset.tone = tone;
+    statusEl.style.display = 'block';
+  };
+
+  const hideStatus = () => {
+    statusEl.textContent = '';
+    statusEl.style.display = 'none';
+    delete statusEl.dataset.tone;
+  };
+
+  const waitForLoader = () => {
+    if (window.RipairOptions && typeof window.RipairOptions.load === 'function') {
+      return Promise.resolve(window.RipairOptions);
+    }
+    return new Promise((resolve, reject) => {
+      let timer = null;
+      function cleanup() {
+        document.removeEventListener('ripair:options-ready', handleReady);
+        if (timer !== null) clearTimeout(timer);
+      }
+      function handleReady() {
+        if (window.RipairOptions && typeof window.RipairOptions.load === 'function') {
+          cleanup();
+          resolve(window.RipairOptions);
+        }
+      }
+      timer = setTimeout(() => {
+        cleanup();
+        reject(new Error('options_loader_unavailable'));
+      }, 10000);
+      document.addEventListener('ripair:options-ready', handleReady, { once: true });
+    });
+  };
+
+  const init = async () => {
+    lock(brand, model, issue);
+    typeEl.disabled = true;
+    refreshFancy(typeEl);
+    showStatus('Chargement des options...', 'loading');
+
+    try {
+      const loader = await waitForLoader();
+      const data = await loader.load();
+      if (!data || !Array.isArray(data.categories) || data.categories.length == 0) {
+        throw new Error('options_dataset_empty');
+      }
+
+      optionsFacade = data;
+      setSel(typeEl, data.categories);
+      typeEl.disabled = false;
+      refreshFancy(typeEl);
+      hideStatus();
+
+      if (data.meta && data.meta.stale) {
+        loader.load({ force: true })
+          .then(fresh => {
+            optionsFacade = fresh;
+            if (!typeEl.value) {
+              setSel(typeEl, fresh.categories);
+              refreshFancy(typeEl);
+            }
+          })
+          .catch(err => console.warn('[RipairOptions] refresh failed', err));
+      }
+    } catch (err) {
+      console.error('Quick quote options load failed', err);
+      showStatus('Impossible de charger les options de devis. Verifiez votre connexion.', 'error');
+      typeEl.disabled = true;
+      lock(brand, model, issue);
+    }
+  };
+
+  const start = () => {
+    init().catch(err => console.error('init options cascade failed', err));
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', start, { once: true });
+  } else {
+    start();
+  }
+
+  typeEl.addEventListener('change', () => {
+    setSel(brand, []); setSel(model, []); setSel(issue, []);
+    lock(brand, model, issue);
+
+    if (!optionsFacade) return;
+
+    const brands = optionsFacade.getBrands(typeEl.value) || [];
+    setSel(brand, brands);
+    if (brands.length > 0) {
+      unlock(brand);
+    } else {
+      lock(brand);
+    }
+  });
+
+  brand.addEventListener('change', () => {
+    setSel(model, []); setSel(issue, []);
+    lock(model, issue);
+
+    if (!optionsFacade || !typeEl.value || !brand.value) return;
+
+    const models = optionsFacade.getModels(typeEl.value, brand.value) || [];
+    setSel(model, models);
+    if (models.length > 0) {
+      unlock(model);
+    } else {
+      lock(model);
+    }
+  });
+
+  model.addEventListener('change', () => { rebuildIssueOptionsNoDup();
+    setSel(issue, []); lock(issue);
+
+    if (!optionsFacade || !typeEl.value || !brand.value || !model.value) return;
+
+    const problems = optionsFacade.getProblems(typeEl.value, brand.value, model.value) || [];
+    setSel(issue, problems);
+    if (problems.length > 0) {
+      unlock(issue);
+    } else {
+      lock(issue);
+    }
+  });
+
+  resetBtn?.addEventListener('click', () => {
+    form.reset();
+    if (optionsFacade) {
+      setSel(typeEl, optionsFacade.categories);
+      typeEl.disabled = false;
+      refreshFancy(typeEl);
+    }
+    setSel(brand, []); setSel(model, []); setSel(issue, []);
+    lock(brand, model, issue);
+    hideStatus();
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!typeEl.value || !brand.value || !model.value || !issue.value) {
+      alert('Merci de completer les 4 champs.');
+      return;
+    }
+
+    const fd = new FormData(form);
+    const params = new URLSearchParams();
+
+    ['type','brand','model'].forEach(k => { const v = fd.get(k); if (v) params.set(k, v); });
+    // collect all issues (first used for alias, others appended)
+    const allIssues = Array.from(document.querySelectorAll('#issueContainer select[name="issue"], select#issue'))
+      .map(s => s.value).filter(Boolean);
+    if (fd.get('type')) params.set('category', fd.get('type'));
+    if (allIssues.length > 0) {
+      params.set('issue', allIssues[0]);
+      params.set('problem', allIssues[0]);
+      for (let i=1;i<allIssues.length;i++){ params.append('issue', allIssues[i]); params.append('problem', allIssues[i]); }
+    }
+    params.set('src','home');
+
+    location.href = 'devis.html?' + params.toString();
+  });
+
+  // === Multi-issue (+) button ===
+  const issueContainer = document.getElementById('issueContainer');
+  const addIssueBtn = document.getElementById('addIssueBtn');
+  let issueCount = 1;
+
+  const setSelPreserve = (el, items) => {
+    const prev = el.value;
+    setSel(el, items);
+    if (prev && items.includes(prev)) { el.value = prev; refreshFancy(el); }
+  };
+
+  function problemsList(){
+    if (!optionsFacade || !typeEl.value || !brand.value || !model.value) return [];
+    return optionsFacade.getProblems(typeEl.value, brand.value, model.value) || [];
+  }
+  // === Helpers for duplicate-safe issue management ===
+  function currentIssueValues(){
+    return Array.from(issueContainer.querySelectorAll('select[name="issue"]'))
+      .map(s => s.value).filter(Boolean);
+  }
+  function allIssuesSelects(){
+    return Array.from(issueContainer.querySelectorAll('select[name="issue"]'));
+  }
+  function baseProblems(){ return problemsList(); }
+
+  function rebuildIssueOptionsNoDup(){
+    const chosen = new Set(currentIssueValues());
+    const full = baseProblems();
+    allIssuesSelects().forEach(sel => {
+      const cur = sel.value;
+      const items = full.filter(v => !chosen.has(v) || v === cur);
+      const prev = sel.value;
+      setSel(sel, items);
+      if (prev && items.includes(prev)) { sel.value = prev; refreshFancy(sel); }
+      if (prev && !items.includes(prev)) { sel.value = ''; refreshFancy(sel); }
+    });
+    updatePlusState();
+  }
+
+
+  function lastIssueSelect(){
+    const all = issueContainer.querySelectorAll('select[name="issue"]');
+    return all[all.length - 1];
+  }
+
+  function updatePlusState(){
+    const last = lastIssueSelect();
+    const canUse = !!last && !last.disabled && !!last.value;
+    addIssueBtn.classList.toggle('disabled', !canUse);
+    addIssueBtn.setAttribute('aria-disabled', canUse ? 'false' : 'true');
+  }
+
+  function movePlusAfter(el){
+    const wrap = addIssueBtn.parentElement;
+    el.after(wrap);
+  }
+
+  function addIssueSelect(){
+    const probs = problemsList();
+    if (probs.length === 0) return;
+    issueCount += 1;
+    const id = 'issue' + issueCount;
+    const row = document.createElement('div'); row.className = 'issue-row';
+    const sel = document.createElement('select');
+    sel.id = id; sel.name = 'issue'; sel.className = 'fs'; sel.required = false; sel.disabled = lastIssueSelect()?.disabled || false;
+    // No visible label for extra selects (avoid repeating "Problème")
+    sel.setAttribute('aria-label', 'Problème supplémentaire');
+    row.appendChild(sel);
+    // remove button
+    const rm = document.createElement('button');
+    rm.type = 'button'; rm.className = 'remove-btn'; rm.setAttribute('aria-label','Supprimer'); rm.textContent = '×';
+    rm.addEventListener('click', () => {
+      row.remove();
+      rebuildIssueOptionsNoDup();
+    });
+    row.appendChild(rm);
+    issueContainer.appendChild(row);
+    setSel(sel, probs);
+    if (window.FancySelect) window.FancySelect.upgradeAll();
+    sel.addEventListener('change', () => { rebuildIssueOptionsNoDup(); });
+    movePlusAfter(row);
+    rebuildIssueOptionsNoDup();
+  }
+
+  addIssueBtn?.addEventListener('click', function(e){
+    e.preventDefault();
+    if (addIssueBtn.classList.contains('disabled')) return;
+    addIssueSelect();
+  });
+
+  // Rebuild issues when model changes
+  model.addEventListener('change', () => { rebuildIssueOptionsNoDup();
+    const probs = problemsList();
+    // update all issue selects with preservation
+    issueContainer.querySelectorAll('select[name="issue"]').forEach(s => setSelPreserve(s, probs));
+    updatePlusState();
+  });
+
+  issue.addEventListener('change', () => { rebuildIssueOptionsNoDup(); });
+  typeEl.addEventListener('change', () => { setTimeout(() => { rebuildIssueOptionsNoDup(); }, 0); });
+  brand.addEventListener('change', () => { setTimeout(() => { rebuildIssueOptionsNoDup(); }, 0); });
+
+  })();
+</script>
+
+
+</body>
+</html>
+
+
+
+
+
+
+
+
