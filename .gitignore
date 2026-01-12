@@ -39,3 +39,5 @@ Helix/backend/storage/app/public/*
 Helix/backend/storage/framework/*
 Helix/backend/storage/logs/*
 Helix/backend/.phpunit.result.cache
+
+cloc-report.txt
